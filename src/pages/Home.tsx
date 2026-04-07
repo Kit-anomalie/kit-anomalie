@@ -11,10 +11,14 @@ export function Home() {
 
   const userApplis = APPLIS_METIER.filter(app => applisMetier.includes(app.id))
 
-  // Accès rapides — seulement les briques fonctionnelles
+  // Accès rapides
   const quickActions = [
     { icon: '📖', label: 'Guides', desc: 'Pas à pas par appli', path: '/guides', color: 'bg-blue-50 border-sncf-blue/20' },
     { icon: '📋', label: 'Fiches mémo', desc: 'Réflexes en 1 tap', path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
+    { icon: '🎓', label: 'Onboarding', desc: 'Parcours formation', path: '/onboarding', color: 'bg-green-50 border-sncf-green/20' },
+    { icon: '🔍', label: 'Anomalies', desc: 'Par actif', path: '/actifs', color: 'bg-purple-50 border-purple-200' },
+    { icon: '🤖', label: 'Assistant IA', desc: 'Aide rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
+    { icon: '🔔', label: 'Alertes', desc: 'Bon à savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
   ]
 
   // Tips rotatifs
@@ -95,9 +99,12 @@ export function Home() {
             {userApplis.map(app => (
               <div
                 key={app.id}
-                className="bg-white rounded-2xl p-3 border border-gray-100 flex items-center"
+                className="bg-white rounded-2xl p-3 border border-gray-100 flex items-center justify-between"
               >
-                <div className="font-semibold text-sncf-dark text-sm">{app.nom}</div>
+                <div>
+                  <div className="font-semibold text-sncf-dark text-sm">{app.nom}</div>
+                  {app.description && <div className="text-[10px] text-gray-500">{app.description}</div>}
+                </div>
               </div>
             ))}
           </div>
