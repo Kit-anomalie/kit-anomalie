@@ -1,0 +1,22 @@
+{
+  "name": "Kit Anomalie",
+  "short_name": "Kit Anomalie",
+  "description": "Compagnon mobile d'adoption digitale pour la gestion des anomalies",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F6FA",
+  "theme_color": "#0C1E5B",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
