@@ -11,22 +11,18 @@ export function Home() {
 
   const userApplis = APPLIS_METIER.filter(app => applisMetier.includes(app.id))
 
-  // Accès rapides
+  // Accès rapides — seulement les briques fonctionnelles
   const quickActions = [
     { icon: '📖', label: 'Guides', desc: 'Pas à pas par appli', path: '/guides', color: 'bg-blue-50 border-sncf-blue/20' },
     { icon: '📋', label: 'Fiches mémo', desc: 'Réflexes en 1 tap', path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
-    { icon: '🎓', label: 'Onboarding', desc: 'Parcours formation', path: '/onboarding', color: 'bg-green-50 border-sncf-green/20' },
-    { icon: '🔍', label: 'Anomalies', desc: 'Par actif', path: '/actifs', color: 'bg-purple-50 border-purple-200' },
-    { icon: '🤖', label: 'Assistant IA', desc: 'Aide rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
-    { icon: '🔔', label: 'Alertes', desc: 'Bon à savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
   ]
 
-  // Tips rotatifs (Brique 6.2)
+  // Tips rotatifs
   const tips = [
     "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'ancienneté du défaut.",
     "Vérifiez toujours les anomalies existantes sur un actif avant d'en déclarer une nouvelle.",
     "Le classement S/I nécessite une intervention immédiate. En cas de doute, consultez le référentiel MT00342.",
-    "Pensez à renseigner le DLF (Date Limite de Fin) pour les anomalies de classement A.",
+    "Pensez à renseigner la DLF (Date Limite de Fin) pour les anomalies de classement A.",
   ]
   const tipOfTheDay = tips[new Date().getDate() % tips.length]
 
@@ -44,8 +40,12 @@ export function Home() {
               <div className="text-xs text-gray-500 flex items-center gap-1">
                 <span>{SPECIALITE_ICONS[specialite]}</span>
                 {SPECIALITE_LABELS[specialite]}
-                <span className="text-gray-300 mx-1">·</span>
-                {userApplis.length} appli{userApplis.length > 1 ? 's' : ''}
+                {userApplis.length > 0 && (
+                  <>
+                    <span className="text-gray-300 mx-1">·</span>
+                    {userApplis.length} appli{userApplis.length > 1 ? 's' : ''}
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -88,25 +88,21 @@ export function Home() {
       </div>
 
       {/* Mes applications */}
-      <div>
-        <h2 className="text-sm font-bold text-sncf-dark mb-3">Mes applications métier</h2>
-        <div className="space-y-2">
-          {userApplis.map(app => (
-            <div
-              key={app.id}
-              className="bg-white rounded-2xl p-3 border border-gray-100 flex items-center justify-between"
-            >
-              <div>
+      {userApplis.length > 0 && (
+        <div>
+          <h2 className="text-sm font-bold text-sncf-dark mb-3">Mes applications métier</h2>
+          <div className="space-y-2">
+            {userApplis.map(app => (
+              <div
+                key={app.id}
+                className="bg-white rounded-2xl p-3 border border-gray-100 flex items-center"
+              >
                 <div className="font-semibold text-sncf-dark text-sm">{app.nom}</div>
-                {app.description && <div className="text-[10px] text-gray-500">{app.description}</div>}
               </div>
-              <span className="text-xs text-sncf-blue font-medium bg-blue-50 px-3 py-1.5 rounded-xl">
-                Ouvrir →
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

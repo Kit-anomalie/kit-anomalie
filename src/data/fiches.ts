@@ -1,0 +1,65 @@
+import type { FicheMemo } from '../types'
+
+export const FICHES_MEMO: FicheMemo[] = [
+  {
+    id: 'fiche-classer-anomalie',
+    titre: 'Classer une anomalie',
+    gestesCles: ['classer', 'classement', 'S/I', 'S/DP', 'A/P'],
+    roles: ['agent_req', 'rp'],
+    specialites: ['voie', 'seg', 'eale', 'cat', 'sm'],
+    quoiFaire: 'Attribuer le bon classement réglementaire à une anomalie détectée lors d\'une tournée ou visite.',
+    comment: '1. Identifier le type de défaut constaté (sécurité immédiate, sécurité différée, maintenance)\n2. Vérifier le référentiel de classement applicable à votre spécialité\n3. Choisir le classement :\n   • **S/I** — Sécurité Immédiate : risque imminent, intervention sous 24h\n   • **S/DP** — Sécurité avec Demande de Programme : risque avéré, planification rapide\n   • **A/P** — Anomalie Prioritaire : dégradation significative\n   • **A/M** — Anomalie de Maintenance : usure normale à surveiller\n   • **A/SURV** — Anomalie sous Surveillance : à réévaluer périodiquement\n   • **A/DET** — Anomalie à Déterminer : classement à confirmer après expertise\n4. Renseigner la DLF (Date Limite de Fin) associée au classement',
+    erreursAEviter: [
+      'Classer S/I par excès de prudence → surcharge la planification d\'urgence',
+      'Laisser une anomalie en NC (Non Classée) → invisible pour l\'ordonnanceur',
+      'Oublier la DLF → l\'anomalie sort du radar de suivi',
+    ],
+    referentiel: 'MT00342',
+    guideAssocie: 'guide-creer-anomalie-ef3c0',
+  },
+  {
+    id: 'fiche-decrire-anomalie',
+    titre: 'Rédiger une bonne description',
+    gestesCles: ['description', 'rédiger', 'décrire', 'libellé'],
+    roles: ['agent_req'],
+    specialites: ['voie', 'seg', 'eale', 'cat', 'sm'],
+    quoiFaire: 'Rédiger une description d\'anomalie exploitable par le Référent Patrimoine et l\'Ordonnanceur, sans avoir à revenir sur le terrain.',
+    comment: '1. **Quoi** — Quel défaut ? (fissure, usure, desserrage, corrosion…)\n2. **Où exactement** — Composant précis + PK + repère terrain (ex : "Joint isolant voie 1, PK 142+350, côté gauche sens croissant")\n3. **Depuis quand** — Ancienneté estimée (constaté pour la première fois / évolution depuis dernière tournée)\n4. **Gravité observée** — Ce que vous voyez sur le terrain (dimensions, étendue, impact visible)\n5. **Photo** — Prendre une photo cadrée du défaut avec un repère d\'échelle si possible',
+    erreursAEviter: [
+      '"Anomalie constatée" sans précision → inutilisable',
+      'Description trop technique sans localisation → le RP ne peut pas planifier',
+      'Pas de photo → retour terrain nécessaire pour confirmer',
+    ],
+    referentiel: 'MT00342',
+    guideAssocie: 'guide-creer-anomalie-ef3c0',
+  },
+  {
+    id: 'fiche-eviter-doublons',
+    titre: 'Éviter les doublons',
+    gestesCles: ['doublon', 'doublet', 'existant', 'vérifier'],
+    roles: ['agent_req', 'rp'],
+    specialites: ['voie', 'seg', 'eale', 'cat', 'sm'],
+    quoiFaire: 'Vérifier qu\'une anomalie n\'existe pas déjà sur l\'actif avant d\'en créer une nouvelle. Le stock actuel contient plus de 213 000 anomalies — les doublons compliquent le pilotage.',
+    comment: '1. **Avant de déclarer** → rechercher l\'actif dans la GMAO (SPM ou SPOT BO)\n2. Vérifier les anomalies ouvertes sur cet actif (même localisation, même type de défaut)\n3. Si une anomalie similaire existe :\n   • Même défaut, même localisation → **ne pas recréer**, mettre à jour la description existante si évolution\n   • Même actif mais défaut différent → **créer une nouvelle anomalie**\n   • Même défaut mais actif différent (ex : 2 rails distincts) → **créer une nouvelle anomalie**\n4. En cas de doute → demander au Référent Patrimoine',
+    erreursAEviter: [
+      'Créer systématiquement sans vérifier → génère des doublons (2/3 du stock à nettoyer)',
+      'Mettre à jour une anomalie résolue au lieu d\'en créer une nouvelle',
+      'Confondre actif linéaire (voie, caténaire) et actif ponctuel (appareil de voie)',
+    ],
+  },
+  {
+    id: 'fiche-dlf',
+    titre: 'Comprendre la DLF',
+    gestesCles: ['DLF', 'date limite', 'délai', 'fin'],
+    roles: ['agent_req', 'ordonnanceur', 'rp'],
+    specialites: ['voie', 'seg', 'eale', 'cat', 'sm'],
+    quoiFaire: 'Comprendre et respecter la Date Limite de Fin (DLF) associée à chaque anomalie classée.',
+    comment: '**La DLF est la date avant laquelle l\'anomalie doit être traitée.**\n\nElle dépend du classement :\n• **S/I** → traitement immédiat (24h)\n• **S/DP** → délai court, selon programme de sécurité\n• **A/P** → délai fixé selon criticité\n• **A/M** → intégré au prochain cycle de maintenance\n• **A/SURV** → réévaluation à date\n\n**Qui est responsable :**\n• Agent terrain → renseigne le classement, la DLF est calculée automatiquement\n• Ordonnanceur → planifie l\'intervention avant la DLF\n• RP → vérifie la cohérence classement/DLF\n\n**Aujourd\'hui, 28% des DLF ne sont pas respectées** (50% pour VA/VI/VR). C\'est un indicateur suivi au niveau national.',
+    erreursAEviter: [
+      'Ignorer la DLF → l\'anomalie dépasse le délai réglementaire sans intervention',
+      'Modifier la DLF pour "gagner du temps" → fausse le pilotage',
+      'Ne pas renseigner de classement → pas de DLF → anomalie invisible',
+    ],
+    referentiel: 'MT00342',
+  },
+]
