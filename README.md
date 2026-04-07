@@ -1,73 +1,172 @@
-# React + TypeScript + Vite
+# Kit Anomalie — PWA d'adoption digitale
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Compagnon mobile-first** pour les agents terrain. Guides interactifs, fiches mémo réflexes, aide au classement par IA, consultation des anomalies par actif.
 
-Currently, two official plugins are available:
+**Le kit n'est PAS une application métier.** La déclaration des anomalies se fait dans les applications métier existantes (EF3C0, S6A7, ADV Mobile, etc.). Le kit accompagne l'utilisateur.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**En ligne :** https://willykaizen.github.io/kit-anomalie/
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Cible
 
-## Expanding the ESLint configuration
+| | |
+|---|---|
+| **3 rôles** | Agent terrain/REQ, Ordonnanceur, Référent Patrimoine (RP) |
+| **5 spécialités** | Voie, SEG, EALE, CAT, SM |
+| **7 classements** | S/I, S/DP, A/P, A/M, A/SURV, A/DET, VA/VI/VR (Voie) |
+| **Statuts** | Brouillon → Ouverte → En cours → Résolue |
+| **Terminal cible** | Samsung A52s/A54s (400-430px) |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Applications métier par spécialité
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Spécialité | Applications terrain |
+|-----------|---------------------|
+| **Voie** | EF3C0, ADV Mobile, SPM, CONFO, SPOT Coeur |
+| **SEG** | S6A7, EF4B1, SPM, EF5A VSP |
+| **EALE** | EF4B1, SPM, EF5A VSP |
+| **CAT** | EF4B1, SPM, EF5A VSP, ARCAT |
+| **SM** | EF4B1, SPM, EF5A VSP |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+SPM est transverse (toutes spécialités). OPTISPOT et SPOT BO sont hors périmètre (back-office GMAO, pas terrain).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Architecture — 8 briques
+
+### État d'avancement
+
+| Brique | Nom | Statut | Fichiers |
+|--------|-----|--------|----------|
+| **0** | Accueil & Profil | **Fait** | `ProfileSetup.tsx`, `Home.tsx`, `Layout.tsx`, `BottomNav.tsx` |
+| **1** | Guides par application | **Fait** (1 guide démo) | `Guides.tsx`, `GuideDetail.tsx`, `data/guides.ts` |
+| **2** | Fiches mémo réflexes | **Fait** (4 fiches) | `Fiches.tsx`, `FicheDetail.tsx`, `data/fiches.ts` |
+| **3** | Parcours onboarding | Placeholder | — |
+| **4** | Anomalies par actif | Placeholder | — |
+| **5** | Assistant IA | Placeholder | — |
+| **6** | Bon à savoir & alertes | Placeholder | — |
+| **7** | Administration (BO) | Non commencé | App séparée |
+
+### Brique 0 — Accueil & Profil ✅
+
+- Sélection rôle → spécialité → applications métier (3 étapes)
+- Hub d'accueil : carte profil, tip du jour, 6 accès rapides, liste des applis
+- Badge connecté/hors réseau en temps réel
+- L'ordonnanceur peut passer le setup sans applis (message "Applications à définir")
+
+### Brique 1 — Guides ✅
+
+- Catalogue filtré par profil (rôle + spécialité + applis sélectionnées)
+- Guide pas à pas interactif : barre de progression, navigation étape par étape
+- Chaque étape : action à faire, champs à remplir, erreurs fréquentes, référentiel
+- **Contenu démo :** 1 guide "Créer une anomalie dans EF3C0" (6 étapes)
+
+### Brique 2 — Fiches mémo ✅
+
+- Catalogue filtré par profil avec recherche par mot-clé
+- Structure fixe : quoi faire, comment, erreurs à éviter, référentiel
+- Lien vers le guide associé en bas de fiche
+- **Contenu démo :** 4 fiches (classer, décrire, doublons, DLF)
+
+### Briques 3-7 — À construire
+
+Voir le fichier de spécification complet : `/Projects/Anomalies/prompt-kit-anomalie.md`
+
+---
+
+## Stack technique
+
+| | |
+|---|---|
+| **Frontend** | React 19 + TypeScript |
+| **Build** | Vite 8 |
+| **CSS** | Tailwind CSS 4 |
+| **State** | Zustand (persist middleware → localStorage) |
+| **Routing** | React Router DOM 7 |
+| **PWA** | manifest.json, Service Worker (à compléter) |
+| **Hébergement** | GitHub Pages (déploiement auto via GitHub Actions) |
+
+## Arborescence
+
+```
+Kit_Anomalie/
+├── .github/workflows/deploy.yml   ← CI/CD GitHub Pages
+├── public/
+│   ├── manifest.json              ← Config PWA
+│   └── favicon.svg
+├── src/
+│   ├── App.tsx                    ← Router principal
+│   ├── main.tsx                   ← Point d'entrée
+│   ├── index.css                  ← Tailwind + charte SNCF
+│   ├── components/
+│   │   ├── Layout.tsx             ← Shell mobile (header + nav + offline)
+│   │   ├── BottomNav.tsx          ← Navigation basse 5 onglets
+│   │   └── OfflineBadge.tsx       ← Indicateur réseau
+│   ├── pages/
+│   │   ├── ProfileSetup.tsx       ← Brique 0 : config profil
+│   │   ├── Home.tsx               ← Brique 0 : hub accueil
+│   │   ├── Guides.tsx             ← Brique 1 : catalogue
+│   │   ├── GuideDetail.tsx        ← Brique 1 : guide pas à pas
+│   │   ├── Fiches.tsx             ← Brique 2 : catalogue
+│   │   ├── FicheDetail.tsx        ← Brique 2 : détail fiche
+│   │   └── Placeholder.tsx        ← Pages "À venir"
+│   ├── data/
+│   │   ├── roles.ts               ← Rôles, spécialités, applis métier
+│   │   ├── guides.ts              ← Données guides de démo
+│   │   └── fiches.ts              ← Données fiches de démo
+│   ├── stores/
+│   │   ├── profileStore.ts        ← Profil utilisateur (Zustand + persist)
+│   │   └── favoritesStore.ts      ← Favoris, récents, recherche adaptative
+│   ├── hooks/
+│   │   └── useOffline.ts          ← Détection réseau
+│   └── types/
+│       └── index.ts               ← Tous les types TS
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Charte graphique
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Couleur | Hex | Usage |
+|---------|-----|-------|
+| Bleu SNCF foncé | `#0C1E5B` | Header, textes principaux |
+| Bleu ciel SNCF | `#00A3E0` | Boutons, liens, accents |
+| Rouge SNCF | `#E3051B` | Erreurs, alertes sécurité |
+| Orange | `#F7A600` | Avertissements, statut "en cours" |
+| Vert | `#3AAA35` | Succès, statut "résolu", connecté |
+| Fond | `#F4F6FA` | Arrière-plan général |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Bordures arrondies 16-20px. Mobile-first (430px max).
+
+## Terminologie
+
+| Terme | Définition |
+|-------|-----------|
+| **Anomalie** | Déviation nécessitant intervention (classement + DLF) |
+| **Constat** | Observation sans impact opérationnel (pas de classement, pas de DLF) |
+| **DLF** | Date Limite de Fin |
+| **REQ** | Responsable Équipe |
+| **RP** | Référent Patrimoine |
+| **MPC** | Maintenance Préventive Conditionnelle |
+| **MC** | Maintenance Corrective |
+| **Embarquement** | Attribution auto des anomalies aux tournées terrain |
+| **NC** | Non Classé (anomalie sans classement = problème) |
+
+## Lancer en local
+
+```bash
+cd 02_DataShift_App/Kit_Anomalie
+npm install
+npm run dev
+# → http://localhost:5173/kit-anomalie/
+```
+
+## Déployer
+
+Push sur `main` → GitHub Actions build + déploie automatiquement sur GitHub Pages.
+
+```bash
+git add -A && git commit -m "description" && git push
+# → https://willykaizen.github.io/kit-anomalie/
 ```
