@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { usePlanStore } from '../stores/planStore'
 import {
-  BRIQUES, SPRINTS,
-  ASSIGNEE_LABELS, TAG_COLORS,
-  getOverallProgress, getSprintProgress,
+  TAG_COLORS,
   type Task, type TaskStatus
 } from '../data/planTravail'
 
@@ -11,20 +10,22 @@ type ViewMode = 'missions' | 'kanban' | 'timeline'
 
 export function PlanTravail() {
   const navigate = useNavigate()
+  const { sprints, briques } = usePlanStore()
   const [view, setView] = useState<ViewMode>('missions')
   const [expandedSprint, setExpandedSprint] = useState<string | null>(
-    SPRINTS.find(s => s.status === 'active')?.id ?? null
+    sprints.find(s => s.status === 'active')?.id ?? null
   )
   const [filterAssignee, setFilterAssignee] = useState<string | null>(null)
 
-  const overallProgress = getOverallProgress()
-  const totalTasks = SPRINTS.flatMap(s => s.tasks).length
-  const doneTasks = SPRINTS.flatMap(s => s.tasks).filter(t => t.status === 'done').length
-  const inProgressTasks = SPRINTS.flatMap(s => s.tasks).filter(t => t.status === 'in_progress').length
+  const allTasks = sprints.flatMap(s => s.tasks)
+  const totalTasks = allTasks.length
+  const doneTasks = allTasks.filter(t => t.status === 'done').length
+  const inProgressTasks = allTasks.filter(t => t.status === 'in_progress').length
+  const overallProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0
 
   return (
     <div className="min-h-screen bg-[#F4F6FA]">
-      {/* === HEADER MISSION BRIEFING === */}
+      {/* === HEADER === */}
       <header className="relative overflow-hidden bg-gradient-to-br from-[#0C1E5B] to-[#1a3a8f]">
         <div className="absolute inset-0 opacity-[0.07]">
           <div className="absolute inset-0" style={{
@@ -34,12 +35,8 @@ export function PlanTravail() {
         </div>
 
         <div className="relative px-4 pt-5 pb-5">
-          {/* Top bar */}
           <div className="flex items-center justify-between mb-5">
-            <button
-              onClick={() => navigate('/')}
-              className="text-white/60 text-xs font-mono tracking-wider hover:text-white/90 transition-colors"
-            >
+            <button onClick={() => navigate('/')} className="text-white/60 text-xs font-mono tracking-wider hover:text-white/90 transition-colors">
               ← RETOUR KIT
             </button>
             <div className="flex items-center gap-2">
@@ -48,14 +45,11 @@ export function PlanTravail() {
             </div>
           </div>
 
-          {/* Title block */}
           <div className="text-center mb-5">
             <div className="text-white/40 text-[10px] font-mono tracking-[0.3em] mb-1">OPÉRATION</div>
-            <h1 className="text-3xl font-black text-white tracking-tight mb-1">
-              KIT ANOMALIE
-            </h1>
+            <h1 className="text-3xl font-black text-white tracking-tight mb-1">KIT ANOMALIE</h1>
             <div className="text-white/50 text-xs font-mono tracking-wider">
-              PLAN DE MISSION — 8 BRIQUES — 6 SPRINTS
+              PLAN DE MISSION — {briques.length} BRIQUES — {sprints.length} SPRINTS
             </div>
           </div>
 
@@ -66,10 +60,7 @@ export function PlanTravail() {
               <div className="text-2xl font-black text-white">{overallProgress}%</div>
             </div>
             <div className="h-2.5 bg-white/10 rounded-full overflow-hidden mb-3">
-              <div
-                className="h-full bg-gradient-to-r from-[#00A3E0] to-[#3AAA35] rounded-full transition-all duration-1000"
-                style={{ width: `${overallProgress}%` }}
-              />
+              <div className="h-full bg-gradient-to-r from-[#00A3E0] to-[#3AAA35] rounded-full transition-all duration-1000" style={{ width: `${overallProgress}%` }} />
             </div>
             <div className="grid grid-cols-3 gap-3">
               <StatBlock value={doneTasks} label="Terminées" color="text-emerald-300" />
@@ -78,16 +69,14 @@ export function PlanTravail() {
             </div>
           </div>
 
-          {/* Team */}
+          {/* Team filter */}
           <div className="flex items-center justify-center gap-4">
-            <TeamBadge name="Willy" role="Code & Vision" emoji="👨‍💻" active={filterAssignee === 'willy'} onClick={() => setFilterAssignee(f => f === 'willy' ? null : 'willy')} />
+            <TeamBadge name="Willy" emoji="👨‍💻" active={filterAssignee === 'willy'} onClick={() => setFilterAssignee(f => f === 'willy' ? null : 'willy')} />
             <div className="text-white/30 text-xs">&</div>
-            <TeamBadge name="Mathilde" role="Contenu & Métier" emoji="👩‍💼" active={filterAssignee === 'mathilde'} onClick={() => setFilterAssignee(f => f === 'mathilde' ? null : 'mathilde')} />
+            <TeamBadge name="Mathilde" emoji="👩‍💼" active={filterAssignee === 'mathilde'} onClick={() => setFilterAssignee(f => f === 'mathilde' ? null : 'mathilde')} />
           </div>
           {filterAssignee && (
-            <button onClick={() => setFilterAssignee(null)} className="block mx-auto text-[10px] text-white/50 font-mono mt-2">
-              ✕ Voir tout
-            </button>
+            <button onClick={() => setFilterAssignee(null)} className="block mx-auto text-[10px] text-white/50 font-mono mt-2">✕ Voir tout</button>
           )}
         </div>
       </header>
@@ -104,9 +93,7 @@ export function PlanTravail() {
               key={v.id}
               onClick={() => setView(v.id)}
               className={`flex-1 py-2 px-2 rounded-lg text-xs font-semibold transition-all ${
-                view === v.id
-                  ? 'bg-white text-sncf-dark shadow-sm'
-                  : 'text-gray-400 hover:text-gray-600'
+                view === v.id ? 'bg-white text-sncf-dark shadow-sm' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
               {v.label}
@@ -120,19 +107,12 @@ export function PlanTravail() {
         {view === 'missions' && <MissionsView filterAssignee={filterAssignee} />}
         {view === 'kanban' && <KanbanView filterAssignee={filterAssignee} />}
         {view === 'timeline' && (
-          <TimelineView
-            expandedSprint={expandedSprint}
-            setExpandedSprint={setExpandedSprint}
-            filterAssignee={filterAssignee}
-          />
+          <TimelineView expandedSprint={expandedSprint} setExpandedSprint={setExpandedSprint} filterAssignee={filterAssignee} />
         )}
       </div>
 
-      {/* Footer */}
       <footer className="text-center py-6 border-t border-gray-200">
-        <div className="text-[10px] font-mono text-gray-300 tracking-widest">
-          KIT ANOMALIE — CHANTIER ANOMALIE — {new Date().getFullYear()}
-        </div>
+        <div className="text-[10px] font-mono text-gray-300 tracking-widest">KIT ANOMALIE — CHANTIER ANOMALIE — {new Date().getFullYear()}</div>
       </footer>
     </div>
   )
@@ -149,51 +129,199 @@ function StatBlock({ value, label, color }: { value: number; label: string; colo
   )
 }
 
-function TeamBadge({ name, role, emoji, active, onClick }: {
-  name: string; role: string; emoji: string; active: boolean; onClick: () => void
-}) {
+function TeamBadge({ name, emoji, active, onClick }: { name: string; emoji: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${
-        active
-          ? 'bg-white/20 border-white/40 shadow-lg'
-          : 'bg-white/5 border-white/15 hover:bg-white/10'
+      className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+        active ? 'bg-white/20 border-white/40 shadow-lg' : 'bg-white/5 border-white/15 hover:bg-white/10'
       }`}
     >
       <span className="text-lg">{emoji}</span>
-      <div className="text-left">
-        <div className="text-xs font-bold text-white">{name}</div>
-        <div className="text-[9px] text-white/50 font-mono">{role}</div>
-      </div>
+      <span className="text-sm font-bold text-white">{name}</span>
     </button>
   )
 }
 
-// === MISSIONS VIEW (par brique) ===
+// === ASSIGNEE PICKER ===
+
+function AssigneePicker({ taskId, current }: { taskId: string; current?: string }) {
+  const { setTaskAssignee } = usePlanStore()
+  const options: { value: string | undefined; label: string }[] = [
+    { value: undefined, label: '—' },
+    { value: 'willy', label: '👨‍💻 Willy' },
+    { value: 'mathilde', label: '👩‍💼 Mathilde' },
+    { value: 'both', label: '👥 Les deux' },
+  ]
+
+  return (
+    <select
+      value={current ?? ''}
+      onChange={e => setTaskAssignee(taskId, (e.target.value || undefined) as 'willy' | 'mathilde' | 'both' | undefined)}
+      className="text-[10px] bg-gray-50 border border-gray-200 rounded-lg px-1.5 py-1 text-gray-600 focus:outline-none focus:border-[#00A3E0]"
+    >
+      {options.map(o => (
+        <option key={o.label} value={o.value ?? ''}>{o.label}</option>
+      ))}
+    </select>
+  )
+}
+
+// === ADD TASK FORM ===
+
+function AddTaskForm({ sprintId, brique }: { sprintId: string; brique?: number }) {
+  const { addTask } = usePlanStore()
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+
+  const handleSubmit = () => {
+    if (!title.trim()) return
+    addTask(sprintId, {
+      title: title.trim(),
+      description: description.trim(),
+      status: 'todo',
+      brique,
+      tags: [],
+    })
+    setTitle('')
+    setDescription('')
+    setOpen(false)
+  }
+
+  if (!open) {
+    return (
+      <button onClick={() => setOpen(true)} className="w-full py-2 text-xs text-gray-400 hover:text-[#00A3E0] border border-dashed border-gray-200 hover:border-[#00A3E0]/40 rounded-xl transition-all mt-2">
+        + Ajouter une tâche
+      </button>
+    )
+  }
+
+  return (
+    <div className="bg-blue-50/50 border border-[#00A3E0]/20 rounded-xl p-3 mt-2 space-y-2">
+      <input
+        type="text"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        placeholder="Titre de la tâche"
+        className="w-full text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#00A3E0] text-sncf-dark placeholder:text-gray-300"
+        autoFocus
+        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+      />
+      <input
+        type="text"
+        value={description}
+        onChange={e => setDescription(e.target.value)}
+        placeholder="Description (optionnel)"
+        className="w-full text-xs bg-white border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#00A3E0] text-gray-600 placeholder:text-gray-300"
+        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+      />
+      <div className="flex gap-2">
+        <button onClick={handleSubmit} className="text-xs bg-[#00A3E0] text-white px-4 py-1.5 rounded-lg font-medium hover:bg-[#0090c7] transition-colors">
+          Ajouter
+        </button>
+        <button onClick={() => { setOpen(false); setTitle(''); setDescription('') }} className="text-xs text-gray-400 px-3 py-1.5 hover:text-gray-600 transition-colors">
+          Annuler
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// === INTERACTIVE TASK ROW ===
+
+function InteractiveTaskRow({ task, showSprint, sprintCodename }: { task: Task; showSprint?: boolean; sprintCodename?: string }) {
+  const { toggleTaskStatus, deleteTask } = usePlanStore()
+  const [showDelete, setShowDelete] = useState(false)
+
+  return (
+    <div
+      className="flex items-center gap-2 py-2 group"
+      onMouseEnter={() => setShowDelete(true)}
+      onMouseLeave={() => setShowDelete(false)}
+    >
+      {/* Checkbox */}
+      <button
+        onClick={() => toggleTaskStatus(task.id)}
+        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
+          task.status === 'done'
+            ? 'bg-[#3AAA35] border-[#3AAA35] text-white'
+            : task.status === 'in_progress'
+            ? 'border-[#F7A600] bg-amber-50'
+            : 'border-gray-300 hover:border-[#00A3E0]'
+        }`}
+      >
+        {task.status === 'done' && <span className="text-[10px]">✓</span>}
+        {task.status === 'in_progress' && <span className="text-[8px] text-[#F7A600]">●</span>}
+      </button>
+
+      {/* Title */}
+      <div className="flex-1 min-w-0">
+        <span className={`text-xs ${task.status === 'done' ? 'text-gray-300 line-through' : 'text-sncf-dark/80'}`}>
+          {task.title}
+        </span>
+        {task.description && (
+          <p className={`text-[10px] leading-tight mt-0.5 ${task.status === 'done' ? 'text-gray-200' : 'text-gray-400'}`}>
+            {task.description}
+          </p>
+        )}
+      </div>
+
+      {/* Sprint badge */}
+      {showSprint && sprintCodename && (
+        <span className="text-[9px] font-mono text-[#00A3E0] bg-blue-50 px-2 py-0.5 rounded shrink-0">
+          {sprintCodename}
+        </span>
+      )}
+
+      {/* Tags */}
+      {task.tags?.map(tag => (
+        <span key={tag} className={`text-[8px] px-1.5 py-0.5 rounded font-mono shrink-0 ${TAG_COLORS[tag] ?? 'bg-gray-50 text-gray-400'}`}>
+          {tag}
+        </span>
+      ))}
+
+      {/* Assignee */}
+      <AssigneePicker taskId={task.id} current={task.assignee} />
+
+      {/* Delete */}
+      <button
+        onClick={() => deleteTask(task.id)}
+        className={`text-gray-300 hover:text-[#E3051B] text-sm shrink-0 transition-all ${showDelete ? 'opacity-100' : 'opacity-0'}`}
+        title="Supprimer"
+      >
+        ✕
+      </button>
+    </div>
+  )
+}
+
+// === MISSIONS VIEW ===
 
 function MissionsView({ filterAssignee }: { filterAssignee: string | null }) {
+  const { sprints, briques } = usePlanStore()
+
   return (
     <div className="space-y-3">
       <div className="text-[10px] font-mono text-sncf-dark/40 tracking-widest mb-2">8 MISSIONS — ARCHITECTURE DU KIT</div>
-      {BRIQUES.map(brique => {
-        const tasks = SPRINTS.flatMap(s => s.tasks).filter(t => t.brique === brique.numero)
+      {briques.map(brique => {
+        const tasks = sprints.flatMap(s => s.tasks).filter(t => t.brique === brique.numero)
         const filteredTasks = filterAssignee
           ? tasks.filter(t => t.assignee === filterAssignee || t.assignee === 'both')
           : tasks
+        const doneBrique = tasks.filter(t => t.status === 'done').length
+        const progressBrique = tasks.length > 0 ? Math.round((doneBrique / tasks.length) * 100) : 0
+        // Find the sprint that has tasks for this brique
+        const sprintForBrique = sprints.find(s => s.tasks.some(t => t.brique === brique.numero))
 
         return (
           <div
             key={brique.numero}
             className={`bg-white rounded-2xl border p-4 shadow-sm transition-all ${
-              brique.status === 'done'
-                ? 'border-emerald-200'
-                : brique.status === 'in_progress'
-                ? 'border-[#00A3E0]/30 shadow-md'
-                : 'border-gray-100'
+              brique.status === 'done' ? 'border-emerald-200' :
+              brique.status === 'in_progress' ? 'border-[#00A3E0]/30 shadow-md' : 'border-gray-100'
             }`}
           >
-            {/* Mission header */}
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${
@@ -204,12 +332,8 @@ function MissionsView({ filterAssignee }: { filterAssignee: string | null }) {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-mono text-sncf-dark/30 tracking-widest">
-                      BRIQUE {brique.numero}
-                    </span>
-                    <span className="text-[9px] font-mono text-gray-300">
-                      // {brique.codename}
-                    </span>
+                    <span className="text-[9px] font-mono text-sncf-dark/30 tracking-widest">BRIQUE {brique.numero}</span>
+                    <span className="text-[9px] font-mono text-gray-300">// {brique.codename}</span>
                   </div>
                   <div className="text-sm font-bold text-sncf-dark">{brique.nom}</div>
                 </div>
@@ -219,28 +343,28 @@ function MissionsView({ filterAssignee }: { filterAssignee: string | null }) {
 
             <p className="text-xs text-gray-400 mb-3 leading-relaxed">{brique.description}</p>
 
-            {/* Progress */}
-            {brique.progress > 0 && (
+            {progressBrique > 0 && (
               <div className="mb-3">
                 <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all duration-700 ${
-                      brique.status === 'done' ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'
-                    }`}
-                    style={{ width: `${brique.progress}%` }}
+                    className={`h-full rounded-full transition-all duration-700 ${progressBrique === 100 ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'}`}
+                    style={{ width: `${progressBrique}%` }}
                   />
                 </div>
-                <div className="text-right text-[9px] font-mono text-gray-300 mt-1">{brique.progress}%</div>
+                <div className="text-right text-[9px] font-mono text-gray-300 mt-1">{doneBrique}/{tasks.length} — {progressBrique}%</div>
               </div>
             )}
 
-            {/* Tasks mini-list */}
             {filteredTasks.length > 0 && (
-              <div className="space-y-1.5 border-t border-gray-50 pt-2 mt-2">
+              <div className="border-t border-gray-50 pt-2 mt-2 divide-y divide-gray-50">
                 {filteredTasks.map(task => (
-                  <TaskRow key={task.id} task={task} compact />
+                  <InteractiveTaskRow key={task.id} task={task} />
                 ))}
               </div>
+            )}
+
+            {sprintForBrique && (
+              <AddTaskForm sprintId={sprintForBrique.id} brique={brique.numero} />
             )}
           </div>
         )
@@ -257,18 +381,15 @@ function MissionStatusBadge({ status }: { status: string }) {
     not_started: { label: 'À VENIR', color: 'text-gray-400 bg-gray-50 border-gray-200' },
   }
   const c = config[status] ?? config.not_started
-  return (
-    <span className={`text-[9px] font-mono tracking-wider px-2 py-1 rounded-lg border ${c.color}`}>
-      {c.label}
-    </span>
-  )
+  return <span className={`text-[9px] font-mono tracking-wider px-2 py-1 rounded-lg border ${c.color}`}>{c.label}</span>
 }
 
 // === KANBAN VIEW ===
 
 function KanbanView({ filterAssignee }: { filterAssignee: string | null }) {
-  const allTasks = SPRINTS.flatMap(s =>
-    s.tasks.map(t => ({ ...t, sprintName: s.name, sprintCodename: s.codename }))
+  const { sprints } = usePlanStore()
+  const allTasks = sprints.flatMap(s =>
+    s.tasks.map(t => ({ ...t, sprintCodename: s.codename }))
   )
   const filtered = filterAssignee
     ? allTasks.filter(t => t.assignee === filterAssignee || t.assignee === 'both')
@@ -293,38 +414,12 @@ function KanbanView({ filterAssignee }: { filterAssignee: string | null }) {
             <div className="flex items-center gap-2 mb-3">
               <span>{col.icon}</span>
               <span className="text-sm font-bold text-sncf-dark">{col.label}</span>
-              <span className="text-[10px] font-mono text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                {tasks.length}
-              </span>
+              <span className="text-[10px] font-mono text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{tasks.length}</span>
             </div>
             <div className="space-y-2">
               {tasks.map(task => (
-                <div
-                  key={task.id}
-                  className={`bg-white border border-gray-100 ${col.accent} border-l-3 rounded-xl p-3 shadow-sm hover:shadow-md transition-all`}
-                >
-                  <div className="text-sm font-medium text-sncf-dark mb-1">{task.title}</div>
-                  <p className="text-[11px] text-gray-400 mb-2 leading-relaxed">{task.description}</p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[9px] font-mono text-[#00A3E0] bg-blue-50 px-2 py-0.5 rounded">
-                      {task.sprintCodename}
-                    </span>
-                    {task.assignee && (
-                      <span className="text-[9px] font-mono text-gray-500 bg-gray-50 px-2 py-0.5 rounded">
-                        {ASSIGNEE_LABELS[task.assignee]}
-                      </span>
-                    )}
-                    {task.brique !== undefined && (
-                      <span className="text-[9px] font-mono text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
-                        B{task.brique}
-                      </span>
-                    )}
-                    {task.tags?.map(tag => (
-                      <span key={tag} className={`text-[9px] px-2 py-0.5 rounded font-mono ${TAG_COLORS[tag] ?? 'bg-gray-50 text-gray-400'}`}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                <div key={task.id} className={`bg-white border border-gray-100 ${col.accent} border-l-3 rounded-xl p-3 shadow-sm`}>
+                  <InteractiveTaskRow task={task} showSprint sprintCodename={task.sprintCodename} />
                 </div>
               ))}
             </div>
@@ -335,18 +430,21 @@ function KanbanView({ filterAssignee }: { filterAssignee: string | null }) {
   )
 }
 
-// === TIMELINE VIEW (par sprint) ===
+// === TIMELINE VIEW ===
 
 function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
   expandedSprint: string | null
   setExpandedSprint: (id: string | null) => void
   filterAssignee: string | null
 }) {
+  const { sprints } = usePlanStore()
+
   return (
     <div className="space-y-4">
-      <div className="text-[10px] font-mono text-sncf-dark/40 tracking-widest">TIMELINE — 6 SPRINTS</div>
-      {SPRINTS.map((sprint, i) => {
-        const progress = getSprintProgress(sprint)
+      <div className="text-[10px] font-mono text-sncf-dark/40 tracking-widest">TIMELINE — {sprints.length} SPRINTS</div>
+      {sprints.map((sprint, i) => {
+        const done = sprint.tasks.filter(t => t.status === 'done').length
+        const progress = sprint.tasks.length > 0 ? Math.round((done / sprint.tasks.length) * 100) : 0
         const isExpanded = expandedSprint === sprint.id
         const tasks = filterAssignee
           ? sprint.tasks.filter(t => t.assignee === filterAssignee || t.assignee === 'both')
@@ -354,8 +452,7 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
 
         return (
           <div key={sprint.id} className="relative">
-            {/* Timeline connector */}
-            {i < SPRINTS.length - 1 && (
+            {i < sprints.length - 1 && (
               <div className="absolute left-5 top-16 bottom-0 w-0.5 bg-gradient-to-b from-gray-200 to-transparent" />
             )}
 
@@ -363,8 +460,7 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
               onClick={() => setExpandedSprint(isExpanded ? null : sprint.id)}
               className={`w-full text-left bg-white rounded-2xl border p-4 shadow-sm transition-all ${
                 sprint.status === 'completed' ? 'border-emerald-200' :
-                sprint.status === 'active' ? 'border-[#00A3E0]/40 shadow-md shadow-blue-100' :
-                'border-gray-100'
+                sprint.status === 'active' ? 'border-[#00A3E0]/40 shadow-md shadow-blue-100' : 'border-gray-100'
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
@@ -379,38 +475,33 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
                     <span className="text-xs font-bold text-sncf-dark">{sprint.name}</span>
                     <span className="text-[9px] font-mono text-gray-300">// {sprint.codename}</span>
                   </div>
-                  <div className="text-[10px] text-gray-400 font-mono">
-                    {sprint.dateDebut} → {sprint.dateFin}
-                  </div>
+                  <div className="text-[10px] text-gray-400 font-mono">{sprint.dateDebut} → {sprint.dateFin}</div>
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-black text-sncf-dark">{progress}%</div>
                   <SprintStatusBadge status={sprint.status} />
                 </div>
               </div>
-
               <p className="text-xs text-gray-400 leading-relaxed">{sprint.objectif}</p>
-
-              {/* Mini progress bar */}
               <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mt-3">
                 <div
-                  className={`h-full rounded-full transition-all duration-700 ${
-                    sprint.status === 'completed' ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'
-                  }`}
+                  className={`h-full rounded-full transition-all duration-700 ${sprint.status === 'completed' ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'}`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
             </button>
 
-            {/* Expanded tasks */}
             {isExpanded && (
-              <div className="mt-2 ml-6 space-y-1.5 pl-4 border-l-2 border-blue-100">
-                {tasks.map(task => (
-                  <TaskRow key={task.id} task={task} />
-                ))}
+              <div className="mt-2 bg-white rounded-xl border border-gray-100 p-3 ml-2">
+                <div className="divide-y divide-gray-50">
+                  {tasks.map(task => (
+                    <InteractiveTaskRow key={task.id} task={task} />
+                  ))}
+                </div>
                 {tasks.length === 0 && (
                   <div className="text-[10px] text-gray-300 font-mono py-2">Aucune tâche pour ce filtre</div>
                 )}
+                <AddTaskForm sprintId={sprint.id} />
               </div>
             )}
           </div>
@@ -428,40 +519,4 @@ function SprintStatusBadge({ status }: { status: string }) {
   }
   const c = config[status] ?? config.upcoming
   return <div className={`text-[9px] font-mono tracking-wider ${c.color}`}>{c.label}</div>
-}
-
-// === SHARED ===
-
-function TaskRow({ task, compact }: { task: Task; compact?: boolean }) {
-  return (
-    <div className={`flex items-center gap-2 ${compact ? 'py-1' : 'py-1.5'} group`}>
-      <TaskIcon status={task.status} />
-      <div className="flex-1 min-w-0">
-        <span className={`text-xs ${
-          task.status === 'done' ? 'text-gray-300 line-through' : 'text-sncf-dark/70'
-        }`}>
-          {task.title}
-        </span>
-      </div>
-      {task.assignee && (
-        <span className="text-[9px] font-mono text-gray-300 shrink-0">
-          {task.assignee === 'willy' ? '👨‍💻' : task.assignee === 'mathilde' ? '👩‍💼' : '👥'}
-        </span>
-      )}
-      {task.tags?.map(tag => (
-        <span key={tag} className={`text-[8px] px-1.5 py-0.5 rounded font-mono shrink-0 hidden group-hover:inline-block ${TAG_COLORS[tag] ?? 'bg-gray-50 text-gray-400'}`}>
-          {tag}
-        </span>
-      ))}
-    </div>
-  )
-}
-
-function TaskIcon({ status }: { status: TaskStatus }) {
-  switch (status) {
-    case 'done': return <span className="text-[#3AAA35] text-xs">●</span>
-    case 'in_progress': return <span className="text-[#F7A600] text-xs animate-pulse">◉</span>
-    case 'blocked': return <span className="text-[#E3051B] text-xs">⊘</span>
-    default: return <span className="text-gray-300 text-xs">○</span>
-  }
 }
