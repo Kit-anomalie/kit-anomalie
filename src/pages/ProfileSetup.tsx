@@ -25,9 +25,12 @@ export function ProfileSetup() {
 
   return (
     <div className="min-h-screen bg-bg px-4 py-8">
-      {/* Logo et titre */}
-      <div className="text-center mb-8">
-        <div className="w-16 h-16 bg-sncf-dark rounded-2xl mx-auto mb-4 flex items-center justify-center">
+      {/* Logo et titre — respiration douce */}
+      <div className="text-center mb-8 spring-enter">
+        <div
+          className="w-16 h-16 bg-sncf-dark rounded-2xl mx-auto mb-4 flex items-center justify-center"
+          style={{ animation: 'breathe 3s ease-in-out infinite' }}
+        >
           <span className="text-2xl font-bold text-sncf-blue">KA</span>
         </div>
         <h1 className="text-2xl font-bold text-sncf-dark">Kit Anomalie</h1>
@@ -35,39 +38,44 @@ export function ProfileSetup() {
       </div>
 
       {/* Indicateur d'etapes */}
-      <div className="flex items-center justify-center gap-2 mb-8">
+      <div className="flex items-center justify-center gap-2 mb-8 spring-enter" style={{ animationDelay: '100ms' }}>
         {(['role', 'specialite'] as SetupStep[]).map((s, i) => (
           <div key={s} className="flex items-center gap-2">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-              step === s ? 'bg-sncf-blue text-white' :
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+              step === s ? 'bg-sncf-blue text-white scale-110' :
               (['role', 'specialite'].indexOf(step) > i) ? 'bg-sncf-green text-white' :
               'bg-gray-200 text-gray-400'
             }`}>
               {(['role', 'specialite'].indexOf(step) > i) ? '✓' : i + 1}
             </div>
-            {i < 1 && <div className="w-8 h-0.5 bg-gray-200" />}
+            {i < 1 && (
+              <div className={`w-8 h-0.5 transition-colors duration-300 ${
+                step === 'specialite' ? 'bg-sncf-green' : 'bg-gray-200'
+              }`} />
+            )}
           </div>
         ))}
       </div>
 
-      {/* Etape 1 : Role */}
+      {/* Etape 1 : Role — slide depuis la gauche */}
       {step === 'role' && (
-        <div>
+        <div key="step-role" className="slide-right">
           <h2 className="text-lg font-bold text-sncf-dark mb-1">Quel est votre role ?</h2>
           <p className="text-sm text-gray-500 mb-4">Cela personnalise le contenu du kit</p>
           <div className="space-y-3">
-            {(Object.keys(ROLE_LABELS) as Role[]).map(r => (
+            {(Object.keys(ROLE_LABELS) as Role[]).map((r, i) => (
               <button
                 key={r}
                 onClick={() => handleRoleSelect(r)}
-                className={`w-full text-left p-4 rounded-2xl border-2 transition-all active:scale-[0.98] ${
+                className={`w-full text-left p-4 rounded-2xl border-2 active:scale-[0.97] transition-all duration-200 spring-scale ${
                   role === r
                     ? 'border-sncf-blue bg-blue-50'
                     : 'border-gray-200 bg-white'
                 }`}
+                style={{ animationDelay: `${150 + i * 80}ms` }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{ROLE_ICONS[r]}</span>
+                  <span className="text-2xl spring-pop" style={{ animationDelay: `${300 + i * 80}ms` }}>{ROLE_ICONS[r]}</span>
                   <div>
                     <div className="font-semibold text-sncf-dark">{ROLE_LABELS[r]}</div>
                     <div className="text-xs text-gray-500 mt-0.5">{ROLE_DESCRIPTIONS[r]}</div>
@@ -79,23 +87,24 @@ export function ProfileSetup() {
         </div>
       )}
 
-      {/* Etape 2 : Specialite */}
+      {/* Etape 2 : Specialite — slide depuis la droite */}
       {step === 'specialite' && (
-        <div>
-          <button onClick={() => setStep('role')} className="text-sncf-blue text-sm mb-4 flex items-center gap-1">
+        <div key="step-specialite" className="slide-right">
+          <button onClick={() => setStep('role')} className="text-sncf-blue text-sm mb-4 flex items-center gap-1 active:opacity-60 transition-opacity">
             ← Retour
           </button>
           <h2 className="text-lg font-bold text-sncf-dark mb-1">Votre specialite</h2>
           <p className="text-sm text-gray-500 mb-4">Determine les guides et fiches disponibles</p>
           <div className="space-y-3">
-            {(Object.keys(SPECIALITE_LABELS) as Specialite[]).map(s => (
+            {(Object.keys(SPECIALITE_LABELS) as Specialite[]).map((s, i) => (
               <button
                 key={s}
                 onClick={() => handleSpecialiteSelect(s)}
-                className="w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white transition-all active:scale-[0.98]"
+                className="w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white active:scale-[0.97] transition-all duration-200 spring-scale"
+                style={{ animationDelay: `${100 + i * 70}ms` }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{SPECIALITE_ICONS[s]}</span>
+                  <span className="text-2xl spring-pop" style={{ animationDelay: `${250 + i * 70}ms` }}>{SPECIALITE_ICONS[s]}</span>
                   <div>
                     <div className="font-semibold text-sncf-dark">{SPECIALITE_LABELS[s]}</div>
                     <div className="text-[11px] text-gray-400 mt-0.5">

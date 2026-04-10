@@ -8,11 +8,19 @@ interface PlaceholderProps {
 export function Placeholder({ titre, icon, description, brique }: PlaceholderProps) {
   return (
     <div className="px-4 py-12 text-center">
-      <span className="text-5xl">{icon}</span>
-      <h1 className="text-xl font-bold text-sncf-dark mt-4">{titre}</h1>
-      <p className="text-sm text-gray-500 mt-2 max-w-[280px] mx-auto">{description}</p>
-      <span className="inline-block mt-4 text-xs bg-sncf-blue/10 text-sncf-blue px-3 py-1.5 rounded-full font-medium">
-        {brique} — À venir
+      <span
+        className="text-5xl block"
+        style={{ animation: 'breathe 2.5s ease-in-out infinite, popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both' }}
+      >
+        {icon}
+      </span>
+      <h1 className="text-xl font-bold text-sncf-dark mt-4 spring-enter" style={{ animationDelay: '200ms' }}>{titre}</h1>
+      <p className="text-sm text-gray-500 mt-2 max-w-[280px] mx-auto spring-enter" style={{ animationDelay: '300ms' }}>{description}</p>
+      <span
+        className="inline-block mt-4 text-xs bg-sncf-blue/10 text-sncf-blue px-3 py-1.5 rounded-full font-medium spring-pop"
+        style={{ animationDelay: '450ms' }}
+      >
+        {brique} — A venir
       </span>
     </div>
   )

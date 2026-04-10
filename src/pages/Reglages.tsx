@@ -36,13 +36,13 @@ export function Reglages() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <button onClick={() => navigate('/')} className="text-sncf-blue text-sm flex items-center gap-1">
+      <button onClick={() => navigate('/')} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity">
         ← Accueil
       </button>
-      <h1 className="text-lg font-bold text-sncf-dark">Reglages</h1>
+      <h1 className="text-lg font-bold text-sncf-dark spring-enter" style={{ animationDelay: '50ms' }}>Reglages</h1>
 
       {/* Mon profil */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden spring-scale" style={{ animationDelay: '120ms' }}>
         <div className="px-4 py-3 border-b border-gray-100">
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Mon profil</h2>
         </div>
@@ -60,7 +60,7 @@ export function Reglages() {
             </div>
             <button
               onClick={handleModifyProfile}
-              className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-1.5 rounded-xl font-medium"
+              className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-1.5 rounded-xl font-medium active:scale-[0.95] transition-transform duration-200"
             >
               Modifier
             </button>
@@ -69,7 +69,7 @@ export function Reglages() {
       </div>
 
       {/* Apparence */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden spring-scale" style={{ animationDelay: '220ms' }}>
         <div className="px-4 py-3 border-b border-gray-100">
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Apparence</h2>
         </div>
@@ -83,7 +83,7 @@ export function Reglages() {
       </div>
 
       {/* Informations */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden spring-scale" style={{ animationDelay: '320ms' }}>
         <div className="px-4 py-3 border-b border-gray-100">
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Informations</h2>
         </div>
@@ -101,7 +101,7 @@ export function Reglages() {
 
           <button
             onClick={handleVersionTap}
-            className="w-full px-4 py-3 flex items-center justify-between text-left"
+            className="w-full px-4 py-3 flex items-center justify-between text-left active:bg-gray-50 transition-colors duration-150"
           >
             <span className="text-sm text-sncf-dark">Version</span>
             <span className="text-xs text-gray-500">{version ? `v${version}` : '...'}</span>

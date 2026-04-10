@@ -30,9 +30,9 @@ export function Fiches() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <div>
-        <h1 className="text-lg font-bold text-sncf-dark">Fiches mémo</h1>
-        <p className="text-xs text-gray-500">Réflexes essentiels en un tap</p>
+      <div className="spring-enter">
+        <h1 className="text-lg font-bold text-sncf-dark">Fiches memo</h1>
+        <p className="text-xs text-gray-500">Reflexes essentiels en un tap</p>
       </div>
 
       {/* Recherche */}
@@ -41,16 +41,18 @@ export function Fiches() {
         placeholder="Rechercher une fiche..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:border-sncf-blue"
+        className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:border-sncf-blue transition-colors duration-200 spring-scale"
+        style={{ animationDelay: '100ms' }}
       />
 
       {/* Liste */}
       <div className="space-y-3">
-        {fichesFiltered.map(fiche => (
+        {fichesFiltered.map((fiche, i) => (
           <button
             key={fiche.id}
             onClick={() => navigate(`/fiches/${fiche.id}`)}
-            className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.98] transition-transform"
+            className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.97] transition-transform duration-200 spring-scale"
+            style={{ animationDelay: `${180 + i * 70}ms` }}
           >
             <div className="font-semibold text-sncf-dark text-sm">{fiche.titre}</div>
             <p className="text-xs text-gray-500 mt-1 line-clamp-2">{fiche.quoiFaire}</p>

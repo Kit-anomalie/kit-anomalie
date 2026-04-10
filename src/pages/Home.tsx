@@ -3,6 +3,7 @@ import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
+
 const DEFAULT_TIPS = [
   "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'anciennete du defaut.",
   "Verifiez toujours les anomalies existantes sur un actif avant d'en declarer une nouvelle.",
@@ -34,10 +35,10 @@ export function Home() {
 
   return (
     <div className="px-4 py-4 space-y-5">
-      {/* Bienvenue */}
-      <div className="animate-[fadeIn_0.3s_ease-out]">
+      {/* Bienvenue — entre en premier */}
+      <div className="spring-enter">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🧑‍🔧</span>
+          <span className="text-2xl spring-pop" style={{ animationDelay: '200ms' }}>🧑‍🔧</span>
           <div>
             <h1 className="text-lg font-bold text-sncf-dark">Bienvenue</h1>
             <p className="text-xs text-gray-500">{ROLE_LABELS[role]} · {SPECIALITE_LABELS[specialite]}</p>
@@ -47,7 +48,10 @@ export function Home() {
 
       {/* Bandeau maintenance planifiee */}
       {planningEnabled && planningMessage && (
-        <div className="bg-sncf-orange/10 border border-sncf-orange/30 rounded-2xl p-3 animate-[fadeIn_0.3s_ease-out]">
+        <div
+          className="bg-sncf-orange/10 border border-sncf-orange/30 rounded-2xl p-3 spring-scale"
+          style={{ animationDelay: '150ms' }}
+        >
           <div className="flex items-start gap-2">
             <span className="text-sm">🔧</span>
             <div>
@@ -58,10 +62,13 @@ export function Home() {
         </div>
       )}
 
-      {/* Tip du jour */}
-      <div className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl p-3 animate-[fadeIn_0.4s_ease-out]">
+      {/* Tip du jour — apparait apres le welcome */}
+      <div
+        className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl p-3 spring-scale"
+        style={{ animationDelay: '250ms' }}
+      >
         <div className="flex items-start gap-2">
-          <span className="text-sm">💡</span>
+          <span className="text-sm spring-pop" style={{ animationDelay: '450ms' }}>💡</span>
           <div>
             <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide">Tip du jour</div>
             <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{tipOfTheDay}</p>
@@ -69,18 +76,23 @@ export function Home() {
         </div>
       </div>
 
-      {/* Acces rapides */}
+      {/* Acces rapides — cascade de cards */}
       <div>
-        <h2 className="text-sm font-bold text-sncf-dark mb-3">Acces rapides</h2>
+        <h2
+          className="text-sm font-bold text-sncf-dark mb-3 spring-enter"
+          style={{ animationDelay: '350ms' }}
+        >
+          Acces rapides
+        </h2>
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map((action, i) => (
             <button
               key={action.path}
               onClick={() => navigate(action.path)}
-              className={`text-left p-4 rounded-2xl border ${action.color} transition-all active:scale-[0.97] animate-[fadeIn_0.3s_ease-out]`}
-              style={{ animationDelay: `${i * 50}ms`, animationFillMode: 'both' }}
+              className={`text-left p-4 rounded-2xl border ${action.color} active:scale-[0.96] transition-transform duration-200 spring-scale`}
+              style={{ animationDelay: `${420 + i * 70}ms` }}
             >
-              <span className="text-2xl">{action.icon}</span>
+              <span className="text-2xl block spring-pop" style={{ animationDelay: `${550 + i * 70}ms` }}>{action.icon}</span>
               <div className="font-semibold text-sncf-dark text-sm mt-2">{action.label}</div>
               <div className="text-[11px] text-gray-500 mt-0.5">{action.desc}</div>
             </button>
@@ -88,8 +100,11 @@ export function Home() {
         </div>
       </div>
 
-      {/* Baseline */}
-      <div className="text-center py-4 animate-[fadeIn_0.5s_ease-out]">
+      {/* Baseline — la derniere chose qui apparait */}
+      <div
+        className="text-center py-4"
+        style={{ animation: 'fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both', animationDelay: '900ms' }}
+      >
         <p className="text-[11px] text-gray-300 italic whitespace-nowrap">Les bons reflexes anomalie, dans la poche</p>
       </div>
 

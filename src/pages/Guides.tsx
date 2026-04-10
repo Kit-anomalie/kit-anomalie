@@ -32,19 +32,19 @@ export function Guides() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <div>
+      <div className="spring-enter">
         <h1 className="text-lg font-bold text-sncf-dark">Guides</h1>
         <p className="text-xs text-gray-500">Pas a pas par application metier</p>
       </div>
 
       {/* Filtre horizontal par appli */}
       {applisDisponibles.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 spring-enter" style={{ animationDelay: '100ms' }}>
           <button
             onClick={() => setAppliFilter(null)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
               appliFilter === null
-                ? 'bg-sncf-blue text-white'
+                ? 'bg-sncf-blue text-white shadow-sm'
                 : 'bg-white text-gray-600 border border-gray-200'
             }`}
           >
@@ -54,9 +54,9 @@ export function Guides() {
             <button
               key={appli.id}
               onClick={() => setAppliFilter(appli.id)}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 appliFilter === appli.id
-                  ? 'bg-sncf-blue text-white'
+                  ? 'bg-sncf-blue text-white shadow-sm'
                   : 'bg-white text-gray-600 border border-gray-200'
               }`}
             >
@@ -68,13 +68,14 @@ export function Guides() {
 
       {/* Liste des guides */}
       <div className="space-y-2">
-        {guidesFiltered.map(guide => {
+        {guidesFiltered.map((guide, i) => {
           const appli = APPLIS_METIER.find(a => a.id === guide.appliMetier)
           return (
             <button
               key={guide.id}
               onClick={() => navigate(`/guides/${guide.id}`)}
-              className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.98] transition-transform"
+              className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.97] transition-transform duration-200 spring-scale"
+              style={{ animationDelay: `${180 + i * 70}ms` }}
             >
               <div className="font-semibold text-sncf-dark text-sm">{guide.titre}</div>
               <div className="flex items-center gap-2 mt-2 flex-wrap">
@@ -101,7 +102,7 @@ export function Guides() {
       </div>
 
       {guidesFiltered.length === 0 && (
-        <div className="text-center py-8 text-gray-400 text-sm">
+        <div className="text-center py-8 text-gray-400 text-sm spring-enter">
           Aucun guide disponible pour votre profil
         </div>
       )}

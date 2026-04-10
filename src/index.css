@@ -123,15 +123,82 @@ html, body, #root {
   box-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
 }
 
-/* Animations */
+/* ── Animations Apple-style ── */
+
+/* Entree principale — contenu qui monte avec spring */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(24px) scale(0.98); }
+  60% { opacity: 1; transform: translateY(-2px) scale(1.005); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Entree douce — pour les elements secondaires */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Pop — pour les icones et badges */
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Scale in — cards et surfaces */
+@keyframes scaleIn {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Slide depuis la droite — navigation forward */
+@keyframes slideFromRight {
+  0% { opacity: 0; transform: translateX(40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Slide depuis la gauche — navigation back */
+@keyframes slideFromLeft {
+  0% { opacity: 0; transform: translateX(-40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Slide legacy */
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(-12px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+/* Respiration — logo, elements d'attente */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+/* Barre de progression qui se remplit */
+@keyframes fillWidth {
+  from { width: 0; }
+}
+
+/* Spring curves Apple */
+.spring-enter {
+  animation: fadeUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.spring-pop {
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.spring-scale {
+  animation: scaleIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.slide-right {
+  animation: slideFromRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.slide-left {
+  animation: slideFromLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 /* Utilitaires */
