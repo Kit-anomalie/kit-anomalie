@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BRIQUES, SPRINTS } from '../data/planTravail'
+import { BRIQUES, SPRINTS, getBriqueProgress, getBriqueStatus } from '../data/planTravail'
 
 export function PlanTravail() {
   const navigate = useNavigate()
@@ -17,7 +17,7 @@ export function PlanTravail() {
             <button onClick={() => navigate('/')} className="text-white/50 text-xs font-mono hover:text-white/80 transition-colors">
               ← Kit
             </button>
-            <span className="text-white/30 text-[10px] font-mono">Willy & Mathilde</span>
+            <span className="text-white/30 text-[10px] font-mono">Wilfried & Mathilde</span>
           </div>
 
           <h1 className="text-2xl font-black tracking-tight mb-1">Kit Anomalie</h1>
@@ -43,30 +43,34 @@ export function PlanTravail() {
         <section>
           <h2 className="text-xs font-mono text-sncf-dark/40 tracking-widest mb-4">LES 8 BRIQUES</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {BRIQUES.map(b => (
-              <div key={b.numero} className={`bg-white rounded-2xl p-3 border shadow-sm transition-all ${
-                b.status === 'done' ? 'border-[#3AAA35]/30' :
-                b.status === 'in_progress' ? 'border-[#00A3E0]/30 shadow-md' : 'border-gray-100'
-              }`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-base ${
-                    b.status === 'done' ? 'bg-emerald-50' :
-                    b.status === 'in_progress' ? 'bg-blue-50' : 'bg-gray-50'
-                  }`}>{b.icon}</div>
-                  <BriqueStatus status={b.status} />
-                </div>
-                <div className="text-xs font-bold text-sncf-dark leading-tight">{b.nom}</div>
-                <div className="text-[9px] font-mono text-gray-300 mt-0.5">{b.codename}</div>
-                {b.progress > 0 && (
-                  <div className="mt-2">
-                    <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-                      <div className={`h-full rounded-full ${b.progress === 100 ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'}`}
-                        style={{ width: `${b.progress}%` }} />
-                    </div>
+            {BRIQUES.map(b => {
+              const status = getBriqueStatus(b.numero)
+              const { pct } = getBriqueProgress(b.numero)
+              return (
+                <div key={b.numero} className={`bg-white rounded-2xl p-3 border shadow-sm transition-all ${
+                  status === 'done' ? 'border-[#3AAA35]/30' :
+                  status === 'in_progress' ? 'border-[#00A3E0]/30 shadow-md' : 'border-gray-100'
+                }`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-base ${
+                      status === 'done' ? 'bg-emerald-50' :
+                      status === 'in_progress' ? 'bg-blue-50' : 'bg-gray-50'
+                    }`}>{b.icon}</div>
+                    <StatusDot status={status} />
                   </div>
-                )}
-              </div>
-            ))}
+                  <div className="text-xs font-bold text-sncf-dark leading-tight">{b.nom}</div>
+                  <div className="text-[9px] font-mono text-gray-300 mt-0.5">{b.codename}</div>
+                  {pct > 0 && (
+                    <div className="mt-2">
+                      <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${pct === 100 ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'}`}
+                          style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </section>
 
@@ -92,15 +96,15 @@ export function PlanTravail() {
 
 // === Composants ===
 
-function BriqueStatus({ status }: { status: string }) {
-  const conf: Record<string, { label: string; class: string }> = {
-    done: { label: '✓', class: 'text-[#3AAA35] bg-emerald-50' },
-    in_progress: { label: '●', class: 'text-[#00A3E0] bg-blue-50' },
-    planned: { label: '○', class: 'text-[#F7A600] bg-amber-50' },
-    not_started: { label: '—', class: 'text-gray-300 bg-gray-50' },
+function StatusDot({ status }: { status: string }) {
+  const conf: Record<string, { label: string; cls: string }> = {
+    done: { label: '✓', cls: 'text-[#3AAA35] bg-emerald-50' },
+    in_progress: { label: '●', cls: 'text-[#00A3E0] bg-blue-50' },
+    planned: { label: '○', cls: 'text-[#F7A600] bg-amber-50' },
+    not_started: { label: '—', cls: 'text-gray-300 bg-gray-50' },
   }
   const c = conf[status] ?? conf.not_started
-  return <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${c.class}`}>{c.label}</span>
+  return <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${c.cls}`}>{c.label}</span>
 }
 
 function SprintBlock({ sprint, isLast }: { sprint: typeof SPRINTS[number]; isLast: boolean }) {
@@ -114,7 +118,7 @@ function SprintBlock({ sprint, isLast }: { sprint: typeof SPRINTS[number]; isLas
 
   return (
     <div className="flex gap-3">
-      {/* Timeline line + dot */}
+      {/* Timeline dot + line */}
       <div className="flex flex-col items-center pt-1">
         <div className={`w-3 h-3 rounded-full shrink-0 border-2 ${
           isCompleted ? 'bg-[#3AAA35] border-[#3AAA35]' :
@@ -138,7 +142,6 @@ function SprintBlock({ sprint, isLast }: { sprint: typeof SPRINTS[number]; isLas
           <div className="text-[10px] text-gray-400 font-mono">{sprint.periode}</div>
           <div className={`text-xs mt-1 ${isActive ? 'text-sncf-dark/70' : 'text-gray-400'}`}>{sprint.objectif}</div>
 
-          {/* Mini progress */}
           <div className="flex items-center gap-2 mt-2">
             <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
               <div className={`h-full rounded-full transition-all ${isCompleted ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'}`}
@@ -150,7 +153,6 @@ function SprintBlock({ sprint, isLast }: { sprint: typeof SPRINTS[number]; isLas
           </div>
         </button>
 
-        {/* Jalons */}
         {open && (
           <div className="mt-3 space-y-1.5">
             {sprint.jalons.map((j, k) => (
