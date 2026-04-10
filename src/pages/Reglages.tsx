@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useThemeStore } from '../stores/themeStore'
+import { Toggle } from '../components/Toggle'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 import { ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
 
@@ -64,16 +65,7 @@ export function Reglages() {
             <span className="text-xl">{theme === 'light' ? '☀️' : '🌙'}</span>
             <span className="text-sm text-sncf-dark font-medium">{theme === 'light' ? 'Mode jour' : 'Mode nuit'}</span>
           </div>
-          <button
-            onClick={toggleTheme}
-            className={`w-12 h-7 rounded-full transition-colors relative ${
-              theme === 'dark' ? 'bg-sncf-blue' : 'bg-gray-300'
-            }`}
-          >
-            <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${
-              theme === 'dark' ? 'translate-x-5' : 'translate-x-0.5'
-            }`} />
-          </button>
+          <Toggle enabled={theme === 'dark'} onChange={toggleTheme} color="bg-sncf-blue" />
         </div>
       </div>
 

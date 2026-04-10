@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
+import { Toggle } from '../components/Toggle'
 
 export function Admin() {
   const navigate = useNavigate()
@@ -79,16 +80,7 @@ export function Admin() {
           <div className="px-4 py-3 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-sncf-dark font-medium">Activer</span>
-              <button
-                onClick={() => setPartielEnabled(!partielEnabled)}
-                className={`w-12 h-7 rounded-full transition-colors relative ${
-                  partielEnabled ? 'bg-sncf-green' : 'bg-gray-300'
-                }`}
-              >
-                <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${
-                  partielEnabled ? 'translate-x-5' : 'translate-x-0.5'
-                }`} />
-              </button>
+              <Toggle enabled={partielEnabled} onChange={setPartielEnabled} />
             </div>
             <textarea
               value={partielMessage}
@@ -131,16 +123,7 @@ export function Admin() {
           <div className="px-4 py-3 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-sncf-dark font-medium">Activer le bandeau</span>
-              <button
-                onClick={() => setPlanningEnabled(!planningEnabled)}
-                className={`w-12 h-7 rounded-full transition-colors relative ${
-                  planningEnabled ? 'bg-sncf-green' : 'bg-gray-300'
-                }`}
-              >
-                <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${
-                  planningEnabled ? 'translate-x-5' : 'translate-x-0.5'
-                }`} />
-              </button>
+              <Toggle enabled={planningEnabled} onChange={setPlanningEnabled} />
             </div>
             <input
               value={planningMessage}
