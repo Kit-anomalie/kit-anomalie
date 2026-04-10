@@ -17,7 +17,7 @@ interface PlanState {
 
 export const usePlanStore = create<PlanState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       sprints: INITIAL_SPRINTS,
       briques: INITIAL_BRIQUES,
       _initialized: true,
