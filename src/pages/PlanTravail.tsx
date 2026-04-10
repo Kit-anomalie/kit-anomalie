@@ -23,70 +23,69 @@ export function PlanTravail() {
   const inProgressTasks = SPRINTS.flatMap(s => s.tasks).filter(t => t.status === 'in_progress').length
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a]">
+    <div className="min-h-screen bg-[#F4F6FA]">
       {/* === HEADER MISSION BRIEFING === */}
-      <header className="relative overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-10">
+      <header className="relative overflow-hidden bg-gradient-to-br from-[#0C1E5B] to-[#1a3a8f]">
+        <div className="absolute inset-0 opacity-[0.07]">
           <div className="absolute inset-0" style={{
-            backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,163,224,0.1) 40px, rgba(0,163,224,0.1) 41px),
-              repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,163,224,0.1) 40px, rgba(0,163,224,0.1) 41px)`
+            backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.15) 30px, rgba(255,255,255,0.15) 31px),
+              repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.15) 30px, rgba(255,255,255,0.15) 31px)`
           }} />
         </div>
 
-        <div className="relative px-4 pt-6 pb-4">
+        <div className="relative px-4 pt-5 pb-5">
           {/* Top bar */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-5">
             <button
               onClick={() => navigate('/')}
-              className="text-cyan-400/70 text-xs font-mono tracking-wider hover:text-cyan-300 transition-colors"
+              className="text-white/60 text-xs font-mono tracking-wider hover:text-white/90 transition-colors"
             >
               ← RETOUR KIT
             </button>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-emerald-400 text-[10px] font-mono tracking-widest uppercase">Mission active</span>
+              <span className="text-emerald-300 text-[10px] font-mono tracking-widest uppercase">Mission active</span>
             </div>
           </div>
 
           {/* Title block */}
-          <div className="text-center mb-6">
-            <div className="text-cyan-400/50 text-[10px] font-mono tracking-[0.3em] mb-2">OPÉRATION</div>
+          <div className="text-center mb-5">
+            <div className="text-white/40 text-[10px] font-mono tracking-[0.3em] mb-1">OPÉRATION</div>
             <h1 className="text-3xl font-black text-white tracking-tight mb-1">
               KIT ANOMALIE
             </h1>
-            <div className="text-cyan-400/70 text-xs font-mono tracking-wider">
+            <div className="text-white/50 text-xs font-mono tracking-wider">
               PLAN DE MISSION — 8 BRIQUES — 6 SPRINTS
             </div>
           </div>
 
-          {/* Progress radar */}
-          <div className="bg-white/5 backdrop-blur border border-cyan-400/20 rounded-2xl p-4 mb-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-[10px] font-mono text-cyan-400/70 tracking-widest">AVANCEMENT GLOBAL</div>
+          {/* Progress */}
+          <div className="bg-white/10 backdrop-blur rounded-2xl p-4 mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-[10px] font-mono text-white/60 tracking-widest">AVANCEMENT GLOBAL</div>
               <div className="text-2xl font-black text-white">{overallProgress}%</div>
             </div>
-            <div className="h-2 bg-white/10 rounded-full overflow-hidden mb-3">
+            <div className="h-2.5 bg-white/10 rounded-full overflow-hidden mb-3">
               <div
-                className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-[#00A3E0] to-[#3AAA35] rounded-full transition-all duration-1000"
                 style={{ width: `${overallProgress}%` }}
               />
             </div>
             <div className="grid grid-cols-3 gap-3">
-              <StatBlock value={doneTasks} label="Terminées" color="text-emerald-400" />
-              <StatBlock value={inProgressTasks} label="En cours" color="text-amber-400" />
-              <StatBlock value={totalTasks - doneTasks - inProgressTasks} label="À venir" color="text-gray-400" />
+              <StatBlock value={doneTasks} label="Terminées" color="text-emerald-300" />
+              <StatBlock value={inProgressTasks} label="En cours" color="text-amber-300" />
+              <StatBlock value={totalTasks - doneTasks - inProgressTasks} label="À venir" color="text-white/50" />
             </div>
           </div>
 
           {/* Team */}
-          <div className="flex items-center justify-center gap-4 mb-2">
+          <div className="flex items-center justify-center gap-4">
             <TeamBadge name="Willy" role="Code & Vision" emoji="👨‍💻" active={filterAssignee === 'willy'} onClick={() => setFilterAssignee(f => f === 'willy' ? null : 'willy')} />
-            <div className="text-cyan-400/30 text-xs">&</div>
+            <div className="text-white/30 text-xs">&</div>
             <TeamBadge name="Mathilde" role="Contenu & Métier" emoji="👩‍💼" active={filterAssignee === 'mathilde'} onClick={() => setFilterAssignee(f => f === 'mathilde' ? null : 'mathilde')} />
           </div>
           {filterAssignee && (
-            <button onClick={() => setFilterAssignee(null)} className="block mx-auto text-[10px] text-cyan-400/60 font-mono mt-1">
+            <button onClick={() => setFilterAssignee(null)} className="block mx-auto text-[10px] text-white/50 font-mono mt-2">
               ✕ Voir tout
             </button>
           )}
@@ -94,23 +93,23 @@ export function PlanTravail() {
       </header>
 
       {/* === VIEW TOGGLE === */}
-      <div className="sticky top-0 z-40 bg-[#0a0e1a]/95 backdrop-blur border-b border-cyan-400/10 px-4 py-2">
-        <div className="flex gap-1 bg-white/5 rounded-xl p-1">
+      <div className="sticky top-0 z-40 bg-white/90 backdrop-blur shadow-sm px-4 py-2">
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
           {([
-            { id: 'missions' as ViewMode, label: '🎯 Missions', desc: 'Par brique' },
-            { id: 'kanban' as ViewMode, label: '📋 Kanban', desc: 'Par statut' },
-            { id: 'timeline' as ViewMode, label: '📅 Sprints', desc: 'Timeline' },
+            { id: 'missions' as ViewMode, label: '🎯 Missions' },
+            { id: 'kanban' as ViewMode, label: '📋 Kanban' },
+            { id: 'timeline' as ViewMode, label: '📅 Sprints' },
           ]).map(v => (
             <button
               key={v.id}
               onClick={() => setView(v.id)}
-              className={`flex-1 py-2 px-2 rounded-lg text-xs font-medium transition-all ${
+              className={`flex-1 py-2 px-2 rounded-lg text-xs font-semibold transition-all ${
                 view === v.id
-                  ? 'bg-cyan-400/20 text-cyan-300 shadow-sm'
-                  : 'text-white/40 hover:text-white/60'
+                  ? 'bg-white text-sncf-dark shadow-sm'
+                  : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              <div>{v.label}</div>
+              {v.label}
             </button>
           ))}
         </div>
@@ -130,8 +129,8 @@ export function PlanTravail() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-6 border-t border-white/5">
-        <div className="text-[10px] font-mono text-white/20 tracking-widest">
+      <footer className="text-center py-6 border-t border-gray-200">
+        <div className="text-[10px] font-mono text-gray-300 tracking-widest">
           KIT ANOMALIE — CHANTIER ANOMALIE — {new Date().getFullYear()}
         </div>
       </footer>
@@ -145,7 +144,7 @@ function StatBlock({ value, label, color }: { value: number; label: string; colo
   return (
     <div className="text-center">
       <div className={`text-lg font-black ${color}`}>{value}</div>
-      <div className="text-[9px] font-mono text-white/30 tracking-wider uppercase">{label}</div>
+      <div className="text-[9px] font-mono text-white/40 tracking-wider uppercase">{label}</div>
     </div>
   )
 }
@@ -158,14 +157,14 @@ function TeamBadge({ name, role, emoji, active, onClick }: {
       onClick={onClick}
       className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${
         active
-          ? 'bg-cyan-400/20 border-cyan-400/40 shadow-lg shadow-cyan-400/10'
-          : 'bg-white/5 border-white/10 hover:border-cyan-400/20'
+          ? 'bg-white/20 border-white/40 shadow-lg'
+          : 'bg-white/5 border-white/15 hover:bg-white/10'
       }`}
     >
       <span className="text-lg">{emoji}</span>
       <div className="text-left">
         <div className="text-xs font-bold text-white">{name}</div>
-        <div className="text-[9px] text-white/40 font-mono">{role}</div>
+        <div className="text-[9px] text-white/50 font-mono">{role}</div>
       </div>
     </button>
   )
@@ -176,7 +175,7 @@ function TeamBadge({ name, role, emoji, active, onClick }: {
 function MissionsView({ filterAssignee }: { filterAssignee: string | null }) {
   return (
     <div className="space-y-3">
-      <div className="text-[10px] font-mono text-cyan-400/50 tracking-widest mb-2">8 MISSIONS — ARCHITECTURE DU KIT</div>
+      <div className="text-[10px] font-mono text-sncf-dark/40 tracking-widest mb-2">8 MISSIONS — ARCHITECTURE DU KIT</div>
       {BRIQUES.map(brique => {
         const tasks = SPRINTS.flatMap(s => s.tasks).filter(t => t.brique === brique.numero)
         const filteredTasks = filterAssignee
@@ -186,58 +185,58 @@ function MissionsView({ filterAssignee }: { filterAssignee: string | null }) {
         return (
           <div
             key={brique.numero}
-            className={`rounded-2xl border p-4 transition-all ${
+            className={`bg-white rounded-2xl border p-4 shadow-sm transition-all ${
               brique.status === 'done'
-                ? 'bg-emerald-400/5 border-emerald-400/20'
+                ? 'border-emerald-200'
                 : brique.status === 'in_progress'
-                ? 'bg-cyan-400/5 border-cyan-400/20'
-                : 'bg-white/[0.02] border-white/10'
+                ? 'border-[#00A3E0]/30 shadow-md'
+                : 'border-gray-100'
             }`}
           >
             {/* Mission header */}
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${
-                  brique.status === 'done' ? 'bg-emerald-400/20' :
-                  brique.status === 'in_progress' ? 'bg-cyan-400/20' : 'bg-white/5'
+                  brique.status === 'done' ? 'bg-emerald-50' :
+                  brique.status === 'in_progress' ? 'bg-blue-50' : 'bg-gray-50'
                 }`}>
                   {brique.icon}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-mono text-cyan-400/50 tracking-widest">
+                    <span className="text-[9px] font-mono text-sncf-dark/30 tracking-widest">
                       BRIQUE {brique.numero}
                     </span>
-                    <span className="text-[9px] font-mono text-white/20">
+                    <span className="text-[9px] font-mono text-gray-300">
                       // {brique.codename}
                     </span>
                   </div>
-                  <div className="text-sm font-bold text-white">{brique.nom}</div>
+                  <div className="text-sm font-bold text-sncf-dark">{brique.nom}</div>
                 </div>
               </div>
               <MissionStatusBadge status={brique.status} />
             </div>
 
-            <p className="text-xs text-white/40 mb-3 leading-relaxed">{brique.description}</p>
+            <p className="text-xs text-gray-400 mb-3 leading-relaxed">{brique.description}</p>
 
             {/* Progress */}
             {brique.progress > 0 && (
               <div className="mb-3">
-                <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-700 ${
-                      brique.status === 'done' ? 'bg-emerald-400' : 'bg-cyan-400'
+                      brique.status === 'done' ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'
                     }`}
                     style={{ width: `${brique.progress}%` }}
                   />
                 </div>
-                <div className="text-right text-[9px] font-mono text-white/20 mt-1">{brique.progress}%</div>
+                <div className="text-right text-[9px] font-mono text-gray-300 mt-1">{brique.progress}%</div>
               </div>
             )}
 
             {/* Tasks mini-list */}
             {filteredTasks.length > 0 && (
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 border-t border-gray-50 pt-2 mt-2">
                 {filteredTasks.map(task => (
                   <TaskRow key={task.id} task={task} compact />
                 ))}
@@ -252,10 +251,10 @@ function MissionsView({ filterAssignee }: { filterAssignee: string | null }) {
 
 function MissionStatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; color: string }> = {
-    done: { label: 'TERMINÉ', color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20' },
-    in_progress: { label: 'EN COURS', color: 'text-cyan-400 bg-cyan-400/10 border-cyan-400/20' },
-    planned: { label: 'PLANIFIÉ', color: 'text-amber-400 bg-amber-400/10 border-amber-400/20' },
-    not_started: { label: 'À VENIR', color: 'text-white/30 bg-white/5 border-white/10' },
+    done: { label: 'TERMINÉ', color: 'text-[#3AAA35] bg-emerald-50 border-emerald-200' },
+    in_progress: { label: 'EN COURS', color: 'text-[#00A3E0] bg-blue-50 border-blue-200' },
+    planned: { label: 'PLANIFIÉ', color: 'text-[#F7A600] bg-amber-50 border-amber-200' },
+    not_started: { label: 'À VENIR', color: 'text-gray-400 bg-gray-50 border-gray-200' },
   }
   const c = config[status] ?? config.not_started
   return (
@@ -275,16 +274,16 @@ function KanbanView({ filterAssignee }: { filterAssignee: string | null }) {
     ? allTasks.filter(t => t.assignee === filterAssignee || t.assignee === 'both')
     : allTasks
 
-  const columns: { status: TaskStatus; label: string; icon: string }[] = [
-    { status: 'in_progress', label: 'En cours', icon: '🔥' },
-    { status: 'todo', label: 'À faire', icon: '📌' },
-    { status: 'done', label: 'Terminé', icon: '✅' },
-    { status: 'blocked', label: 'Bloqué', icon: '🚫' },
+  const columns: { status: TaskStatus; label: string; icon: string; accent: string }[] = [
+    { status: 'in_progress', label: 'En cours', icon: '🔥', accent: 'border-l-[#F7A600]' },
+    { status: 'todo', label: 'À faire', icon: '📌', accent: 'border-l-gray-300' },
+    { status: 'done', label: 'Terminé', icon: '✅', accent: 'border-l-[#3AAA35]' },
+    { status: 'blocked', label: 'Bloqué', icon: '🚫', accent: 'border-l-[#E3051B]' },
   ]
 
   return (
     <div className="space-y-5">
-      <div className="text-[10px] font-mono text-cyan-400/50 tracking-widest">VUE KANBAN — TOUTES LES TÂCHES</div>
+      <div className="text-[10px] font-mono text-sncf-dark/40 tracking-widest">VUE KANBAN — TOUTES LES TÂCHES</div>
       {columns.map(col => {
         const tasks = filtered.filter(t => t.status === col.status)
         if (tasks.length === 0) return null
@@ -293,8 +292,8 @@ function KanbanView({ filterAssignee }: { filterAssignee: string | null }) {
           <div key={col.status}>
             <div className="flex items-center gap-2 mb-3">
               <span>{col.icon}</span>
-              <span className="text-xs font-bold text-white/80">{col.label}</span>
-              <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded-full">
+              <span className="text-sm font-bold text-sncf-dark">{col.label}</span>
+              <span className="text-[10px] font-mono text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
                 {tasks.length}
               </span>
             </div>
@@ -302,28 +301,26 @@ function KanbanView({ filterAssignee }: { filterAssignee: string | null }) {
               {tasks.map(task => (
                 <div
                   key={task.id}
-                  className="bg-white/[0.03] border border-white/10 rounded-xl p-3 hover:border-cyan-400/20 transition-all"
+                  className={`bg-white border border-gray-100 ${col.accent} border-l-3 rounded-xl p-3 shadow-sm hover:shadow-md transition-all`}
                 >
-                  <div className="flex items-start justify-between mb-1.5">
-                    <div className="text-sm font-medium text-white/90 flex-1">{task.title}</div>
-                  </div>
-                  <p className="text-[11px] text-white/30 mb-2 leading-relaxed">{task.description}</p>
+                  <div className="text-sm font-medium text-sncf-dark mb-1">{task.title}</div>
+                  <p className="text-[11px] text-gray-400 mb-2 leading-relaxed">{task.description}</p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[9px] font-mono text-cyan-400/40 bg-cyan-400/5 px-2 py-0.5 rounded">
+                    <span className="text-[9px] font-mono text-[#00A3E0] bg-blue-50 px-2 py-0.5 rounded">
                       {task.sprintCodename}
                     </span>
                     {task.assignee && (
-                      <span className="text-[9px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">
+                      <span className="text-[9px] font-mono text-gray-500 bg-gray-50 px-2 py-0.5 rounded">
                         {ASSIGNEE_LABELS[task.assignee]}
                       </span>
                     )}
                     {task.brique !== undefined && (
-                      <span className="text-[9px] font-mono text-white/20 bg-white/5 px-2 py-0.5 rounded">
+                      <span className="text-[9px] font-mono text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
                         B{task.brique}
                       </span>
                     )}
                     {task.tags?.map(tag => (
-                      <span key={tag} className={`text-[9px] px-2 py-0.5 rounded font-mono ${TAG_COLORS[tag] ?? 'bg-white/5 text-white/30'}`}>
+                      <span key={tag} className={`text-[9px] px-2 py-0.5 rounded font-mono ${TAG_COLORS[tag] ?? 'bg-gray-50 text-gray-400'}`}>
                         {tag}
                       </span>
                     ))}
@@ -347,7 +344,7 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
 }) {
   return (
     <div className="space-y-4">
-      <div className="text-[10px] font-mono text-cyan-400/50 tracking-widest">TIMELINE — 6 SPRINTS</div>
+      <div className="text-[10px] font-mono text-sncf-dark/40 tracking-widest">TIMELINE — 6 SPRINTS</div>
       {SPRINTS.map((sprint, i) => {
         const progress = getSprintProgress(sprint)
         const isExpanded = expandedSprint === sprint.id
@@ -359,46 +356,46 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
           <div key={sprint.id} className="relative">
             {/* Timeline connector */}
             {i < SPRINTS.length - 1 && (
-              <div className="absolute left-5 top-14 bottom-0 w-px bg-gradient-to-b from-cyan-400/20 to-transparent" />
+              <div className="absolute left-5 top-16 bottom-0 w-0.5 bg-gradient-to-b from-gray-200 to-transparent" />
             )}
 
             <button
               onClick={() => setExpandedSprint(isExpanded ? null : sprint.id)}
-              className={`w-full text-left rounded-2xl border p-4 transition-all ${
-                sprint.status === 'completed' ? 'bg-emerald-400/5 border-emerald-400/20' :
-                sprint.status === 'active' ? 'bg-cyan-400/5 border-cyan-400/30 shadow-lg shadow-cyan-400/5' :
-                'bg-white/[0.02] border-white/10'
+              className={`w-full text-left bg-white rounded-2xl border p-4 shadow-sm transition-all ${
+                sprint.status === 'completed' ? 'border-emerald-200' :
+                sprint.status === 'active' ? 'border-[#00A3E0]/40 shadow-md shadow-blue-100' :
+                'border-gray-100'
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${
-                  sprint.status === 'completed' ? 'bg-emerald-400/20' :
-                  sprint.status === 'active' ? 'bg-cyan-400/20' : 'bg-white/5'
+                  sprint.status === 'completed' ? 'bg-emerald-50' :
+                  sprint.status === 'active' ? 'bg-blue-50' : 'bg-gray-50'
                 }`}>
                   {sprint.icon}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white">{sprint.name}</span>
-                    <span className="text-[9px] font-mono text-cyan-400/40">// {sprint.codename}</span>
+                    <span className="text-xs font-bold text-sncf-dark">{sprint.name}</span>
+                    <span className="text-[9px] font-mono text-gray-300">// {sprint.codename}</span>
                   </div>
-                  <div className="text-[10px] text-white/30 font-mono">
+                  <div className="text-[10px] text-gray-400 font-mono">
                     {sprint.dateDebut} → {sprint.dateFin}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-black text-white/70">{progress}%</div>
+                  <div className="text-sm font-black text-sncf-dark">{progress}%</div>
                   <SprintStatusBadge status={sprint.status} />
                 </div>
               </div>
 
-              <p className="text-xs text-white/40 leading-relaxed">{sprint.objectif}</p>
+              <p className="text-xs text-gray-400 leading-relaxed">{sprint.objectif}</p>
 
               {/* Mini progress bar */}
-              <div className="h-1 bg-white/5 rounded-full overflow-hidden mt-3">
+              <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mt-3">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${
-                    sprint.status === 'completed' ? 'bg-emerald-400' : 'bg-cyan-400'
+                    sprint.status === 'completed' ? 'bg-[#3AAA35]' : 'bg-[#00A3E0]'
                   }`}
                   style={{ width: `${progress}%` }}
                 />
@@ -407,12 +404,12 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
 
             {/* Expanded tasks */}
             {isExpanded && (
-              <div className="mt-2 ml-6 space-y-1.5 pl-4 border-l border-cyan-400/10">
+              <div className="mt-2 ml-6 space-y-1.5 pl-4 border-l-2 border-blue-100">
                 {tasks.map(task => (
                   <TaskRow key={task.id} task={task} />
                 ))}
                 {tasks.length === 0 && (
-                  <div className="text-[10px] text-white/20 font-mono py-2">Aucune tâche pour ce filtre</div>
+                  <div className="text-[10px] text-gray-300 font-mono py-2">Aucune tâche pour ce filtre</div>
                 )}
               </div>
             )}
@@ -425,9 +422,9 @@ function TimelineView({ expandedSprint, setExpandedSprint, filterAssignee }: {
 
 function SprintStatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; color: string }> = {
-    completed: { label: 'FAIT', color: 'text-emerald-400' },
-    active: { label: 'ACTIF', color: 'text-cyan-400' },
-    upcoming: { label: 'À VENIR', color: 'text-white/30' },
+    completed: { label: 'FAIT', color: 'text-[#3AAA35]' },
+    active: { label: 'ACTIF', color: 'text-[#00A3E0]' },
+    upcoming: { label: 'À VENIR', color: 'text-gray-300' },
   }
   const c = config[status] ?? config.upcoming
   return <div className={`text-[9px] font-mono tracking-wider ${c.color}`}>{c.label}</div>
@@ -441,18 +438,18 @@ function TaskRow({ task, compact }: { task: Task; compact?: boolean }) {
       <TaskIcon status={task.status} />
       <div className="flex-1 min-w-0">
         <span className={`text-xs ${
-          task.status === 'done' ? 'text-white/30 line-through' : 'text-white/70'
+          task.status === 'done' ? 'text-gray-300 line-through' : 'text-sncf-dark/70'
         }`}>
           {task.title}
         </span>
       </div>
       {task.assignee && (
-        <span className="text-[9px] font-mono text-white/20 shrink-0">
+        <span className="text-[9px] font-mono text-gray-300 shrink-0">
           {task.assignee === 'willy' ? '👨‍💻' : task.assignee === 'mathilde' ? '👩‍💼' : '👥'}
         </span>
       )}
       {task.tags?.map(tag => (
-        <span key={tag} className={`text-[8px] px-1.5 py-0.5 rounded font-mono shrink-0 hidden group-hover:inline-block ${TAG_COLORS[tag] ?? 'bg-white/5 text-white/30'}`}>
+        <span key={tag} className={`text-[8px] px-1.5 py-0.5 rounded font-mono shrink-0 hidden group-hover:inline-block ${TAG_COLORS[tag] ?? 'bg-gray-50 text-gray-400'}`}>
           {tag}
         </span>
       ))}
@@ -462,9 +459,9 @@ function TaskRow({ task, compact }: { task: Task; compact?: boolean }) {
 
 function TaskIcon({ status }: { status: TaskStatus }) {
   switch (status) {
-    case 'done': return <span className="text-emerald-400 text-xs">●</span>
-    case 'in_progress': return <span className="text-amber-400 text-xs animate-pulse">◉</span>
-    case 'blocked': return <span className="text-red-400 text-xs">⊘</span>
-    default: return <span className="text-white/20 text-xs">○</span>
+    case 'done': return <span className="text-[#3AAA35] text-xs">●</span>
+    case 'in_progress': return <span className="text-[#F7A600] text-xs animate-pulse">◉</span>
+    case 'blocked': return <span className="text-[#E3051B] text-xs">⊘</span>
+    default: return <span className="text-gray-300 text-xs">○</span>
   }
 }
