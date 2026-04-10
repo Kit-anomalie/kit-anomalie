@@ -90,7 +90,7 @@ export function Home() {
 
       {/* Baseline */}
       <div className="text-center py-4 animate-[fadeIn_0.5s_ease-out]">
-        <p className="text-xs text-gray-300 italic">Les bons reflexes anomalie, dans la poche</p>
+        <p className="text-xs text-gray-300 italic whitespace-nowrap">Les bons reflexes anomalie, dans la poche</p>
       </div>
 
     </div>
