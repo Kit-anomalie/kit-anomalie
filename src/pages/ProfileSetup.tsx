@@ -34,7 +34,7 @@ export function ProfileSetup() {
           <span className="text-2xl font-bold text-sncf-blue">KA</span>
         </div>
         <h1 className="text-2xl font-bold text-sncf-dark">Kit Anomalie</h1>
-        <p className="text-sm text-gray-500 mt-1">Les bons reflexes anomalie, dans la poche</p>
+        <p className="text-xs text-gray-500 mt-1 whitespace-nowrap">Les bons reflexes anomalie, dans la poche</p>
       </div>
 
       {/* Indicateur d'etapes */}
