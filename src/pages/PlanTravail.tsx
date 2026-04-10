@@ -14,7 +14,7 @@ type ViewMode = 'missions' | 'kanban' | 'timeline'
 
 export function PlanTravail() {
   const navigate = useNavigate()
-  const { sprints, briques, team, kanbanColumns } = usePlanStore()
+  const { sprints, team } = usePlanStore()
   const [view, setView] = useState<ViewMode>('kanban')
   const [expandedSprint, setExpandedSprint] = useState<string | null>(
     sprints.find(s => s.status === 'active')?.id ?? null
@@ -285,7 +285,8 @@ function KanbanView(filters: KanbanFilterProps) {
   const touchStart = useRef<{ x: number; y: number; time: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const allTasks = sprints.flatMap(s => s.tasks.map(t => ({ ...t, sprintCodename: s.codename })))
+  type TaskWithSprint = Task & { sprintCodename: string }
+  const allTasks: TaskWithSprint[] = sprints.flatMap(s => s.tasks.map(t => ({ ...t, sprintCodename: s.codename })))
   const filtered = applyFilters(allTasks, filters)
 
   // Swipe handling for mobile
