@@ -54,11 +54,11 @@ export interface Brique {
 // === Colonnes kanban par défaut ===
 
 export const DEFAULT_KANBAN_COLUMNS: KanbanColumn[] = [
-  { id: 'in_progress', name: 'En cours', icon: '🔥' },
+  { id: 'icebox', name: 'Icebox', icon: '🧊' },
   { id: 'todo', name: 'À faire', icon: '📌' },
+  { id: 'in_progress', name: 'En cours', icon: '🔥' },
   { id: 'done', name: 'Terminé', icon: '✅' },
   { id: 'blocked', name: 'Bloqué', icon: '🚫' },
-  { id: 'icebox', name: 'Icebox', icon: '🧊' },
 ]
 
 // === Équipe par défaut ===
