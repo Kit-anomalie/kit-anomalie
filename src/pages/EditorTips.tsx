@@ -88,7 +88,7 @@ export function EditorTips() {
                     Modifier
                   </button>
                   <button
-                    onClick={() => deleteTip(tip.id)}
+                    onClick={() => { if (confirm('Supprimer ce tip ?')) deleteTip(tip.id) }}
                     className="text-xs text-sncf-red bg-sncf-red/10 px-2 py-1 rounded-lg"
                   >
                     Suppr.

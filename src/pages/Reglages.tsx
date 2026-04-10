@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useThemeStore } from '../stores/themeStore'
@@ -16,6 +16,14 @@ export function Reglages() {
   }
   const { theme, toggleTheme } = useThemeStore()
   const [tapCount, setTapCount] = useState(0)
+  const [version, setVersion] = useState('')
+
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => setVersion(data.v))
+      .catch(() => setVersion('?'))
+  }, [])
 
   const handleVersionTap = () => {
     const next = tapCount + 1
@@ -96,7 +104,7 @@ export function Reglages() {
             className="w-full px-4 py-3 flex items-center justify-between text-left"
           >
             <span className="text-sm text-sncf-dark">Version</span>
-            <span className="text-xs text-gray-500">v0.6.0</span>
+            <span className="text-xs text-gray-500">{version ? `v${version}` : '...'}</span>
           </button>
         </div>
       </div>

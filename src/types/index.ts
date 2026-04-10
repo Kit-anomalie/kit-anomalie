@@ -16,7 +16,6 @@ export interface AppliMetier {
 export interface UserProfile {
   role: Role | null
   specialite: Specialite | null
-  applisMetier: string[] // IDs des applis sélectionnées
   isConfigured: boolean
 }
 
@@ -171,19 +170,10 @@ export interface CustomTip {
   dateCreation: string
 }
 
-export interface CustomLien {
-  id: string
-  titre: string
-  url: string
-  description?: string
-  dateCreation: string
-}
-
 export interface EditorData {
   tips: CustomTip[]
   fiches: FicheMemo[]
   guides: Guide[]
-  liens: CustomLien[]
   exportDate?: string
 }
 
