@@ -22,6 +22,9 @@ export function Reglages() {
 
   return (
     <div className="px-4 py-4 space-y-4">
+      <button onClick={() => navigate(-1)} className="text-sncf-blue text-sm flex items-center gap-1">
+        ← Retour
+      </button>
       <h1 className="text-lg font-bold text-sncf-dark">Reglages</h1>
 
       {/* Mon profil */}
@@ -86,29 +89,21 @@ export function Reglages() {
             <span className="text-xs text-gray-500 max-w-[200px] text-right">Compagnon terrain pour la gestion des anomalies</span>
           </div>
 
-          <a
-            href="mailto:wilfried.dieugnou@sncf.fr"
-            className="px-4 py-3 flex items-center justify-between"
-          >
+          <div className="px-4 py-3 flex items-center justify-between">
             <span className="text-sm text-sncf-dark">Nous contacter</span>
-            <span className="text-xs text-sncf-blue">wilfried.dieugnou@sncf.fr</span>
-          </a>
+            <span className="text-xs text-gray-400">Bientot disponible</span>
+          </div>
 
           <button
             onClick={handleVersionTap}
             className="w-full px-4 py-3 flex items-center justify-between text-left"
           >
             <span className="text-sm text-sncf-dark">Version</span>
-            <span className="text-xs text-gray-500">v0.4.0</span>
+            <span className="text-xs text-gray-500">v0.5.0</span>
           </button>
         </div>
       </div>
 
-      {tapCount > 0 && tapCount < 5 && (
-        <p className="text-center text-xs text-gray-400">
-          {5 - tapCount} tap{5 - tapCount > 1 ? 's' : ''} pour le mode admin
-        </p>
-      )}
     </div>
   )
 }

@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
-import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
-import { APPLIS_METIER, ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
+import { APPLIS_METIER } from '../data/roles'
 
 const DEFAULT_TIPS = [
   "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'ancienneté du défaut.",
@@ -14,7 +13,7 @@ const DEFAULT_TIPS = [
 
 export function Home() {
   const navigate = useNavigate()
-  const { role, specialite, applisMetier, resetProfile } = useProfileStore()
+  const { role, specialite, applisMetier } = useProfileStore()
   const customTips = useEditorStore(s => s.tips)
   const { planningEnabled, planningMessage } = useMaintenanceStore()
 
@@ -39,37 +38,6 @@ export function Home() {
 
   return (
     <div className="px-4 py-4 space-y-5">
-      {/* Carte profil */}
-      <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-sncf-dark rounded-xl flex items-center justify-center text-2xl">
-              {ROLE_ICONS[role]}
-            </div>
-            <div>
-              <div className="font-bold text-sncf-dark">{ROLE_LABELS[role]}</div>
-              <div className="text-xs text-gray-500 flex items-center gap-1">
-                <span>{SPECIALITE_ICONS[specialite]}</span>
-                {SPECIALITE_LABELS[specialite]}
-                {userApplis.length > 0 && (
-                  <>
-                    <span className="text-gray-300 mx-1">·</span>
-                    {userApplis.length} appli{userApplis.length > 1 ? 's' : ''}
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={resetProfile}
-            className="text-xs text-sncf-blue bg-blue-50 px-3 py-1.5 rounded-xl font-medium"
-          >
-            Modifier
-          </button>
-        </div>
-      </div>
-
-
       {/* Bandeau maintenance planifiee */}
       {planningEnabled && planningMessage && (
         <div className="bg-sncf-orange/10 border border-sncf-orange/30 rounded-2xl p-3">
