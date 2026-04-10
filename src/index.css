@@ -36,6 +36,92 @@ html, body, #root {
   }
 }
 
+/* Mode sombre */
+[data-theme="dark"] {
+  --color-bg: #0f1729;
+  --color-sncf-dark: #e2e8f0;
+}
+
+[data-theme="dark"] .bg-white {
+  background-color: #1a2332;
+}
+
+[data-theme="dark"] .bg-bg {
+  background-color: #0f1729;
+}
+
+[data-theme="dark"] .text-sncf-dark {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .text-gray-500 {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .text-gray-400 {
+  color: #64748b;
+}
+
+[data-theme="dark"] .text-gray-600 {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .border-gray-100 {
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .border-gray-200 {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+  background-color: #1e293b;
+}
+
+[data-theme="dark"] .bg-blue-50 {
+  background-color: #0c2d4d;
+}
+
+[data-theme="dark"] .bg-amber-50 {
+  background-color: #2d2206;
+}
+
+[data-theme="dark"] .bg-green-50 {
+  background-color: #0d2818;
+}
+
+[data-theme="dark"] .bg-purple-50 {
+  background-color: #1a0d2e;
+}
+
+[data-theme="dark"] .bg-cyan-50 {
+  background-color: #0c2d3d;
+}
+
+[data-theme="dark"] .bg-red-50 {
+  background-color: #2d0c0c;
+}
+
+[data-theme="dark"] .border-t.border-gray-200 {
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] header.bg-sncf-dark {
+  background-color: #070e2a;
+}
+
+[data-theme="dark"] nav.bg-white {
+  background-color: #111827;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: #1a2332;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
 /* Utilitaires */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

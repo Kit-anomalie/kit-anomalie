@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useProfileStore } from './stores/profileStore'
 import { useMaintenanceStore } from './stores/maintenanceStore'
+import './stores/themeStore' // initialise le theme au chargement
 import { Layout } from './components/Layout'
 import { ProfileSetup } from './pages/ProfileSetup'
 import { Home } from './pages/Home'
