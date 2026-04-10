@@ -99,7 +99,7 @@ export function Reglages() {
             className="w-full px-4 py-3 flex items-center justify-between text-left"
           >
             <span className="text-sm text-sncf-dark">Version</span>
-            <span className="text-xs text-gray-500">v1.4.0</span>
+            <span className="text-xs text-gray-500">v0.4.0</span>
           </button>
         </div>
       </div>
