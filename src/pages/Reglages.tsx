@@ -9,6 +9,11 @@ import { ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
 export function Reglages() {
   const navigate = useNavigate()
   const { role, specialite, resetProfile } = useProfileStore()
+
+  const handleModifyProfile = () => {
+    resetProfile()
+    navigate('/setup')
+  }
   const { theme, toggleTheme } = useThemeStore()
   const [tapCount, setTapCount] = useState(0)
 
@@ -23,8 +28,8 @@ export function Reglages() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <button onClick={() => navigate(-1)} className="text-sncf-blue text-sm flex items-center gap-1">
-        ← Retour
+      <button onClick={() => navigate('/')} className="text-sncf-blue text-sm flex items-center gap-1">
+        ← Accueil
       </button>
       <h1 className="text-lg font-bold text-sncf-dark">Reglages</h1>
 
@@ -46,7 +51,7 @@ export function Reglages() {
               </div>
             </div>
             <button
-              onClick={resetProfile}
+              onClick={handleModifyProfile}
               className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-1.5 rounded-xl font-medium"
             >
               Modifier
@@ -91,7 +96,7 @@ export function Reglages() {
             className="w-full px-4 py-3 flex items-center justify-between text-left"
           >
             <span className="text-sm text-sncf-dark">Version</span>
-            <span className="text-xs text-gray-500">v0.5.1</span>
+            <span className="text-xs text-gray-500">v0.6.0</span>
           </button>
         </div>
       </div>

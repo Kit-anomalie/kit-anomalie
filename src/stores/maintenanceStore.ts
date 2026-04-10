@@ -2,11 +2,6 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 interface MaintenanceState {
-  // Mode partiel (moi seul, localStorage)
-  partielEnabled: boolean
-  partielMessage: string
-  setPartiel: (enabled: boolean, message?: string) => void
-
   // Maintenance planifiee (bandeau d'annonce)
   planningEnabled: boolean
   planningMessage: string
@@ -17,14 +12,6 @@ interface MaintenanceState {
 export const useMaintenanceStore = create<MaintenanceState>()(
   persist(
     (set) => ({
-      partielEnabled: false,
-      partielMessage: 'Mise a jour en cours, retour dans quelques instants.',
-
-      setPartiel: (enabled, message) => set(s => ({
-        partielEnabled: enabled,
-        partielMessage: message ?? s.partielMessage,
-      })),
-
       planningEnabled: false,
       planningMessage: '',
       planningDate: '',

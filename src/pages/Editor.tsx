@@ -4,15 +4,13 @@ import { useEditorStore } from '../stores/editorStore'
 import { EditorTips } from './EditorTips'
 import { EditorFiches } from './EditorFiches'
 import { EditorGuides } from './EditorGuides'
-import { EditorLiens } from './EditorLiens'
 
-type Tab = 'tips' | 'fiches' | 'guides' | 'liens'
+type Tab = 'tips' | 'fiches' | 'guides'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'tips', label: 'Tips', icon: '💡' },
   { id: 'fiches', label: 'Fiches', icon: '📋' },
   { id: 'guides', label: 'Guides', icon: '📖' },
-  { id: 'liens', label: 'Liens', icon: '🔗' },
 ]
 
 export function Editor() {
@@ -86,7 +84,6 @@ export function Editor() {
         {activeTab === 'tips' && <EditorTips />}
         {activeTab === 'fiches' && <EditorFiches />}
         {activeTab === 'guides' && <EditorGuides />}
-        {activeTab === 'liens' && <EditorLiens />}
       </main>
 
       {/* Message d'import */}

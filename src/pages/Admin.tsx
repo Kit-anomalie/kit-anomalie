@@ -7,38 +7,31 @@ export function Admin() {
   const navigate = useNavigate()
   const store = useMaintenanceStore()
 
-  // Etat local pour editer avant de sauvegarder
-  const [partielEnabled, setPartielEnabled] = useState(store.partielEnabled)
-  const [partielMessage, setPartielMessage] = useState(store.partielMessage)
   const [planningEnabled, setPlanningEnabled] = useState(store.planningEnabled)
   const [planningMessage, setPlanningMessage] = useState(store.planningMessage)
   const [planningDate, setPlanningDate] = useState(store.planningDate)
+  const [maintenanceMessage, setMaintenanceMessage] = useState('Mise a jour en cours, retour dans quelques instants.')
   const [saved, setSaved] = useState(false)
 
   const hasChanges =
-    partielEnabled !== store.partielEnabled ||
-    partielMessage !== store.partielMessage ||
     planningEnabled !== store.planningEnabled ||
     planningMessage !== store.planningMessage ||
     planningDate !== store.planningDate
 
   const handleSave = () => {
-    store.setPartiel(partielEnabled, partielMessage)
     store.setPlanning(planningEnabled, planningMessage, planningDate)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
 
   const handleReset = () => {
-    setPartielEnabled(store.partielEnabled)
-    setPartielMessage(store.partielMessage)
     setPlanningEnabled(store.planningEnabled)
     setPlanningMessage(store.planningMessage)
     setPlanningDate(store.planningDate)
   }
 
   const handleMaintenanceTotale = () => {
-    const data = { enabled: true, message: partielMessage || 'Mise a jour en cours, retour dans quelques instants.' }
+    const data = { enabled: true, message: maintenanceMessage }
     const json = JSON.stringify(data, null, 2)
     const blob = new Blob([json], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -50,7 +43,7 @@ export function Admin() {
   }
 
   const handleDesactiverTotale = () => {
-    const data = { enabled: false, message: 'Mise a jour en cours, retour dans quelques instants.' }
+    const data = { enabled: false, message: maintenanceMessage }
     const json = JSON.stringify(data, null, 2)
     const blob = new Blob([json], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -63,7 +56,6 @@ export function Admin() {
 
   return (
     <div className="min-h-full bg-bg flex flex-col">
-      {/* Header */}
       <header className="bg-sncf-dark text-white px-4 py-3 flex items-center gap-3 sticky top-0 z-50">
         <button onClick={() => navigate('/reglages')} className="text-sncf-blue text-sm">← Retour</button>
         <span className="text-lg font-bold">Administration</span>
@@ -71,46 +63,34 @@ export function Admin() {
 
       <div className="p-4 space-y-4 pb-32">
 
-        {/* Maintenance partielle */}
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100">
-            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Maintenance partielle (moi seul)</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Ecran de maintenance uniquement sur votre navigateur.</p>
-          </div>
-          <div className="px-4 py-3 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-sncf-dark font-medium">Activer</span>
-              <Toggle enabled={partielEnabled} onChange={setPartielEnabled} />
-            </div>
-            <textarea
-              value={partielMessage}
-              onChange={e => setPartielMessage(e.target.value)}
-              rows={2}
-              placeholder="Message de maintenance..."
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
-            />
-          </div>
-        </div>
-
         {/* Maintenance totale */}
         <div className="bg-white rounded-2xl border border-sncf-red/20 overflow-hidden">
           <div className="px-4 py-3 border-b border-sncf-red/20">
-            <h2 className="text-xs font-bold text-sncf-red uppercase tracking-wide">Maintenance totale (tout le monde)</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Bloque l'acces pour tous. Telecharge le fichier puis demandez le deploiement.</p>
+            <h2 className="text-xs font-bold text-sncf-red uppercase tracking-wide">Maintenance totale</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Bloque l'acces pour tous les utilisateurs. Telecharge le fichier puis demandez le deploiement a Claude.</p>
           </div>
-          <div className="px-4 py-3 flex gap-2">
-            <button
-              onClick={handleMaintenanceTotale}
-              className="flex-1 py-2.5 rounded-xl bg-sncf-red text-white font-medium text-sm active:scale-[0.98] transition-transform"
-            >
-              Activer pour tous
-            </button>
-            <button
-              onClick={handleDesactiverTotale}
-              className="flex-1 py-2.5 rounded-xl bg-sncf-green text-white font-medium text-sm active:scale-[0.98] transition-transform"
-            >
-              Desactiver pour tous
-            </button>
+          <div className="px-4 py-3 space-y-3">
+            <textarea
+              value={maintenanceMessage}
+              onChange={e => setMaintenanceMessage(e.target.value)}
+              rows={2}
+              placeholder="Message affiche aux utilisateurs..."
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleMaintenanceTotale}
+                className="flex-1 py-2.5 rounded-xl bg-sncf-red text-white font-medium text-sm active:scale-[0.98] transition-transform"
+              >
+                Activer pour tous
+              </button>
+              <button
+                onClick={handleDesactiverTotale}
+                className="flex-1 py-2.5 rounded-xl bg-sncf-green text-white font-medium text-sm active:scale-[0.98] transition-transform"
+              >
+                Desactiver pour tous
+              </button>
+            </div>
           </div>
         </div>
 
@@ -156,7 +136,7 @@ export function Admin() {
 
       </div>
 
-      {/* Barre enregistrer / annuler — fixe en bas */}
+      {/* Barre enregistrer / annuler */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] md:max-w-[768px] lg:max-w-[1024px] bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-50">
         <button
           onClick={handleSave}
