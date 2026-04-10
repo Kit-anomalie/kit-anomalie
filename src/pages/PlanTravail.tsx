@@ -259,7 +259,7 @@ interface KanbanFilterProps {
   filterPriority: TaskPriority | null
 }
 
-function applyFilters(tasks: Task[], filters: KanbanFilterProps): Task[] {
+function applyFilters<T extends Task>(tasks: T[], filters: KanbanFilterProps): T[] {
   let result = tasks
   if (filters.filterAssignee) result = result.filter(t => t.assignee === filters.filterAssignee)
   if (filters.filterType) result = result.filter(t => t.type === filters.filterType)
@@ -267,7 +267,7 @@ function applyFilters(tasks: Task[], filters: KanbanFilterProps): Task[] {
   return result
 }
 
-function sortByPriority(tasks: Task[]): Task[] {
+function sortByPriority<T extends Task>(tasks: T[]): T[] {
   const order: Record<string, number> = { P1: 0, P2: 1, P3: 2, P4: 3 }
   return [...tasks].sort((a, b) => (order[a.priority ?? 'P4'] ?? 4) - (order[b.priority ?? 'P4'] ?? 4))
 }
