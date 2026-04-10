@@ -8,6 +8,7 @@ import { GuideDetail } from './pages/GuideDetail'
 import { Fiches } from './pages/Fiches'
 import { FicheDetail } from './pages/FicheDetail'
 import { Placeholder } from './pages/Placeholder'
+import { PlanTravail } from './pages/PlanTravail'
 
 function AppRoutes() {
   const { isConfigured } = useProfileStore()
@@ -15,6 +16,7 @@ function AppRoutes() {
   if (!isConfigured) {
     return (
       <Routes>
+        <Route path="/plan" element={<PlanTravail />} />
         <Route path="/setup" element={<ProfileSetup />} />
         <Route path="*" element={<Navigate to="/setup" replace />} />
       </Routes>
@@ -43,6 +45,7 @@ function AppRoutes() {
         } />
         <Route path="/setup" element={<ProfileSetup />} />
       </Route>
+      <Route path="/plan" element={<PlanTravail />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
