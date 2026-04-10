@@ -75,13 +75,13 @@ export function Reglages() {
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Informations</h2>
         </div>
 
-        <div className="divide-y divide-gray-100">
-          <div className="px-4 py-3 flex items-center justify-between">
+        <div>
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <span className="text-sm text-sncf-dark">A propos</span>
             <span className="text-xs text-gray-500 max-w-[200px] text-right">Les bons reflexes anomalie, dans la poche</span>
           </div>
 
-          <div className="px-4 py-3 flex items-center justify-between">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <span className="text-sm text-sncf-dark">Nous contacter</span>
             <span className="text-xs text-gray-400">Bientot disponible</span>
           </div>
@@ -91,7 +91,7 @@ export function Reglages() {
             className="w-full px-4 py-3 flex items-center justify-between text-left"
           >
             <span className="text-sm text-sncf-dark">Version</span>
-            <span className="text-xs text-gray-500">v0.5.0</span>
+            <span className="text-xs text-gray-500">v0.5.1</span>
           </button>
         </div>
       </div>
