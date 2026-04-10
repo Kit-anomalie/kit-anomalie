@@ -38,7 +38,7 @@ export function Home() {
       {/* Bienvenue — entre en premier */}
       <div className="spring-enter">
         <div className="flex items-center gap-2">
-          <span className="text-2xl spring-pop" style={{ animationDelay: '200ms' }}>🧑‍🔧</span>
+          <span className="text-2xl">🧑‍🔧</span>
           <div>
             <h1 className="text-lg font-bold text-sncf-dark">Bienvenue</h1>
             <p className="text-xs text-gray-500">{ROLE_LABELS[role]} · {SPECIALITE_LABELS[specialite]}</p>
@@ -68,7 +68,7 @@ export function Home() {
         style={{ animationDelay: '250ms' }}
       >
         <div className="flex items-start gap-2">
-          <span className="text-sm spring-pop" style={{ animationDelay: '450ms' }}>💡</span>
+          <span className="text-sm">💡</span>
           <div>
             <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide">Tip du jour</div>
             <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{tipOfTheDay}</p>
@@ -92,7 +92,7 @@ export function Home() {
               className={`text-left p-4 rounded-2xl border ${action.color} active:scale-[0.96] transition-transform duration-200 spring-scale`}
               style={{ animationDelay: `${420 + i * 70}ms` }}
             >
-              <span className="text-2xl block spring-pop" style={{ animationDelay: `${550 + i * 70}ms` }}>{action.icon}</span>
+              <span className="text-2xl block">{action.icon}</span>
               <div className="font-semibold text-sncf-dark text-sm mt-2">{action.label}</div>
               <div className="text-[11px] text-gray-500 mt-0.5">{action.desc}</div>
             </button>

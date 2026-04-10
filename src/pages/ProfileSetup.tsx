@@ -75,7 +75,7 @@ export function ProfileSetup() {
                 style={{ animationDelay: `${150 + i * 80}ms` }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl spring-pop" style={{ animationDelay: `${300 + i * 80}ms` }}>{ROLE_ICONS[r]}</span>
+                  <span className="text-2xl">{ROLE_ICONS[r]}</span>
                   <div>
                     <div className="font-semibold text-sncf-dark">{ROLE_LABELS[r]}</div>
                     <div className="text-xs text-gray-500 mt-0.5">{ROLE_DESCRIPTIONS[r]}</div>
@@ -104,7 +104,7 @@ export function ProfileSetup() {
                 style={{ animationDelay: `${100 + i * 70}ms` }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl spring-pop" style={{ animationDelay: `${250 + i * 70}ms` }}>{SPECIALITE_ICONS[s]}</span>
+                  <span className="text-2xl">{SPECIALITE_ICONS[s]}</span>
                   <div>
                     <div className="font-semibold text-sncf-dark">{SPECIALITE_LABELS[s]}</div>
                     <div className="text-[11px] text-gray-400 mt-0.5">
