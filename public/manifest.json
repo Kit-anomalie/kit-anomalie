@@ -1,7 +1,7 @@
 {
   "name": "Kit Anomalie",
   "short_name": "Kit Anomalie",
-  "description": "Compagnon mobile d'adoption digitale pour la gestion des anomalies",
+  "description": "Les bons reflexes anomalie, dans la poche",
   "start_url": "/kit-anomalie/",
   "scope": "/kit-anomalie/",
   "display": "standalone",

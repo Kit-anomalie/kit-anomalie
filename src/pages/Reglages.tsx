@@ -86,7 +86,7 @@ export function Reglages() {
         <div className="divide-y divide-gray-100">
           <div className="px-4 py-3 flex items-center justify-between">
             <span className="text-sm text-sncf-dark">A propos</span>
-            <span className="text-xs text-gray-500 max-w-[200px] text-right">Compagnon terrain pour la gestion des anomalies</span>
+            <span className="text-xs text-gray-500 max-w-[200px] text-right">Les bons reflexes anomalie, dans la poche</span>
           </div>
 
           <div className="px-4 py-3 flex items-center justify-between">
