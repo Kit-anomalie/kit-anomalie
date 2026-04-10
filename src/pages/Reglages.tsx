@@ -35,7 +35,7 @@ export function Reglages() {
   }
 
   return (
-    <div className="px-4 py-4 space-y-4 max-w-lg mx-auto">
+    <div className="px-4 py-4 space-y-4 max-w-4xl mx-auto">
       <button onClick={() => navigate('/')} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity">
         ← Accueil
       </button>
