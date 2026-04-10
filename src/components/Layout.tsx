@@ -22,10 +22,10 @@ export function Layout() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate('/editeur')}
-            className="text-[11px] bg-sncf-blue/30 px-2 py-1 rounded-full font-medium"
+            onClick={() => navigate('/reglages')}
+            className="text-white/70 text-lg leading-none"
           >
-            Editeur
+            ⚙
           </button>
           <OfflineBadge />
         </div>

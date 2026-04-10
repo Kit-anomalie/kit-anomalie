@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
+import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 import { APPLIS_METIER, ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
 
@@ -15,6 +16,7 @@ export function Home() {
   const navigate = useNavigate()
   const { role, specialite, applisMetier, resetProfile } = useProfileStore()
   const customTips = useEditorStore(s => s.tips)
+  const { planningEnabled, planningMessage } = useMaintenanceStore()
 
   if (!role || !specialite) return null
 
@@ -67,6 +69,19 @@ export function Home() {
         </div>
       </div>
 
+
+      {/* Bandeau maintenance planifiee */}
+      {planningEnabled && planningMessage && (
+        <div className="bg-sncf-orange/10 border border-sncf-orange/30 rounded-2xl p-3">
+          <div className="flex items-start gap-2">
+            <span className="text-sm">🔧</span>
+            <div>
+              <div className="text-[11px] font-bold text-sncf-orange uppercase tracking-wide">Maintenance prevue</div>
+              <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{planningMessage}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tip du jour */}
       <div className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl p-3">
