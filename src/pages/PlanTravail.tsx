@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  BRIQUES, SPRINTS, STATUS_LABELS, STATUS_COLORS, SPRINT_STATUS_COLORS,
+  BRIQUES, SPRINTS,
   ASSIGNEE_LABELS, TAG_COLORS,
   getOverallProgress, getSprintProgress,
-  type Sprint, type Task, type TaskStatus
+  type Task, type TaskStatus
 } from '../data/planTravail'
 
 type ViewMode = 'missions' | 'kanban' | 'timeline'
