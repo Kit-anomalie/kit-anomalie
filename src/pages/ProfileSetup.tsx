@@ -27,7 +27,7 @@ export function ProfileSetup() {
     navigate('/')
   }
 
-  const applis = specialite ? getApplisBySpecialite(specialite) : []
+  const applis = specialite ? getApplisBySpecialite(specialite, role) : []
 
   return (
     <div className="min-h-screen bg-bg px-4 py-8">

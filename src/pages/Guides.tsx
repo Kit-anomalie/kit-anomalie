@@ -1,14 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
+import { useEditorStore } from '../stores/editorStore'
 import { GUIDES } from '../data/guides'
 import { APPLIS_METIER } from '../data/roles'
 
 export function Guides() {
   const navigate = useNavigate()
   const { role, specialite, applisMetier } = useProfileStore()
+  const customGuides = useEditorStore(s => s.guides)
+
+  // Fusionner guides codés en dur + guides éditeur
+  const allGuides = [...GUIDES, ...customGuides]
 
   // Filtrer par profil
-  const guidesFiltered = GUIDES.filter(g => {
+  const guidesFiltered = allGuides.filter(g => {
     if (role && !g.roles.includes(role)) return false
     if (specialite && !g.specialites.includes(specialite)) return false
     if (applisMetier.length > 0 && !applisMetier.includes(g.appliMetier)) return false
@@ -43,14 +48,14 @@ export function Guides() {
               >
                 <div className="font-semibold text-sncf-dark text-sm">{guide.titre}</div>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[10px] bg-sncf-green/10 text-sncf-green px-2 py-0.5 rounded-full font-medium">
+                  <span className="text-[11px] bg-sncf-green/10 text-sncf-green px-2 py-0.5 rounded-full font-medium">
                     {guide.etapes.length} étapes
                   </span>
-                  <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+                  <span className="text-[11px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
                     {guide.gesteMetier}
                   </span>
                   {guide.referentiel && (
-                    <span className="text-[10px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
                       {guide.referentiel}
                     </span>
                   )}

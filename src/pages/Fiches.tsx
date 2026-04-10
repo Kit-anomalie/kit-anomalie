@@ -1,22 +1,28 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
+import { useEditorStore } from '../stores/editorStore'
 import { FICHES_MEMO } from '../data/fiches'
 
 export function Fiches() {
   const navigate = useNavigate()
   const { role, specialite } = useProfileStore()
+  const customFiches = useEditorStore(s => s.fiches)
   const [search, setSearch] = useState('')
 
+  // Fusionner fiches codées en dur + fiches éditeur
+  const allFiches = [...FICHES_MEMO, ...customFiches]
+
   // Filtrer par profil
-  const fichesFiltered = FICHES_MEMO.filter(f => {
+  const fichesFiltered = allFiches.filter(f => {
     if (role && !f.roles.includes(role)) return false
     if (specialite && !f.specialites.includes(specialite)) return false
     if (search) {
-      const q = search.toLowerCase()
+      const normalize = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      const q = normalize(search)
       return (
-        f.titre.toLowerCase().includes(q) ||
-        f.gestesCles.some(g => g.toLowerCase().includes(q))
+        normalize(f.titre).includes(q) ||
+        f.gestesCles.some(g => normalize(g).includes(q))
       )
     }
     return true
@@ -50,12 +56,12 @@ export function Fiches() {
             <p className="text-xs text-gray-500 mt-1 line-clamp-2">{fiche.quoiFaire}</p>
             <div className="flex items-center gap-2 mt-2">
               {fiche.referentiel && (
-                <span className="text-[10px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
+                <span className="text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
                   {fiche.referentiel}
                 </span>
               )}
               {fiche.gestesCles.slice(0, 2).map(g => (
-                <span key={g} className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+                <span key={g} className="text-[11px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
                   {g}
                 </span>
               ))}

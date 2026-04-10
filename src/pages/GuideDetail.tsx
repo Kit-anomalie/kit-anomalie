@@ -1,16 +1,24 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { GUIDES } from '../data/guides'
+import { useEditorStore } from '../stores/editorStore'
 
 export function GuideDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const guide = GUIDES.find(g => g.id === id)
+  const customGuides = useEditorStore(s => s.guides)
+  const guide = [...GUIDES, ...customGuides].find(g => g.id === id)
   const [currentStep, setCurrentStep] = useState(0)
 
-  if (!guide) return <div className="p-4 text-center text-gray-500">Guide non trouvé</div>
+  if (!guide) return (
+    <div className="p-4 text-center text-gray-500 space-y-3">
+      <p>Guide non trouvé</p>
+      <button onClick={() => navigate('/guides')} className="text-sncf-blue text-sm font-medium">← Retour aux guides</button>
+    </div>
+  )
 
-  const etape = guide.etapes[currentStep]
+  const safeStep = Math.min(Math.max(0, currentStep), guide.etapes.length - 1)
+  const etape = guide.etapes[safeStep]
   const isFirst = currentStep === 0
   const isLast = currentStep === guide.etapes.length - 1
 
@@ -24,7 +32,7 @@ export function GuideDetail() {
       <div>
         <h1 className="text-lg font-bold text-sncf-dark">{guide.titre}</h1>
         {guide.referentiel && (
-          <span className="inline-block mt-1 text-[10px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
+          <span className="inline-block mt-1 text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
             Réf. {guide.referentiel}
           </span>
         )}
@@ -59,7 +67,7 @@ export function GuideDetail() {
         {/* Champs à remplir */}
         {etape.champsARemplir && etape.champsARemplir.length > 0 && (
           <div className="bg-sncf-blue/5 rounded-xl p-3">
-            <div className="text-[10px] font-bold text-sncf-blue uppercase tracking-wide mb-1">Champs à remplir</div>
+            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide mb-1">Champs à remplir</div>
             {etape.champsARemplir.map((champ, i) => (
               <div key={i} className="text-xs text-gray-700 flex items-center gap-1.5 mt-1">
                 <span className="text-sncf-blue">→</span> {champ}
@@ -71,7 +79,7 @@ export function GuideDetail() {
         {/* Erreurs fréquentes */}
         {etape.erreursFrequentes && etape.erreursFrequentes.length > 0 && (
           <div className="bg-sncf-orange/5 rounded-xl p-3">
-            <div className="text-[10px] font-bold text-sncf-orange uppercase tracking-wide mb-1">Attention</div>
+            <div className="text-[11px] font-bold text-sncf-orange uppercase tracking-wide mb-1">Attention</div>
             {etape.erreursFrequentes.map((err, i) => (
               <div key={i} className="text-xs text-gray-700 flex items-start gap-1.5 mt-1">
                 <span className="text-sncf-orange mt-0.5">⚠</span> {err}
@@ -82,7 +90,7 @@ export function GuideDetail() {
 
         {/* Référentiel */}
         {etape.referentiel && (
-          <div className="text-[10px] bg-sncf-blue/10 text-sncf-blue px-2 py-1 rounded-full inline-block font-medium">
+          <div className="text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-1 rounded-full inline-block font-medium">
             Réf. {etape.referentiel}
           </div>
         )}

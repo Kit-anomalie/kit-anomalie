@@ -9,22 +9,10 @@ export const APPLIS_METIER: AppliMetier[] = [
     specialites: ['voie'],
   },
   {
-    id: 's6a7',
-    nom: 'S6A7',
-    description: 'Préparer et saisir en mobilité vos comptes-rendus de visite',
-    specialites: ['seg'],
-  },
-  {
     id: 'adv_mobile',
     nom: 'ADV Mobile',
     description: 'Aide à la surveillance des voies',
     specialites: ['voie'],
-  },
-  {
-    id: 'ef4b1',
-    nom: 'EF4B1',
-    description: 'Contrôle technique',
-    specialites: ['seg', 'eale', 'cat', 'sm'],
   },
   {
     id: 'spm',
@@ -45,10 +33,10 @@ export const APPLIS_METIER: AppliMetier[] = [
     specialites: ['voie'],
   },
   {
-    id: 'ef5a_vsp',
-    nom: 'EF5A VSP',
-    description: 'Visibilité signaux à pieds',
-    specialites: ['seg', 'eale', 'cat', 'sm'],
+    id: 'tsp1',
+    nom: 'TSP1',
+    description: 'Tournée de Surveillance Périodique à pieds — voie, appareils de voie et abords',
+    specialites: ['voie'],
   },
   {
     id: 'arcat',
@@ -74,9 +62,13 @@ export const SPECIALITE_DESCRIPTIONS: Record<Specialite, string> = {
   sm: 'Structures et Maçonnerie — ouvrages d\'art, tunnels, ponts',
 }
 
-// Filtrer les applis par spécialité
-export function getApplisBySpecialite(specialite: Specialite): AppliMetier[] {
-  return APPLIS_METIER.filter(app => app.specialites.includes(specialite))
+// Filtrer les applis par spécialité et rôle
+export function getApplisBySpecialite(specialite: Specialite, role?: Role | null): AppliMetier[] {
+  return APPLIS_METIER.filter(app => {
+    if (!app.specialites.includes(specialite)) return false
+    if (role && app.roles && !app.roles.includes(role)) return false
+    return true
+  })
 }
 
 // Icônes des rôles (emoji pour le prototype)

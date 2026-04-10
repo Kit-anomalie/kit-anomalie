@@ -1,12 +1,19 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { FICHES_MEMO } from '../data/fiches'
+import { useEditorStore } from '../stores/editorStore'
 
 export function FicheDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const fiche = FICHES_MEMO.find(f => f.id === id)
+  const customFiches = useEditorStore(s => s.fiches)
+  const fiche = [...FICHES_MEMO, ...customFiches].find(f => f.id === id)
 
-  if (!fiche) return <div className="p-4 text-center text-gray-500">Fiche non trouvée</div>
+  if (!fiche) return (
+    <div className="p-4 text-center text-gray-500 space-y-3">
+      <p>Fiche non trouvée</p>
+      <button onClick={() => navigate('/fiches')} className="text-sncf-blue text-sm font-medium">← Retour aux fiches</button>
+    </div>
+  )
 
   return (
     <div className="px-4 py-4 space-y-4">
@@ -18,7 +25,7 @@ export function FicheDetail() {
       <div>
         <h1 className="text-lg font-bold text-sncf-dark">{fiche.titre}</h1>
         {fiche.referentiel && (
-          <span className="inline-block mt-1 text-[10px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
+          <span className="inline-block mt-1 text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
             Réf. {fiche.referentiel}
           </span>
         )}

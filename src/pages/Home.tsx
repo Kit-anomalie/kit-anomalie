@@ -21,14 +21,6 @@ export function Home() {
     { icon: '🔔', label: 'Alertes', desc: 'Bon à savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
   ]
 
-  // Tips rotatifs
-  const tips = [
-    "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'ancienneté du défaut.",
-    "Vérifiez toujours les anomalies existantes sur un actif avant d'en déclarer une nouvelle.",
-    "Le classement S/I nécessite une intervention immédiate. En cas de doute, consultez le référentiel MT00342.",
-    "Pensez à renseigner la DLF (Date Limite de Fin) pour les anomalies de classement A.",
-  ]
-  const tipOfTheDay = tips[new Date().getDate() % tips.length]
 
   return (
     <div className="px-4 py-4 space-y-5">
@@ -62,16 +54,6 @@ export function Home() {
         </div>
       </div>
 
-      {/* Tip du jour */}
-      <div className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl p-3">
-        <div className="flex items-start gap-2">
-          <span className="text-sm">💡</span>
-          <div>
-            <div className="text-[10px] font-bold text-sncf-blue uppercase tracking-wide">Tip du jour</div>
-            <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{tipOfTheDay}</p>
-          </div>
-        </div>
-      </div>
 
       {/* Accès rapides */}
       <div>
@@ -85,7 +67,7 @@ export function Home() {
             >
               <span className="text-2xl">{action.icon}</span>
               <div className="font-semibold text-sncf-dark text-sm mt-2">{action.label}</div>
-              <div className="text-[10px] text-gray-500 mt-0.5">{action.desc}</div>
+              <div className="text-[11px] text-gray-500 mt-0.5">{action.desc}</div>
             </button>
           ))}
         </div>
@@ -103,7 +85,7 @@ export function Home() {
               >
                 <div>
                   <div className="font-semibold text-sncf-dark text-sm">{app.nom}</div>
-                  {app.description && <div className="text-[10px] text-gray-500">{app.description}</div>}
+                  {app.description && <div className="text-[11px] text-gray-500">{app.description}</div>}
                 </div>
               </div>
             ))}

@@ -10,6 +10,7 @@ export interface AppliMetier {
   description: string
   url?: string
   specialites: Specialite[] // spécialités qui utilisent cette appli
+  roles?: Role[] // si défini, restreint l'appli à ces rôles uniquement
 }
 
 export interface UserProfile {
@@ -160,6 +161,30 @@ export interface Alerte {
   datePublication: string
   dateExpiration?: string
   lu: boolean
+}
+
+// === Contenu éditable ===
+
+export interface CustomTip {
+  id: string
+  texte: string
+  dateCreation: string
+}
+
+export interface CustomLien {
+  id: string
+  titre: string
+  url: string
+  description?: string
+  dateCreation: string
+}
+
+export interface EditorData {
+  tips: CustomTip[]
+  fiches: FicheMemo[]
+  guides: Guide[]
+  liens: CustomLien[]
+  exportDate?: string
 }
 
 // === Navigation ===
