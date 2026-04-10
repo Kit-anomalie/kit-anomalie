@@ -89,9 +89,9 @@ export function Reglages() {
         </div>
 
         <div>
-          <div className="px-4 py-3 border-b border-gray-100">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <span className="text-sm text-sncf-dark">A propos</span>
-            <p className="text-[11px] text-gray-500 mt-1">Les bons reflexes anomalie, dans la poche</p>
+            <span className="text-[11px] text-gray-500">Les bons reflexes anomalie, dans la poche</span>
           </div>
 
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
