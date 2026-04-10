@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
@@ -6,65 +7,98 @@ import { APPLIS_METIER } from '../data/roles'
 
 export function Guides() {
   const navigate = useNavigate()
-  const { role, specialite, applisMetier } = useProfileStore()
+  const { role, specialite } = useProfileStore()
   const customGuides = useEditorStore(s => s.guides)
+  const [appliFilter, setAppliFilter] = useState<string | null>(null)
 
   // Fusionner guides codés en dur + guides éditeur
   const allGuides = [...GUIDES, ...customGuides]
 
-  // Filtrer par profil
-  const guidesFiltered = allGuides.filter(g => {
+  // Filtrer par rôle + spécialité (plus de filtre par applis sélectionnées)
+  const guidesForProfile = allGuides.filter(g => {
     if (role && !g.roles.includes(role)) return false
     if (specialite && !g.specialites.includes(specialite)) return false
-    if (applisMetier.length > 0 && !applisMetier.includes(g.appliMetier)) return false
     return true
   })
 
-  // Grouper par appli métier
-  const guidesByAppli = guidesFiltered.reduce((acc, guide) => {
-    const appli = APPLIS_METIER.find(a => a.id === guide.appliMetier)
-    const appliNom = appli?.nom ?? guide.appliMetier
-    if (!acc[appliNom]) acc[appliNom] = []
-    acc[appliNom].push(guide)
-    return acc
-  }, {} as Record<string, typeof guidesFiltered>)
+  // Applis disponibles dans les guides filtrés
+  const applisDisponibles = [...new Set(guidesForProfile.map(g => g.appliMetier))]
+    .map(id => APPLIS_METIER.find(a => a.id === id) ?? { id, nom: id })
+
+  // Filtrer par appli sélectionnée
+  const guidesFiltered = appliFilter
+    ? guidesForProfile.filter(g => g.appliMetier === appliFilter)
+    : guidesForProfile
 
   return (
     <div className="px-4 py-4 space-y-4">
       <div>
         <h1 className="text-lg font-bold text-sncf-dark">Guides</h1>
-        <p className="text-xs text-gray-500">Pas à pas par application métier</p>
+        <p className="text-xs text-gray-500">Pas a pas par application metier</p>
       </div>
 
-      {Object.entries(guidesByAppli).map(([appliNom, guides]) => (
-        <div key={appliNom}>
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{appliNom}</h2>
-          <div className="space-y-2">
-            {guides.map(guide => (
-              <button
-                key={guide.id}
-                onClick={() => navigate(`/guides/${guide.id}`)}
-                className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.98] transition-transform"
-              >
-                <div className="font-semibold text-sncf-dark text-sm">{guide.titre}</div>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[11px] bg-sncf-green/10 text-sncf-green px-2 py-0.5 rounded-full font-medium">
-                    {guide.etapes.length} étapes
-                  </span>
-                  <span className="text-[11px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
-                    {guide.gesteMetier}
-                  </span>
-                  {guide.referentiel && (
-                    <span className="text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
-                      {guide.referentiel}
-                    </span>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
+      {/* Filtre horizontal par appli */}
+      {applisDisponibles.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button
+            onClick={() => setAppliFilter(null)}
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              appliFilter === null
+                ? 'bg-sncf-blue text-white'
+                : 'bg-white text-gray-600 border border-gray-200'
+            }`}
+          >
+            Toutes
+          </button>
+          {applisDisponibles.map(appli => (
+            <button
+              key={appli.id}
+              onClick={() => setAppliFilter(appli.id)}
+              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                appliFilter === appli.id
+                  ? 'bg-sncf-blue text-white'
+                  : 'bg-white text-gray-600 border border-gray-200'
+              }`}
+            >
+              {appli.nom}
+            </button>
+          ))}
         </div>
-      ))}
+      )}
+
+      {/* Liste des guides */}
+      <div className="space-y-2">
+        {guidesFiltered.map(guide => {
+          const appli = APPLIS_METIER.find(a => a.id === guide.appliMetier)
+          return (
+            <button
+              key={guide.id}
+              onClick={() => navigate(`/guides/${guide.id}`)}
+              className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.98] transition-transform"
+            >
+              <div className="font-semibold text-sncf-dark text-sm">{guide.titre}</div>
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                {!appliFilter && appli && (
+                  <span className="text-[11px] bg-sncf-dark/10 text-sncf-dark px-2 py-0.5 rounded-full font-medium">
+                    {appli.nom}
+                  </span>
+                )}
+                <span className="text-[11px] bg-sncf-green/10 text-sncf-green px-2 py-0.5 rounded-full font-medium">
+                  {guide.etapes.length} etape{guide.etapes.length > 1 ? 's' : ''}
+                </span>
+                <span className="text-[11px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+                  {guide.gesteMetier}
+                </span>
+                {guide.referentiel && (
+                  <span className="text-[11px] bg-sncf-blue/10 text-sncf-blue px-2 py-0.5 rounded-full font-medium">
+                    {guide.referentiel}
+                  </span>
+                )}
+              </div>
+            </button>
+          )
+        })}
+      </div>
 
       {guidesFiltered.length === 0 && (
         <div className="text-center py-8 text-gray-400 text-sm">

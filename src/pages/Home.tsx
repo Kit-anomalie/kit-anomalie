@@ -1,15 +1,28 @@
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
+import { useEditorStore } from '../stores/editorStore'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 import { APPLIS_METIER, ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
+
+const DEFAULT_TIPS = [
+  "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'ancienneté du défaut.",
+  "Vérifiez toujours les anomalies existantes sur un actif avant d'en déclarer une nouvelle.",
+  "Le classement S/I nécessite une intervention immédiate. En cas de doute, consultez le référentiel MT00342.",
+  "Pensez à renseigner la DLF (Date Limite de Fin) pour les anomalies de classement A.",
+]
 
 export function Home() {
   const navigate = useNavigate()
   const { role, specialite, applisMetier, resetProfile } = useProfileStore()
+  const customTips = useEditorStore(s => s.tips)
 
   if (!role || !specialite) return null
 
   const userApplis = APPLIS_METIER.filter(app => applisMetier.includes(app.id))
+
+  // Tip du jour — carte intégrée, change chaque jour
+  const allTips = [...DEFAULT_TIPS, ...customTips.map(t => t.texte)]
+  const tipOfTheDay = allTips[new Date().getDate() % allTips.length]
 
   // Accès rapides
   const quickActions = [
@@ -54,6 +67,17 @@ export function Home() {
         </div>
       </div>
 
+
+      {/* Tip du jour */}
+      <div className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl p-3">
+        <div className="flex items-start gap-2">
+          <span className="text-sm">💡</span>
+          <div>
+            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide">Tip du jour</div>
+            <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{tipOfTheDay}</p>
+          </div>
+        </div>
+      </div>
 
       {/* Accès rapides */}
       <div>
