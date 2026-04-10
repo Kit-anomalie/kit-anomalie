@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { GUIDES } from '../data/guides'
 import { useEditorStore } from '../stores/editorStore'
+import { PiecesJointesView } from '../components/PiecesJointes'
 
 export function GuideDetail() {
   const { id } = useParams()
@@ -98,6 +99,14 @@ export function GuideDetail() {
           </div>
         )}
       </div>
+
+      {/* Pieces jointes */}
+      {guide.piecesJointes && guide.piecesJointes.length > 0 && (
+        <div>
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Pieces jointes</h2>
+          <PiecesJointesView pieces={guide.piecesJointes} />
+        </div>
+      )}
 
       {/* Navigation etapes */}
       <div className="flex gap-3 spring-enter" style={{ animationDelay: '150ms' }}>

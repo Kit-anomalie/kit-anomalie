@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
-import type { Role, Specialite } from '../types'
+import { PiecesJointesEditor } from '../components/PiecesJointes'
+import type { Role, Specialite, PieceJointe } from '../types'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 
 const ALL_ROLES: Role[] = ['agent_req', 'ordonnanceur', 'rp']
@@ -15,6 +16,7 @@ interface FicheForm {
   roles: Role[]
   specialites: Specialite[]
   referentiel: string
+  piecesJointes: PieceJointe[]
 }
 
 const EMPTY_FORM: FicheForm = {
@@ -26,6 +28,7 @@ const EMPTY_FORM: FicheForm = {
   roles: [],
   specialites: [],
   referentiel: '',
+  piecesJointes: [],
 }
 
 export function EditorFiches() {
@@ -52,6 +55,7 @@ export function EditorFiches() {
       roles: fiche.roles,
       specialites: fiche.specialites,
       referentiel: fiche.referentiel ?? '',
+      piecesJointes: fiche.piecesJointes ?? [],
     })
     setEditingId(id)
     setShowForm(true)
@@ -68,6 +72,7 @@ export function EditorFiches() {
       roles: form.roles,
       specialites: form.specialites,
       referentiel: form.referentiel.trim() || undefined,
+      piecesJointes: form.piecesJointes.length > 0 ? form.piecesJointes : undefined,
     }
 
     if (editingId) {
@@ -194,6 +199,12 @@ export function EditorFiches() {
               ))}
             </div>
           </div>
+
+          {/* Pieces jointes */}
+          <PiecesJointesEditor
+            pieces={form.piecesJointes}
+            onChange={(pj) => setForm(f => ({ ...f, piecesJointes: pj }))}
+          />
 
           <div className="flex gap-2 pt-2">
             <button

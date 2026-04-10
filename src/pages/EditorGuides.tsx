@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
+import { PiecesJointesEditor } from '../components/PiecesJointes'
 import { APPLIS_METIER } from '../data/roles'
-import type { Role, Specialite, GuideStep } from '../types'
+import type { Role, Specialite, GuideStep, PieceJointe } from '../types'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 
 const ALL_ROLES: Role[] = ['agent_req', 'ordonnanceur', 'rp']
@@ -22,6 +23,7 @@ interface GuideForm {
   specialites: Specialite[]
   referentiel: string
   etapes: StepForm[]
+  piecesJointes: PieceJointe[]
 }
 
 const EMPTY_STEP: StepForm = { titre: '', action: '', champsARemplir: '', erreursFrequentes: '' }
@@ -34,6 +36,7 @@ const EMPTY_FORM: GuideForm = {
   specialites: [],
   referentiel: '',
   etapes: [{ ...EMPTY_STEP }],
+  piecesJointes: [],
 }
 
 export function EditorGuides() {
@@ -64,6 +67,7 @@ export function EditorGuides() {
         champsARemplir: e.champsARemplir?.join('\n') ?? '',
         erreursFrequentes: e.erreursFrequentes?.join('\n') ?? '',
       })),
+      piecesJointes: guide.piecesJointes ?? [],
     })
     setEditingId(id)
     setShowForm(true)
@@ -104,6 +108,7 @@ export function EditorGuides() {
       specialites: form.specialites,
       referentiel: form.referentiel.trim() || undefined,
       etapes,
+      piecesJointes: form.piecesJointes.length > 0 ? form.piecesJointes : undefined,
     }
 
     if (editingId) {
@@ -265,6 +270,12 @@ export function EditorGuides() {
               + Ajouter une etape
             </button>
           </div>
+
+          {/* Pieces jointes */}
+          <PiecesJointesEditor
+            pieces={form.piecesJointes}
+            onChange={(pj) => setForm(f => ({ ...f, piecesJointes: pj }))}
+          />
 
           <div className="flex gap-2 pt-2">
             <button

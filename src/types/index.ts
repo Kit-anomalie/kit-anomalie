@@ -76,6 +76,17 @@ export interface Guide {
   gesteMetier: string // ex : "Créer une anomalie"
   etapes: GuideStep[]
   referentiel?: string
+  piecesJointes?: PieceJointe[]
+}
+
+// === Pieces jointes ===
+
+export interface PieceJointe {
+  id: string
+  type: 'image' | 'pdf' | 'lien'
+  nom: string
+  data?: string // base64 pour image/pdf
+  url?: string // pour les liens
 }
 
 // === Fiches mémo ===
@@ -91,6 +102,7 @@ export interface FicheMemo {
   erreursAEviter: string[]
   referentiel?: string
   guideAssocie?: string // ID du guide lié
+  piecesJointes?: PieceJointe[]
 }
 
 // === Anomalies ===

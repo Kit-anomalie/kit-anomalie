@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { FICHES_MEMO } from '../data/fiches'
 import { useEditorStore } from '../stores/editorStore'
+import { PiecesJointesView } from '../components/PiecesJointes'
 
 export function FicheDetail() {
   const { id } = useParams()
@@ -69,6 +70,14 @@ export function FicheDetail() {
           ))}
         </div>
       </div>
+
+      {/* Pieces jointes */}
+      {fiche.piecesJointes && fiche.piecesJointes.length > 0 && (
+        <div className="spring-scale" style={{ animationDelay: '380ms' }}>
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Pieces jointes</h2>
+          <PiecesJointesView pieces={fiche.piecesJointes} />
+        </div>
+      )}
 
       {/* Lien vers le guide */}
       {fiche.guideAssocie && (
