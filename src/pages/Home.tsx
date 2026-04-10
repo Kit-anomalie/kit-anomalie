@@ -3,10 +3,6 @@ import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
-import { ROLE_ICONS } from '../data/roles'
-import { GUIDES } from '../data/guides'
-import { FICHES_MEMO } from '../data/fiches'
-
 const DEFAULT_TIPS = [
   "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'anciennete du defaut.",
   "Verifiez toujours les anomalies existantes sur un actif avant d'en declarer une nouvelle.",
@@ -18,8 +14,6 @@ export function Home() {
   const navigate = useNavigate()
   const { role, specialite } = useProfileStore()
   const customTips = useEditorStore(s => s.tips)
-  const customFiches = useEditorStore(s => s.fiches)
-  const customGuides = useEditorStore(s => s.guides)
   const { planningEnabled, planningMessage } = useMaintenanceStore()
 
   if (!role || !specialite) return null
@@ -27,14 +21,6 @@ export function Home() {
   // Tip du jour
   const allTips = [...DEFAULT_TIPS, ...customTips.map(t => t.texte)]
   const tipOfTheDay = allTips[new Date().getDate() % allTips.length]
-
-  // Compteurs
-  const totalGuides = [...GUIDES, ...customGuides].filter(g =>
-    g.roles.includes(role) && g.specialites.includes(specialite)
-  ).length
-  const totalFiches = [...FICHES_MEMO, ...customFiches].filter(f =>
-    f.roles.includes(role) && f.specialites.includes(specialite)
-  ).length
 
   // Acces rapides
   const quickActions = [
