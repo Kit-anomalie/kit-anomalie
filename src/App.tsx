@@ -11,7 +11,7 @@ import { FicheDetail } from './pages/FicheDetail'
 import { Placeholder } from './pages/Placeholder'
 import { PlanTravail } from './pages/PlanTravail'
 import { Editor } from './pages/Editor'
-import { Reglages } from './pages/Reglages'
+import { Réglages } from './pages/Reglages'
 import { Admin } from './pages/Admin'
 
 function AppRoutes() {
@@ -47,7 +47,7 @@ function AppRoutes() {
         <Route path="/alertes" element={
           <Placeholder titre="Alertes" icon="🔔" description="Informations, alertes et bonnes pratiques" brique="Brique 6" />
         } />
-        <Route path="/reglages" element={<Reglages />} />
+        <Route path="/reglages" element={<Réglages />} />
         <Route path="/setup" element={<ProfileSetup />} />
       </Route>
       <Route path="/plan" element={<PlanTravail />} />
