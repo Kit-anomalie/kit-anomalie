@@ -101,8 +101,8 @@ export function EditorFiches() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-bold text-sncf-dark">Fiches memo</h2>
-          <p className="text-xs text-gray-500 mt-1">{fiches.length} fiche{fiches.length > 1 ? 's' : ''} personnalisee{fiches.length > 1 ? 's' : ''}</p>
+          <h2 className="text-sm font-bold text-sncf-dark">Fiches mémo</h2>
+          <p className="text-xs text-gray-500 mt-1">{fiches.length} fiche{fiches.length > 1 ? 's' : ''} personnalisée{fiches.length > 1 ? 's' : ''}</p>
         </div>
         {!showForm && (
           <button
@@ -137,7 +137,7 @@ export function EditorFiches() {
           <textarea
             value={form.comment}
             onChange={e => setForm(f => ({ ...f, comment: e.target.value }))}
-            placeholder="Comment (etapes detaillees)"
+            placeholder="Comment (étapes détaillées)"
             rows={5}
             className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
           />
@@ -145,7 +145,7 @@ export function EditorFiches() {
           <textarea
             value={form.erreursAEviter}
             onChange={e => setForm(f => ({ ...f, erreursAEviter: e.target.value }))}
-            placeholder="Erreurs a eviter (une par ligne)"
+            placeholder="Erreurs à éviter (une par ligne)"
             rows={3}
             className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
           />
@@ -153,20 +153,20 @@ export function EditorFiches() {
           <input
             value={form.gestesCles}
             onChange={e => setForm(f => ({ ...f, gestesCles: e.target.value }))}
-            placeholder="Mots-cles (separes par des virgules)"
+            placeholder="Mots-clés (séparés par des virgules)"
             className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
           />
 
           <input
             value={form.referentiel}
             onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
-            placeholder="Referentiel (ex: MT00342)"
+            placeholder="Référentiel (ex: MT00342)"
             className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
           />
 
           {/* Roles */}
           <div>
-            <p className="text-xs font-medium text-gray-600 mb-1">Roles concernes</p>
+            <p className="text-xs font-medium text-gray-600 mb-1">Rôles concernés</p>
             <div className="flex flex-wrap gap-2">
               {ALL_ROLES.map(role => (
                 <button
@@ -182,9 +182,9 @@ export function EditorFiches() {
             </div>
           </div>
 
-          {/* Specialites */}
+          {/* Spécialités */}
           <div>
-            <p className="text-xs font-medium text-gray-600 mb-1">Specialites</p>
+            <p className="text-xs font-medium text-gray-600 mb-1">Spécialités</p>
             <div className="flex flex-wrap gap-2">
               {ALL_SPECIALITES.map(spec => (
                 <button
@@ -200,7 +200,7 @@ export function EditorFiches() {
             </div>
           </div>
 
-          {/* Pieces jointes */}
+          {/* Pièces jointes */}
           <PiecesJointesEditor
             pieces={form.piecesJointes}
             onChange={(pj) => setForm(f => ({ ...f, piecesJointes: pj }))}
@@ -231,7 +231,7 @@ export function EditorFiches() {
       {/* Liste des fiches */}
       <div className="space-y-2">
         {fiches.length === 0 && !showForm && (
-          <p className="text-center text-gray-400 text-sm py-4">Aucune fiche personnalisee</p>
+          <p className="text-center text-gray-400 text-sm py-4">Aucune fiche personnalisée</p>
         )}
         {fiches.map(fiche => (
           <div key={fiche.id} className="bg-white rounded-2xl p-4 border border-gray-100">

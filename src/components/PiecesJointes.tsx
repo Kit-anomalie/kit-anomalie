@@ -51,7 +51,7 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
     const isPdf = file.type === 'application/pdf'
 
     if (!isImage && !isPdf) {
-      alert('Format non supporte. Utilisez une image (jpg, png) ou un PDF.')
+      alert('Format non supporté. Utilisez une image (jpg, png) ou un PDF.')
       return
     }
 
@@ -96,14 +96,14 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
   }
 
   const handleRemove = (id: string) => {
-    if (confirm('Supprimer cette piece jointe ?')) {
+    if (confirm('Supprimer cette pièce jointe ?')) {
       onChange(pieces.filter(p => p.id !== id))
     }
   }
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-medium text-gray-600">Pieces jointes</p>
+      <p className="text-xs font-medium text-gray-600">Pièces jointes</p>
 
       {/* Liste des pieces existantes */}
       {pieces.length > 0 && (
@@ -193,7 +193,7 @@ export function PiecesJointesView({ pieces }: { pieces: PieceJointe[] }) {
               <span className="text-xl">📄</span>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-sncf-dark truncate">{p.nom}</div>
-                <div className="text-[11px] text-gray-400">Telecharger le PDF</div>
+                <div className="text-[11px] text-gray-400">Télécharger le PDF</div>
               </div>
               <span className="text-sncf-blue text-sm">↓</span>
             </a>

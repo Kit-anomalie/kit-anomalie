@@ -6,7 +6,7 @@ import { Toggle } from '../components/Toggle'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 import { ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
 
-export function Reglages() {
+export function Réglages() {
   const navigate = useNavigate()
   const { role, specialite, resetProfile } = useProfileStore()
 
@@ -39,7 +39,7 @@ export function Reglages() {
       <button onClick={() => navigate('/')} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity">
         ← Accueil
       </button>
-      <h1 className="text-lg font-bold text-sncf-dark spring-enter" style={{ animationDelay: '50ms' }}>Reglages</h1>
+      <h1 className="text-lg font-bold text-sncf-dark spring-enter" style={{ animationDelay: '50ms' }}>Réglages</h1>
 
       {/* Mon profil */}
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden spring-scale" style={{ animationDelay: '120ms' }}>
@@ -90,13 +90,13 @@ export function Reglages() {
 
         <div>
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <span className="text-sm text-sncf-dark">A propos</span>
-            <span className="text-[11px] text-gray-500">Les bons reflexes anomalie, dans la poche</span>
+            <span className="text-sm text-sncf-dark">À propos</span>
+            <span className="text-[11px] text-gray-500">Les bons réflexes anomalie, dans la poche</span>
           </div>
 
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <span className="text-sm text-sncf-dark">Nous contacter</span>
-            <span className="text-xs text-gray-400">Bientot disponible</span>
+            <span className="text-xs text-gray-400">Bientôt disponible</span>
           </div>
 
           <button

@@ -31,7 +31,7 @@ export function EditorTips() {
     <div className="space-y-4">
       <div>
         <h2 className="text-sm font-bold text-sncf-dark">Tips du jour</h2>
-        <p className="text-xs text-gray-500 mt-1">Un tip s'affiche chaque jour aux utilisateurs. Plus vous en ajoutez, plus la rotation est variee.</p>
+        <p className="text-xs text-gray-500 mt-1">Un tip s'affiche chaque jour aux utilisateurs. Plus vous en ajoutez, plus la rotation est variée.</p>
       </div>
 
       {/* Formulaire d'ajout */}
@@ -39,7 +39,7 @@ export function EditorTips() {
         <textarea
           value={newTip}
           onChange={e => setNewTip(e.target.value)}
-          placeholder="Ecrivez un nouveau tip..."
+          placeholder="Écrivez un nouveau tip..."
           rows={3}
           className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
         />

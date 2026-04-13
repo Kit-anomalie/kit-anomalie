@@ -13,7 +13,7 @@ export function GuideDetail() {
 
   if (!guide) return (
     <div className="p-4 text-center text-gray-500 space-y-3 spring-enter">
-      <p>Guide non trouve</p>
+      <p>Guide non trouvé</p>
       <button onClick={() => navigate('/guides')} className="text-sncf-blue text-sm font-medium">← Retour aux guides</button>
     </div>
   )
@@ -51,10 +51,10 @@ export function GuideDetail() {
         ))}
       </div>
       <div className="text-xs text-gray-400 text-center">
-        Etape {currentStep + 1} / {guide.etapes.length}
+        Étape{currentStep + 1} / {guide.etapes.length}
       </div>
 
-      {/* Etape courante — key force le re-render avec animation */}
+      {/* Étapecourante — key force le re-render avec animation */}
       <div
         key={`step-${currentStep}`}
         className="bg-white rounded-2xl p-4 border border-gray-100 space-y-3 slide-right"
@@ -68,10 +68,10 @@ export function GuideDetail() {
 
         <p className="text-sm text-gray-700 leading-relaxed">{etape.action}</p>
 
-        {/* Champs a remplir */}
+        {/* Champs à remplir */}
         {etape.champsARemplir && etape.champsARemplir.length > 0 && (
           <div className="bg-sncf-blue/5 rounded-xl p-3 spring-scale" style={{ animationDelay: '150ms' }}>
-            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide mb-1">Champs a remplir</div>
+            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide mb-1">Champs à remplir</div>
             {etape.champsARemplir.map((champ, i) => (
               <div key={i} className="text-xs text-gray-700 flex items-center gap-1.5 mt-1">
                 <span className="text-sncf-blue">→</span> {champ}
@@ -100,10 +100,10 @@ export function GuideDetail() {
         )}
       </div>
 
-      {/* Pieces jointes */}
+      {/* Pièces jointes */}
       {guide.piecesJointes && guide.piecesJointes.length > 0 && (
         <div>
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Pieces jointes</h2>
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Pièces jointes</h2>
           <PiecesJointesView pieces={guide.piecesJointes} />
         </div>
       )}
@@ -119,7 +119,7 @@ export function GuideDetail() {
               : 'bg-gray-100 text-sncf-dark active:scale-[0.97]'
           }`}
         >
-          ← Precedent
+          ← Précédent
         </button>
         <button
           onClick={() => isLast ? navigate(-1) : setCurrentStep(s => s + 1)}

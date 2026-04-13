@@ -11,7 +11,7 @@ export function FicheDetail() {
 
   if (!fiche) return (
     <div className="p-4 text-center text-gray-500 space-y-3 spring-enter">
-      <p>Fiche non trouvee</p>
+      <p>Fiche non trouvée</p>
       <button onClick={() => navigate('/fiches')} className="text-sncf-blue text-sm font-medium">← Retour aux fiches</button>
     </div>
   )
@@ -58,9 +58,9 @@ export function FicheDetail() {
         </div>
       </div>
 
-      {/* Erreurs a eviter — section 3 */}
+      {/* Erreurs à éviter — section 3 */}
       <div className="bg-red-50 rounded-2xl p-4 border border-sncf-red/20 spring-scale" style={{ animationDelay: '320ms' }}>
-        <h2 className="text-xs font-bold text-sncf-red uppercase tracking-wide mb-2">Erreurs a eviter</h2>
+        <h2 className="text-xs font-bold text-sncf-red uppercase tracking-wide mb-2">Erreurs à éviter</h2>
         <div className="space-y-2">
           {fiche.erreursAEviter.map((erreur, i) => (
             <div key={i} className="flex items-start gap-2">
@@ -71,10 +71,10 @@ export function FicheDetail() {
         </div>
       </div>
 
-      {/* Pieces jointes */}
+      {/* Pièces jointes */}
       {fiche.piecesJointes && fiche.piecesJointes.length > 0 && (
         <div className="spring-scale" style={{ animationDelay: '380ms' }}>
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Pieces jointes</h2>
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Pièces jointes</h2>
           <PiecesJointesView pieces={fiche.piecesJointes} />
         </div>
       )}
@@ -86,7 +86,7 @@ export function FicheDetail() {
           className="w-full py-3 rounded-2xl bg-sncf-blue/10 text-sncf-blue font-medium text-sm active:scale-[0.97] transition-transform duration-200 spring-enter"
           style={{ animationDelay: '400ms' }}
         >
-          Voir le guide pas a pas →
+          Voir le guide pas à pas →
         </button>
       )}
     </div>

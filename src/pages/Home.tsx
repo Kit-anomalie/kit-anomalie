@@ -23,14 +23,14 @@ export function Home() {
   const allTips = [...DEFAULT_TIPS, ...customTips.map(t => t.texte)]
   const tipOfTheDay = allTips[new Date().getDate() % allTips.length]
 
-  // Acces rapides
+  // Accès rapides
   const quickActions = [
-    { icon: '📖', label: 'Guides', desc: 'Pas a pas par appli', path: '/guides', color: 'bg-blue-50 border-sncf-blue/20' },
-    { icon: '📋', label: 'Fiches memo', desc: 'Reflexes en 1 tap', path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
+    { icon: '📖', label: 'Guides', desc: 'Pas à pas par appli', path: '/guides', color: 'bg-blue-50 border-sncf-blue/20' },
+    { icon: '📋', label: 'Fiches mémo', desc: 'Réflexes en 1 tap', path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
     { icon: '🎓', label: 'Onboarding', desc: 'Parcours formation', path: '/onboarding', color: 'bg-green-50 border-sncf-green/20' },
     { icon: '🔍', label: 'Anomalies', desc: 'Par actif', path: '/actifs', color: 'bg-purple-50 border-purple-200' },
-    { icon: '🤖', label: 'Assistant IA', desc: 'Aide redaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
-    { icon: '🔔', label: 'Alertes', desc: 'Bon a savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
+    { icon: '🤖', label: 'Assistant IA', desc: 'Aide rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
+    { icon: '🔔', label: 'Alertes', desc: 'Bon à savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
   ]
 
   return (
@@ -55,7 +55,7 @@ export function Home() {
           <div className="flex items-start gap-2">
             <span className="text-sm">🔧</span>
             <div>
-              <div className="text-[11px] font-bold text-sncf-orange uppercase tracking-wide">Maintenance prevue</div>
+              <div className="text-[11px] font-bold text-sncf-orange uppercase tracking-wide">Maintenance prévue</div>
               <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{planningMessage}</p>
             </div>
           </div>
@@ -76,13 +76,13 @@ export function Home() {
         </div>
       </div>
 
-      {/* Acces rapides — cascade de cards */}
+      {/* Accès rapides — cascade de cards */}
       <div>
         <h2
           className="text-sm font-bold text-sncf-dark mb-3 spring-enter"
           style={{ animationDelay: '350ms' }}
         >
-          Acces rapides
+          Accès rapides
         </h2>
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map((action, i) => (
@@ -105,7 +105,7 @@ export function Home() {
         className="text-center py-4"
         style={{ animation: 'fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both', animationDelay: '900ms' }}
       >
-        <p className="text-[11px] text-gray-300 italic whitespace-nowrap">Les bons reflexes anomalie, dans la poche</p>
+        <p className="text-[11px] text-gray-300 italic whitespace-nowrap">Les bons réflexes anomalie, dans la poche</p>
       </div>
 
     </div>

@@ -34,7 +34,7 @@ export function ProfileSetup() {
           <span className="text-2xl font-bold text-sncf-blue">KA</span>
         </div>
         <h1 className="text-2xl font-bold text-sncf-dark">Kit Anomalie</h1>
-        <p className="text-xs text-gray-500 mt-1 whitespace-nowrap">Les bons reflexes anomalie, dans la poche</p>
+        <p className="text-xs text-gray-500 mt-1 whitespace-nowrap">Les bons réflexes anomalie, dans la poche</p>
       </div>
 
       {/* Indicateur d'etapes */}
@@ -60,7 +60,7 @@ export function ProfileSetup() {
       {/* Etape 1 : Role — slide depuis la gauche */}
       {step === 'role' && (
         <div key="step-role" className="slide-right">
-          <h2 className="text-lg font-bold text-sncf-dark mb-1">Quel est votre role ?</h2>
+          <h2 className="text-lg font-bold text-sncf-dark mb-1">Quel est votre rôle ?</h2>
           <p className="text-sm text-gray-500 mb-4">Cela personnalise le contenu du kit</p>
           <div className="space-y-3">
             {(Object.keys(ROLE_LABELS) as Role[]).map((r, i) => (
@@ -93,8 +93,8 @@ export function ProfileSetup() {
           <button onClick={() => setStep('role')} className="text-sncf-blue text-sm mb-4 flex items-center gap-1 active:opacity-60 transition-opacity">
             ← Retour
           </button>
-          <h2 className="text-lg font-bold text-sncf-dark mb-1">Votre specialite</h2>
-          <p className="text-sm text-gray-500 mb-4">Determine les guides et fiches disponibles</p>
+          <h2 className="text-lg font-bold text-sncf-dark mb-1">Votre spécialité</h2>
+          <p className="text-sm text-gray-500 mb-4">Détermine les guides et fiches disponibles</p>
           <div className="space-y-3">
             {(Object.keys(SPECIALITE_LABELS) as Specialite[]).map((s, i) => (
               <button

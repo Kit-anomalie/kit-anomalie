@@ -12,7 +12,7 @@ export function OfflineBadge() {
       <div className={`w-2 h-2 rounded-full ${
         isOffline ? 'bg-sncf-red' : 'bg-sncf-green'
       }`} />
-      {isOffline ? 'Hors connexion' : 'Connecte'}
+      {isOffline ? 'Hors connexion' : 'Connecté'}
     </div>
   )
 }

@@ -67,14 +67,14 @@ export function Admin() {
         <div className="bg-white rounded-2xl border border-sncf-red/20 overflow-hidden">
           <div className="px-4 py-3 border-b border-sncf-red/20">
             <h2 className="text-xs font-bold text-sncf-red uppercase tracking-wide">Maintenance totale</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Bloque l'acces pour tous les utilisateurs. Telecharge le fichier puis demandez le deploiement a Claude.</p>
+            <p className="text-xs text-gray-400 mt-0.5">Bloque l'accès pour tous les utilisateurs. Télécharge le fichier puis demandez le déploiement à Claude.</p>
           </div>
           <div className="px-4 py-3 space-y-3">
             <textarea
               value={maintenanceMessage}
               onChange={e => setMaintenanceMessage(e.target.value)}
               rows={2}
-              placeholder="Message affiche aux utilisateurs..."
+              placeholder="Message affiché aux utilisateurs..."
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
             />
             <div className="flex gap-2">
@@ -88,16 +88,16 @@ export function Admin() {
                 onClick={handleDesactiverTotale}
                 className="flex-1 py-2.5 rounded-xl bg-sncf-green text-white font-medium text-sm active:scale-[0.98] transition-transform"
               >
-                Desactiver pour tous
+                Désactiver pour tous
               </button>
             </div>
           </div>
         </div>
 
-        {/* Maintenance planifiee */}
+        {/* Maintenance planifiée */}
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100">
-            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Maintenance planifiee</h2>
+            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Maintenance planifiée</h2>
             <p className="text-xs text-gray-400 mt-0.5">Bandeau d'information sur l'accueil.</p>
           </div>
           <div className="px-4 py-3 space-y-3">
@@ -108,7 +108,7 @@ export function Admin() {
             <input
               value={planningMessage}
               onChange={e => setPlanningMessage(e.target.value)}
-              placeholder="Ex: Maintenance prevue le 12 avril de 14h a 15h"
+              placeholder="Ex: Maintenance prévue le 12 avril de 14h à 15h"
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
             />
             <input
@@ -129,7 +129,7 @@ export function Admin() {
             onClick={() => navigate('/editeur')}
             className="w-full px-4 py-3 flex items-center justify-between text-left"
           >
-            <span className="text-sm text-sncf-dark font-medium">Mode editeur</span>
+            <span className="text-sm text-sncf-dark font-medium">Mode éditeur</span>
             <span className="text-sncf-blue text-sm">→</span>
           </button>
         </div>
@@ -147,7 +147,7 @@ export function Admin() {
               : 'bg-gray-100 text-gray-300'
           }`}
         >
-          {saved ? 'Enregistre !' : 'Enregistrer'}
+          {saved ? 'Enregistré !' : 'Enregistrer'}
         </button>
         <button
           onClick={handleReset}

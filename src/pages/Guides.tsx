@@ -34,7 +34,7 @@ export function Guides() {
     <div className="px-4 py-4 space-y-4">
       <div className="spring-enter">
         <h1 className="text-lg font-bold text-sncf-dark">Guides</h1>
-        <p className="text-xs text-gray-500">Pas a pas par application metier</p>
+        <p className="text-xs text-gray-500">Pas à pas par application métier</p>
       </div>
 
       {/* Filtre horizontal par appli */}
@@ -85,7 +85,7 @@ export function Guides() {
                   </span>
                 )}
                 <span className="text-[11px] bg-sncf-green/10 text-sncf-green px-2 py-0.5 rounded-full font-medium">
-                  {guide.etapes.length} etape{guide.etapes.length > 1 ? 's' : ''}
+                  {guide.etapes.length} étape{guide.etapes.length > 1 ? 's' : ''}
                 </span>
                 <span className="text-[11px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
                   {guide.gesteMetier}

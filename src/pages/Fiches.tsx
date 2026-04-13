@@ -31,8 +31,8 @@ export function Fiches() {
   return (
     <div className="px-4 py-4 space-y-4">
       <div className="spring-enter">
-        <h1 className="text-lg font-bold text-sncf-dark">Fiches memo</h1>
-        <p className="text-xs text-gray-500">Reflexes essentiels en un tap</p>
+        <h1 className="text-lg font-bold text-sncf-dark">Fiches mémo</h1>
+        <p className="text-xs text-gray-500">Réflexes essentiels en un tap</p>
       </div>
 
       {/* Recherche */}
