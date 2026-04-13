@@ -19,17 +19,17 @@ export function Home() {
 
   if (!role || !specialite) return null
 
-  // Tip du jour
+  // Conseil du jour
   const allTips = [...DEFAULT_TIPS, ...customTips.map(t => t.texte)]
   const tipOfTheDay = allTips[new Date().getDate() % allTips.length]
 
   // Accès rapides
   const quickActions = [
     { icon: '📖', label: 'Guides', desc: 'Pas à pas par appli', path: '/guides', color: 'bg-blue-50 border-sncf-blue/20' },
-    { icon: '📋', label: 'Fiches mémo', desc: 'Réflexes en 1 tap', path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
-    { icon: '🎓', label: 'Onboarding', desc: 'Parcours formation', path: '/onboarding', color: 'bg-green-50 border-sncf-green/20' },
+    { icon: '📋', label: 'Fiches mémo', desc: 'Réflexes essentiels', path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
+    { icon: '🎓', label: 'Formation', desc: 'Se former pas à pas', path: '/onboarding', color: 'bg-green-50 border-sncf-green/20' },
     { icon: '🔍', label: 'Anomalies', desc: 'Par actif', path: '/actifs', color: 'bg-purple-50 border-purple-200' },
-    { icon: '🤖', label: 'Assistant IA', desc: 'Aide rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
+    { icon: '🤖', label: 'Assistant IA', desc: 'Aide à la rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
     { icon: '🔔', label: 'Alertes', desc: 'Bon à savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
   ]
 
@@ -62,7 +62,7 @@ export function Home() {
         </div>
       )}
 
-      {/* Tip du jour — apparait apres le welcome */}
+      {/* Conseil du jour — apparait apres le welcome */}
       <div
         className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl p-3 spring-scale"
         style={{ animationDelay: '250ms' }}
@@ -70,7 +70,7 @@ export function Home() {
         <div className="flex items-start gap-2">
           <span className="text-sm">💡</span>
           <div>
-            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide">Tip du jour</div>
+            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide">Conseil du jour</div>
             <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{tipOfTheDay}</p>
           </div>
         </div>

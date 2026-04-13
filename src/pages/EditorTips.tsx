@@ -30,7 +30,7 @@ export function EditorTips() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-sm font-bold text-sncf-dark">Tips du jour</h2>
+        <h2 className="text-sm font-bold text-sncf-dark">Conseils du jour</h2>
         <p className="text-xs text-gray-500 mt-1">Un tip s'affiche chaque jour aux utilisateurs. Plus vous en ajoutez, plus la rotation est variée.</p>
       </div>
 
@@ -39,7 +39,7 @@ export function EditorTips() {
         <textarea
           value={newTip}
           onChange={e => setNewTip(e.target.value)}
-          placeholder="Écrivez un nouveau tip..."
+          placeholder="Écrivez un nouveau conseil..."
           rows={3}
           className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
         />
@@ -52,14 +52,14 @@ export function EditorTips() {
               : 'bg-gray-100 text-gray-300'
           }`}
         >
-          Ajouter ce tip
+          Ajouter ce conseil
         </button>
       </div>
 
       {/* Liste des tips */}
       <div className="space-y-2">
         {tips.length === 0 && (
-          <p className="text-center text-gray-400 text-sm py-4">Aucun tip pour le moment</p>
+          <p className="text-center text-gray-400 text-sm py-4">Aucun conseil pour le moment</p>
         )}
         {tips.map(tip => (
           <div key={tip.id} className="bg-white rounded-2xl p-4 border border-gray-100">
@@ -88,7 +88,7 @@ export function EditorTips() {
                     Modifier
                   </button>
                   <button
-                    onClick={() => { if (confirm('Supprimer ce tip ?')) deleteTip(tip.id) }}
+                    onClick={() => { if (confirm('Supprimer ce conseil ?')) deleteTip(tip.id) }}
                     className="text-xs text-sncf-red bg-sncf-red/10 px-2 py-1 rounded-lg"
                   >
                     Suppr.

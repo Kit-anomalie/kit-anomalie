@@ -36,7 +36,7 @@ function AppRoutes() {
         <Route path="/fiches" element={<Fiches />} />
         <Route path="/fiches/:id" element={<FicheDetail />} />
         <Route path="/onboarding" element={
-          <Placeholder titre="Onboarding" icon="🎓" description="Parcours de formation progressif adapté à votre profil" brique="Brique 3" />
+          <Placeholder titre="Formation" icon="🎓" description="Parcours de formation progressif adapté à votre profil" brique="Brique 3" />
         } />
         <Route path="/actifs" element={
           <Placeholder titre="Anomalies par actif" icon="🔍" description="Recherchez un actif et consultez ses anomalies" brique="Brique 4" />

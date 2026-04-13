@@ -8,7 +8,7 @@ import { EditorGuides } from './EditorGuides'
 type Tab = 'tips' | 'fiches' | 'guides'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: 'tips', label: 'Tips', icon: '💡' },
+  { id: 'tips', label: 'Conseils', icon: '💡' },
   { id: 'fiches', label: 'Fiches', icon: '📋' },
   { id: 'guides', label: 'Guides', icon: '📖' },
 ]
@@ -40,10 +40,10 @@ export function Editor() {
       try {
         const data = JSON.parse(reader.result as string)
         importData(data)
-        setImportMessage(`Import OK — ${data.tips?.length ?? 0} tips, ${data.fiches?.length ?? 0} fiches, ${data.guides?.length ?? 0} guides, ${data.liens?.length ?? 0} liens`)
+        setImportMessage(`Importation réussie — ${data.tips?.length ?? 0} tips, ${data.fiches?.length ?? 0} fiches, ${data.guides?.length ?? 0} guides, ${data.liens?.length ?? 0} liens`)
         setTimeout(() => setImportMessage(''), 4000)
       } catch {
-        setImportMessage('Erreur : fichier JSON invalide')
+        setImportMessage('Erreur : fichier invalide')
         setTimeout(() => setImportMessage(''), 4000)
       }
     }
@@ -101,13 +101,13 @@ export function Editor() {
           onClick={handleExport}
           className="flex-1 py-3 rounded-2xl bg-sncf-blue text-white font-medium text-sm active:scale-[0.98] transition-transform"
         >
-          Exporter JSON
+          Exporter le contenu
         </button>
         <button
           onClick={() => fileInputRef.current?.click()}
           className="flex-1 py-3 rounded-2xl bg-sncf-blue/10 text-sncf-blue font-medium text-sm active:scale-[0.98] transition-transform"
         >
-          Importer JSON
+          Importer du contenu
         </button>
         <input
           ref={fileInputRef}
