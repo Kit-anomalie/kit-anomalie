@@ -44,6 +44,27 @@ export function EditorGuides() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<GuideForm>(EMPTY_FORM)
+  const [showPaste, setShowPaste] = useState(false)
+  const [pasteText, setPasteText] = useState('')
+
+  const handlePasteImport = () => {
+    if (!pasteText.trim()) return
+    const lines = pasteText.trim().split('\n').filter(l => l.trim())
+    const newSteps: StepForm[] = lines.map(line => {
+      // Format: "1. Titre | Action" ou "1. Action"
+      const cleaned = line.replace(/^\d+[\.\)\-]\s*/, '').trim()
+      const parts = cleaned.split('|').map(s => s.trim())
+      if (parts.length >= 2) {
+        return { titre: parts[0], action: parts[1], champsARemplir: '', erreursFrequentes: '' }
+      }
+      return { titre: cleaned, action: '', champsARemplir: '', erreursFrequentes: '' }
+    })
+    if (newSteps.length > 0) {
+      setForm(f => ({ ...f, etapes: [...f.etapes.filter(s => s.titre || s.action), ...newSteps] }))
+      setPasteText('')
+      setShowPaste(false)
+    }
+  }
 
   const resetForm = () => {
     setForm(EMPTY_FORM)
@@ -263,12 +284,46 @@ export function EditorGuides() {
                 />
               </div>
             ))}
-            <button
-              onClick={addStep}
-              className="w-full py-2 rounded-xl border-2 border-dashed border-gray-300 text-sm text-gray-500 font-medium"
-            >
-              + Ajouter une étape
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={addStep}
+                className="flex-1 py-2 rounded-xl border-2 border-dashed border-gray-300 text-sm text-gray-500 font-medium"
+              >
+                + Ajouter une étape
+              </button>
+              <button
+                onClick={() => setShowPaste(!showPaste)}
+                className="flex-1 py-2 rounded-xl border-2 border-dashed border-sncf-blue/30 text-sm text-sncf-blue font-medium"
+              >
+                📋 Coller les étapes
+              </button>
+            </div>
+
+            {showPaste && (
+              <div className="bg-sncf-blue/5 rounded-xl p-3 space-y-2 border border-sncf-blue/20">
+                <p className="text-xs text-gray-500">
+                  Collez vos étapes, une par ligne. Format : <strong>Titre | Action</strong> ou juste le titre.
+                </p>
+                <textarea
+                  value={pasteText}
+                  onChange={e => setPasteText(e.target.value)}
+                  placeholder={"1. Connexion | Saisissez votre mot de passe\n2. Validation | Appuyez sur VALIDER\n3. Synchronisation | Attendez la fin"}
+                  rows={6}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
+                />
+                <button
+                  onClick={handlePasteImport}
+                  disabled={!pasteText.trim()}
+                  className={`w-full py-2 rounded-xl font-medium text-sm ${
+                    pasteText.trim()
+                      ? 'bg-sncf-blue text-white active:scale-[0.98]'
+                      : 'bg-gray-100 text-gray-300'
+                  }`}
+                >
+                  Générer les étapes
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Pièces jointes */}
