@@ -61,6 +61,7 @@ export interface GuideStep {
   numero: number
   titre: string
   action: string
+  section?: string // ex: "Préparer", "Réaliser", "Envoyer"
   champsARemplir?: string[]
   erreursFrequentes?: string[]
   referentiel?: string

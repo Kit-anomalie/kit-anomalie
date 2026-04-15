@@ -11,6 +11,7 @@ const ALL_SPECIALITES: Specialite[] = ['voie', 'seg', 'eale', 'cat', 'sm']
 interface StepForm {
   titre: string
   action: string
+  section: string
   champsARemplir: string
   erreursFrequentes: string
 }
@@ -28,7 +29,7 @@ interface GuideForm {
   piecesJointes: PieceJointe[]
 }
 
-const EMPTY_STEP: StepForm = { titre: '', action: '', champsARemplir: '', erreursFrequentes: '' }
+const EMPTY_STEP: StepForm = { titre: '', action: '', section: '', champsARemplir: '', erreursFrequentes: '' }
 
 const EMPTY_FORM: GuideForm = {
   titre: '',
@@ -54,15 +55,24 @@ export function EditorGuides() {
   const handlePasteImport = () => {
     if (!pasteText.trim()) return
     const lines = pasteText.trim().split('\n').filter(l => l.trim())
-    const newSteps: StepForm[] = lines.map(line => {
+    let currentSection = ''
+    const newSteps: StepForm[] = []
+    for (const line of lines) {
+      // Détection de section : "--- PRÉPARER ---" ou "== RÉALISER ==" ou "# ENVOYER"
+      const sectionMatch = line.match(/^[-=#]+\s*(.+?)\s*[-=#]*$/)
+      if (sectionMatch) {
+        currentSection = sectionMatch[1].trim()
+        continue
+      }
       // Format: "1. Titre | Action" ou "1. Action"
       const cleaned = line.replace(/^\d+[\.\)\-]\s*/, '').trim()
       const parts = cleaned.split('|').map(s => s.trim())
       if (parts.length >= 2) {
-        return { titre: parts[0], action: parts[1], champsARemplir: '', erreursFrequentes: '' }
+        newSteps.push({ titre: parts[0], action: parts[1], section: currentSection, champsARemplir: '', erreursFrequentes: '' })
+      } else {
+        newSteps.push({ titre: cleaned, action: '', section: currentSection, champsARemplir: '', erreursFrequentes: '' })
       }
-      return { titre: cleaned, action: '', champsARemplir: '', erreursFrequentes: '' }
-    })
+    }
     if (newSteps.length > 0) {
       setForm(f => ({ ...f, etapes: [...f.etapes.filter(s => s.titre || s.action), ...newSteps] }))
       setPasteText('')
@@ -91,6 +101,7 @@ export function EditorGuides() {
       etapes: guide.etapes.map(e => ({
         titre: e.titre,
         action: e.action,
+        section: e.section ?? '',
         champsARemplir: e.champsARemplir?.join('\n') ?? '',
         erreursFrequentes: e.erreursFrequentes?.join('\n') ?? '',
       })),
@@ -123,6 +134,7 @@ export function EditorGuides() {
       numero: i + 1,
       titre: step.titre.trim(),
       action: step.action.trim(),
+      section: step.section.trim() || undefined,
       champsARemplir: step.champsARemplir.split('\n').map(s => s.trim()).filter(Boolean) || undefined,
       erreursFrequentes: step.erreursFrequentes.split('\n').map(s => s.trim()).filter(Boolean) || undefined,
     }))
@@ -346,6 +358,12 @@ export function EditorGuides() {
                     <button onClick={() => removeStep(i)} className="text-xs text-sncf-red">Supprimer</button>
                   )}
                 </div>
+                <input
+                  value={step.section}
+                  onChange={e => updateStep(i, 'section', e.target.value)}
+                  placeholder="Section (ex: Préparer, Réaliser, Envoyer)"
+                  className="w-full px-3 py-1.5 rounded-lg border border-dashed border-gray-300 text-xs text-gray-500 focus:outline-none focus:border-sncf-blue"
+                />
                 <input
                   value={step.titre}
                   onChange={e => updateStep(i, 'titre', e.target.value)}

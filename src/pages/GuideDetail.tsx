@@ -56,7 +56,16 @@ export function GuideDetail() {
         Étape{currentStep + 1} / {guide.etapes.length}
       </div>
 
-      {/* Étapecourante — key force le re-render avec animation */}
+      {/* Section — affichée quand elle change */}
+      {etape.section && (currentStep === 0 || etape.section !== guide.etapes[currentStep - 1]?.section) && (
+        <div className="text-center spring-enter">
+          <span className="text-[11px] font-bold text-sncf-blue uppercase tracking-widest bg-sncf-blue/5 px-4 py-1.5 rounded-full">
+            {etape.section}
+          </span>
+        </div>
+      )}
+
+      {/* Étape courante — key force le re-render avec animation */}
       <div
         key={`step-${currentStep}`}
         className="bg-white rounded-2xl p-4 border border-gray-100 space-y-3 slide-right"
