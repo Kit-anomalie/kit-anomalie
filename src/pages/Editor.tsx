@@ -23,7 +23,9 @@ export function Editor() {
   const handleExport = () => {
     const data = exportData()
     const json = JSON.stringify(data, null, 2)
-    const blob = new Blob([json], { type: 'application/json;charset=utf-8' })
+    // BOM UTF-8 pour forcer l'encodage sur tous les navigateurs
+    const bom = new Uint8Array([0xEF, 0xBB, 0xBF])
+    const blob = new Blob([bom, json], { type: 'application/json;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -39,7 +41,10 @@ export function Editor() {
     reader.readAsText(file, 'UTF-8')
     reader.onload = () => {
       try {
-        const data = JSON.parse(reader.result as string)
+        // Retirer le BOM UTF-8 si présent
+        let text = reader.result as string
+        if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1)
+        const data = JSON.parse(text)
         importData(data)
         setImportMessage(`Importation réussie — ${data.tips?.length ?? 0} tips, ${data.fiches?.length ?? 0} fiches, ${data.guides?.length ?? 0} guides, ${data.liens?.length ?? 0} liens`)
         setTimeout(() => setImportMessage(''), 4000)
