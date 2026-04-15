@@ -158,12 +158,16 @@ export function EditorGuides() {
     }))
   }
 
+  const [filterAppli, setFilterAppli] = useState<string | null>(null)
+  const applisUsed = [...new Set(guides.map(g => g.appliMetier).filter(Boolean))]
+  const guidesVisible = filterAppli ? guides.filter(g => g.appliMetier === filterAppli) : guides
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-bold text-sncf-dark">Guides pas à pas</h2>
-          <p className="text-xs text-gray-500 mt-1">{guides.length} guide{guides.length > 1 ? 's' : ''} personnalisé{guides.length > 1 ? 's' : ''}</p>
+          <p className="text-xs text-gray-500 mt-1">{guidesVisible.length} guide{guidesVisible.length > 1 ? 's' : ''} sur {guides.length}</p>
         </div>
         {!showForm && (
           <button
@@ -174,6 +178,34 @@ export function EditorGuides() {
           </button>
         )}
       </div>
+
+      {/* Filtre par appli */}
+      {applisUsed.length > 0 && !showForm && (
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button
+            onClick={() => setFilterAppli(null)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+              filterAppli === null ? 'bg-sncf-blue text-white' : 'bg-white text-gray-600 border border-gray-200'
+            }`}
+          >
+            Toutes
+          </button>
+          {applisUsed.map(appId => {
+            const appli = APPLIS_METIER.find(a => a.id === appId)
+            return (
+              <button
+                key={appId}
+                onClick={() => setFilterAppli(filterAppli === appId ? null : appId)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  filterAppli === appId ? 'bg-sncf-blue text-white' : 'bg-white text-gray-600 border border-gray-200'
+                }`}
+              >
+                {appli?.nom ?? appId}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {/* Formulaire */}
       {showForm && (
@@ -383,10 +415,10 @@ export function EditorGuides() {
 
       {/* Liste des guides */}
       <div className="space-y-2">
-        {guides.length === 0 && !showForm && (
-          <p className="text-center text-gray-400 text-sm py-4">Aucun guide personnalisé</p>
+        {guidesVisible.length === 0 && !showForm && (
+          <p className="text-center text-gray-400 text-sm py-4">{guides.length === 0 ? 'Aucun guide personnalisé' : 'Aucun guide pour ce filtre'}</p>
         )}
-        {guides.map(guide => (
+        {guidesVisible.map(guide => (
           <div key={guide.id} className="bg-white rounded-2xl p-4 border border-gray-100">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
