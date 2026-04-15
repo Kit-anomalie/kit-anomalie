@@ -13,8 +13,9 @@ export function Guides() {
   const sharedGuides = useSharedContentStore(s => s.guides)
   const [appliFilter, setAppliFilter] = useState<string | null>(null)
 
-  // Fusionner guides codés en dur + partagés + locaux
-  const allGuides = [...GUIDES, ...sharedGuides, ...customGuides]
+  // Fusionner guides codés en dur + partagés + locaux (dédoublonner par titre)
+  const merged = [...GUIDES, ...sharedGuides, ...customGuides]
+  const allGuides = merged.filter((g, i) => merged.findIndex(x => x.titre === g.titre) === i)
 
   // Filtrer par rôle + spécialité (plus de filtre par applis sélectionnées)
   const guidesForProfile = allGuides.filter(g => {

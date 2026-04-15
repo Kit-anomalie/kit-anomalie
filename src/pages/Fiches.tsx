@@ -12,8 +12,9 @@ export function Fiches() {
   const sharedFiches = useSharedContentStore(s => s.fiches)
   const [search, setSearch] = useState('')
 
-  // Fusionner fiches codées en dur + partagées + locales
-  const allFiches = [...FICHES_MEMO, ...sharedFiches, ...customFiches]
+  // Fusionner fiches codées en dur + partagées + locales (dédoublonner par titre)
+  const merged = [...FICHES_MEMO, ...sharedFiches, ...customFiches]
+  const allFiches = merged.filter((f, i) => merged.findIndex(x => x.titre === f.titre) === i)
 
   // Filtrer par profil
   const fichesFiltered = allFiches.filter(f => {
