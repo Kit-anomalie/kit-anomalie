@@ -1,1 +1,66 @@
-{"tips": [], "fiches": [], "guides": []}
+{
+  "tips": [],
+  "fiches": [],
+  "guides": [
+    {
+      "id": "guide-shared-mpc-spot",
+      "titre": "Réaliser une intervention MPC",
+      "appliMetier": "spm",
+      "gesteMetier": "Résoudre une anomalie",
+      "roles": ["agent_req"],
+      "specialites": ["voie", "seg", "eale", "cat", "sm"],
+      "etapes": [
+        {
+          "numero": 1,
+          "titre": "Ouvrir À ORGANISER",
+          "action": "Ouvrez le panier « À ORGANISER » et identifiez les interventions de type MPC"
+        },
+        {
+          "numero": 2,
+          "titre": "Sélectionner",
+          "action": "Cochez les interventions MPC à réaliser et appuyez sur « ENVOYER VERS À FAIRE »"
+        },
+        {
+          "numero": 3,
+          "titre": "Commencer",
+          "action": "Ouvrez le panier « À FAIRE », cochez la MPC à débuter et appuyez sur « COMMENCER »"
+        },
+        {
+          "numero": 4,
+          "titre": "En cours",
+          "action": "L'intervention passe dans « EN COURS » — elle apparaît grisée sur les phablettes des autres agents (consultable mais non démarrable)"
+        },
+        {
+          "numero": 5,
+          "titre": "Onglet Réalisation",
+          "action": "Ouvrez l'intervention en cours — dans l'onglet RÉALISATION, consultez les tâches et l'anomalie associée"
+        },
+        {
+          "numero": 6,
+          "titre": "Résoudre l'anomalie",
+          "action": "Si l'anomalie est corrigée, appuyez sur « Anomalie Résolue » puis sur « Enregistrer » — le statut passe en Définitive"
+        },
+        {
+          "numero": 7,
+          "titre": "Amortir",
+          "action": "Ouvrez le panier « EN COURS », cochez la MPC terminée et appuyez sur « AMORTIR »"
+        },
+        {
+          "numero": 8,
+          "titre": "Co-intervenant",
+          "action": "Ajoutez un agent co-intervenant si nécessaire via « Ajouter un agent »"
+        },
+        {
+          "numero": 9,
+          "titre": "Valider",
+          "action": "Vérifiez la fiche de synthèse (dates/heures, référence, anomalie résolue) et appuyez sur « VALIDER »"
+        },
+        {
+          "numero": 10,
+          "titre": "Terminée",
+          "action": "L'intervention MPC est amortie et passe dans « TERMINÉES » — l'anomalie associée est résolue"
+        }
+      ]
+    }
+  ]
+}
