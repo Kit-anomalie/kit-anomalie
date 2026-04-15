@@ -1,13 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { FICHES_MEMO } from '../data/fiches'
 import { useEditorStore } from '../stores/editorStore'
+import { useSharedContentStore } from '../stores/sharedContentStore'
 import { PiecesJointesView } from '../components/PiecesJointes'
 
 export function FicheDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const customFiches = useEditorStore(s => s.fiches)
-  const fiche = [...FICHES_MEMO, ...customFiches].find(f => f.id === id)
+  const sharedFiches = useSharedContentStore(s => s.fiches)
+  const fiche = [...FICHES_MEMO, ...sharedFiches, ...customFiches].find(f => f.id === id)
 
   if (!fiche) return (
     <div className="p-4 text-center text-gray-500 space-y-3 spring-enter">

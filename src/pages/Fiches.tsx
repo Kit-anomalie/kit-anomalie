@@ -2,16 +2,18 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
+import { useSharedContentStore } from '../stores/sharedContentStore'
 import { FICHES_MEMO } from '../data/fiches'
 
 export function Fiches() {
   const navigate = useNavigate()
   const { role, specialite } = useProfileStore()
   const customFiches = useEditorStore(s => s.fiches)
+  const sharedFiches = useSharedContentStore(s => s.fiches)
   const [search, setSearch] = useState('')
 
-  // Fusionner fiches codées en dur + fiches éditeur
-  const allFiches = [...FICHES_MEMO, ...customFiches]
+  // Fusionner fiches codées en dur + partagées + locales
+  const allFiches = [...FICHES_MEMO, ...sharedFiches, ...customFiches]
 
   // Filtrer par profil
   const fichesFiltered = allFiches.filter(f => {

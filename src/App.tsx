@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useProfileStore } from './stores/profileStore'
+import { useSharedContentStore } from './stores/sharedContentStore'
 import './stores/themeStore'
 import { Layout } from './components/Layout'
 import { ProfileSetup } from './pages/ProfileSetup'
@@ -16,6 +18,9 @@ import { Admin } from './pages/Admin'
 
 function AppRoutes() {
   const { isConfigured } = useProfileStore()
+  const loadSharedContent = useSharedContentStore(s => s.load)
+
+  useEffect(() => { loadSharedContent() }, [loadSharedContent])
 
   if (!isConfigured) {
     return (

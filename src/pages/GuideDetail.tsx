@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { GUIDES } from '../data/guides'
 import { useEditorStore } from '../stores/editorStore'
+import { useSharedContentStore } from '../stores/sharedContentStore'
 import { PiecesJointesView } from '../components/PiecesJointes'
 
 export function GuideDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const customGuides = useEditorStore(s => s.guides)
-  const guide = [...GUIDES, ...customGuides].find(g => g.id === id)
+  const sharedGuides = useSharedContentStore(s => s.guides)
+  const guide = [...GUIDES, ...sharedGuides, ...customGuides].find(g => g.id === id)
   const [currentStep, setCurrentStep] = useState(0)
 
   if (!guide) return (

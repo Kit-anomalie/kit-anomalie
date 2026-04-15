@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
+import { useSharedContentStore } from '../stores/sharedContentStore'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 
@@ -15,12 +16,13 @@ export function Home() {
   const navigate = useNavigate()
   const { role, specialite } = useProfileStore()
   const customTips = useEditorStore(s => s.tips)
+  const sharedTips = useSharedContentStore(s => s.tips)
   const { planningEnabled, planningMessage } = useMaintenanceStore()
 
   if (!role || !specialite) return null
 
   // Conseil du jour
-  const allTips = [...DEFAULT_TIPS, ...customTips.map(t => t.texte)]
+  const allTips = [...DEFAULT_TIPS, ...sharedTips.map(t => t.texte), ...customTips.map(t => t.texte)]
   const tipOfTheDay = allTips[new Date().getDate() % allTips.length]
 
   // Accès rapides

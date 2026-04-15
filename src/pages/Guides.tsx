@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
+import { useSharedContentStore } from '../stores/sharedContentStore'
 import { GUIDES } from '../data/guides'
 import { APPLIS_METIER } from '../data/roles'
 
@@ -9,10 +10,11 @@ export function Guides() {
   const navigate = useNavigate()
   const { role, specialite } = useProfileStore()
   const customGuides = useEditorStore(s => s.guides)
+  const sharedGuides = useSharedContentStore(s => s.guides)
   const [appliFilter, setAppliFilter] = useState<string | null>(null)
 
-  // Fusionner guides codés en dur + guides éditeur
-  const allGuides = [...GUIDES, ...customGuides]
+  // Fusionner guides codés en dur + partagés + locaux
+  const allGuides = [...GUIDES, ...sharedGuides, ...customGuides]
 
   // Filtrer par rôle + spécialité (plus de filtre par applis sélectionnées)
   const guidesForProfile = allGuides.filter(g => {
