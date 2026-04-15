@@ -3,64 +3,305 @@
   "fiches": [],
   "guides": [
     {
-      "id": "guide-shared-mpc-spot",
       "titre": "Réaliser une intervention MPC",
       "appliMetier": "spm",
       "gesteMetier": "Résoudre une anomalie",
-      "roles": ["agent_req"],
-      "specialites": ["voie", "seg", "eale", "cat", "sm"],
+      "roles": [
+        "agent_req"
+      ],
+      "specialites": [
+        "seg",
+        "eale",
+        "cat",
+        "sm",
+        "voie"
+      ],
       "etapes": [
         {
           "numero": 1,
-          "titre": "Ouvrir À ORGANISER",
-          "action": "Ouvrez le panier « À ORGANISER » et identifiez les interventions de type MPC"
+          "titre": "Écran d'accueil",
+          "action": "Vous êtes sur l'écran d'accueil de SPOT Mobile — attendez la fin de la synchronisation automatique avant de toucher à quoi que ce soit",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 2,
-          "titre": "Sélectionner",
-          "action": "Cochez les interventions MPC à réaliser et appuyez sur « ENVOYER VERS À FAIRE »"
+          "titre": "Ouvrir À ORGANISER",
+          "action": "Appuyez sur le panier « À ORGANISER »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 3,
-          "titre": "Commencer",
-          "action": "Ouvrez le panier « À FAIRE », cochez la MPC à débuter et appuyez sur « COMMENCER »"
+          "titre": "Sélectionner",
+          "action": "Cochez les interventions MPC que vous souhaitez réaliser",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 4,
-          "titre": "En cours",
-          "action": "L'intervention passe dans « EN COURS » — elle apparaît grisée sur les phablettes des autres agents (consultable mais non démarrable)"
+          "titre": "Envoyer vers À FAIRE",
+          "action": "Appuyez sur « ENVOYER VERS À FAIRE (x) »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 5,
-          "titre": "Onglet Réalisation",
-          "action": "Ouvrez l'intervention en cours — dans l'onglet RÉALISATION, consultez les tâches et l'anomalie associée"
+          "titre": "Ouvrir À FAIRE",
+          "action": "Appuyez sur le panier « À FAIRE »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 6,
-          "titre": "Résoudre l'anomalie",
-          "action": "Si l'anomalie est corrigée, appuyez sur « Anomalie Résolue » puis sur « Enregistrer » — le statut passe en Définitive"
+          "titre": "Commencer",
+          "action": "Cochez l'intervention MPC à débuter et appuyez sur « COMMENCER » — elle passe dans « EN COURS » et devient grisée pour les autres agents",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 7,
-          "titre": "Amortir",
-          "action": "Ouvrez le panier « EN COURS », cochez la MPC terminée et appuyez sur « AMORTIR »"
+          "titre": "Onglet Réalisation",
+          "action": "Ouvrez l'intervention en cours et accédez à l'onglet « RÉALISATION »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 8,
-          "titre": "Co-intervenant",
-          "action": "Ajoutez un agent co-intervenant si nécessaire via « Ajouter un agent »"
+          "titre": "Résoudre l'anomalie",
+          "action": "Si l'anomalie est corrigée, appuyez sur « Anomalie Résolue » puis sur « Enregistrer »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 9,
-          "titre": "Valider",
-          "action": "Vérifiez la fiche de synthèse (dates/heures, référence, anomalie résolue) et appuyez sur « VALIDER »"
+          "titre": "Amortir",
+          "action": "Ouvrez le panier « EN COURS », cochez la MPC terminée et appuyez sur « AMORTIR »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         },
         {
           "numero": 10,
+          "titre": "Co-intervenant",
+          "action": "Si un autre agent a participé, appuyez sur « Ajouter un agent » — sinon passez à l'étape suivante",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 11,
+          "titre": "Valider",
+          "action": "Vérifiez la fiche de synthèse (dates, heures, anomalie résolue) et appuyez sur « VALIDER »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 12,
           "titre": "Terminée",
-          "action": "L'intervention MPC est amortie et passe dans « TERMINÉES » — l'anomalie associée est résolue"
+          "action": "L'intervention MPC est dans le panier « TERMINÉES » — l'anomalie associée passe en statut Résolue",
+          "champsARemplir": [],
+          "erreursFrequentes": []
         }
-      ]
+      ],
+      "id": "guide-custom-mnzz1h8j93yyz"
+    },
+    {
+      "titre": "Débuter un relevé de MPC",
+      "appliMetier": "adv_mobile",
+      "gesteMetier": "Résoudre une anomalie",
+      "roles": [
+        "agent_req"
+      ],
+      "specialites": [
+        "voie"
+      ],
+      "referentiel": "MT 07991 — GMAO SPOT",
+      "bonnesPratiques": [],
+      "etapes": [
+        {
+          "numero": 1,
+          "titre": "Panier Surveillances",
+          "action": "Cliquez sur le panier « Surveillances et Réparations » pour afficher les interventions affectées",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 2,
+          "titre": "Trier",
+          "action": "Triez les interventions par « Date de début planifiée » pour repérer les plus urgentes",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 3,
+          "titre": "Filtrer",
+          "action": "Filtrez par type d'actif (ex : B2V) pour réduire la liste",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 4,
+          "titre": "Télécharger",
+          "action": "Consultez le détail de l'intervention puis téléchargez-la dans le panier PRÉPARÉES",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 5,
+          "titre": "Sélectionner",
+          "action": "Dans le panier PRÉPARÉES, sélectionnez l'intervention de réparation",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 6,
+          "titre": "Vérifier les réparations",
+          "action": "Si toutes les réparations n'ont pas été réalisées, décochez les cases correspondantes",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 7,
+          "titre": "Commencer",
+          "action": "Appuyez sur « COMMENCER » pour débuter la saisie du relevé de mesures",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        }
+      ],
+      "id": "guide-custom-mo04hwy5ksrv1"
+    },
+    {
+      "titre": "Ajouter un participant",
+      "appliMetier": "adv_mobile",
+      "gesteMetier": "Résoudre une anomalie",
+      "roles": [],
+      "specialites": [],
+      "referentiel": "MT 07991 — GMAO SPOT",
+      "bonnesPratiques": [],
+      "etapes": [
+        {
+          "numero": 1,
+          "titre": "Ouvrir Participants",
+          "action": "Dans l'écran de saisie de l'intervention, cliquez sur « PARTICIPANTS »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 2,
+          "titre": "Ajouter",
+          "action": "Cliquez sur « + AJOUTER UN PARTICIPANT »",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 3,
+          "titre": "Rechercher",
+          "action": "Saisissez le début du nom de l'agent et sélectionnez-le dans la liste",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 4,
+          "titre": "Fermer",
+          "action": "Cliquez sur la croix pour fermer la fenêtre de recherche",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 5,
+          "titre": "Enregistrer",
+          "action": "Cliquez sur « ENREGISTRER » pour valider l'ajout du participant",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        }
+      ],
+      "id": "guide-custom-mo04my9swwyay"
+    },
+    {
+      "titre": "Saisir les mesures de MPC",
+      "appliMetier": "adv_mobile",
+      "gesteMetier": "Résoudre une anomalie",
+      "roles": [
+        "agent_req"
+      ],
+      "specialites": [
+        "voie"
+      ],
+      "referentiel": "MT 07991 — GMAO SPOT",
+      "bonnesPratiques": [],
+      "etapes": [
+        {
+          "numero": 1,
+          "titre": "Caractéristiques",
+          "action": "Vérifiez les caractéristiques de l'intervention (type ADV, ligne, voie, PK) et renseignez les directions",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 2,
+          "titre": "Règles et chariots",
+          "action": "Renseignez le numéro de règle d'appareil de voie et sa date de fin de validité",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 3,
+          "titre": "Équipements",
+          "action": "Renseignez la présence de DMAR et le type de coussinets",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 4,
+          "titre": "Zone mesurée",
+          "action": "Cliquez sur la zone mesurée puis maintenez le doigt appuyé pour afficher les champs de saisie",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 5,
+          "titre": "Mesures précédentes",
+          "action": "Consultez les mesures de la précédente intervention affichées à l'écran pour comparaison",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 6,
+          "titre": "Saisir les mesures",
+          "action": "Cliquez sur chaque mesure reprise et renseignez la valeur obtenue",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 7,
+          "titre": "Enregistrer",
+          "action": "Cliquez sur « ENREGISTRER » après chaque bloc de mesures",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 8,
+          "titre": "Valider",
+          "action": "Appuyez sur « VALIDER » — un contrôle de complétude vérifie que tous les blocs sont remplis",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 9,
+          "titre": "Commenter et signer",
+          "action": "Saisissez un commentaire général si nécessaire, puis signez avec votre numéro de CP",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        },
+        {
+          "numero": 10,
+          "titre": "Envoyer",
+          "action": "Appuyez sur « ENVOYER » pour transmettre le relevé vers SPOT Bureautique",
+          "champsARemplir": [],
+          "erreursFrequentes": []
+        }
+      ],
+      "id": "guide-custom-mo04og4u0u1jg"
     }
-  ]
+  ],
+  "exportDate": "2026-04-15T14:12:22.323Z"
 }
