@@ -392,6 +392,11 @@ export function EditorGuides() {
               <div className="min-w-0">
                 <div className="font-semibold text-sncf-dark text-sm">{guide.titre}</div>
                 <div className="flex flex-wrap gap-1 mt-2">
+                  {guide.appliMetier && (
+                    <span className="text-[11px] bg-sncf-dark/10 text-sncf-dark px-2 py-0.5 rounded-full font-medium">
+                      {APPLIS_METIER.find(a => a.id === guide.appliMetier)?.nom ?? guide.appliMetier}
+                    </span>
+                  )}
                   <span className="text-[11px] bg-sncf-green/10 text-sncf-green px-2 py-0.5 rounded-full font-medium">
                     {guide.etapes.length} étape{guide.etapes.length > 1 ? 's' : ''}
                   </span>
