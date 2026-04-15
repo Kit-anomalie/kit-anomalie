@@ -77,6 +77,7 @@ export interface Guide {
   etapes: GuideStep[]
   referentiel?: string
   bonnesPratiques?: string[]
+  guidesAssocies?: string[] // IDs de guides liés
   piecesJointes?: PieceJointe[]
 }
 

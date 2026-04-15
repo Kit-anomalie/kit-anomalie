@@ -23,6 +23,7 @@ interface GuideForm {
   specialites: Specialite[]
   referentiel: string
   bonnesPratiques: string
+  guidesAssocies: string[]
   etapes: StepForm[]
   piecesJointes: PieceJointe[]
 }
@@ -37,6 +38,7 @@ const EMPTY_FORM: GuideForm = {
   specialites: [],
   referentiel: '',
   bonnesPratiques: '',
+  guidesAssocies: [],
   etapes: [{ ...EMPTY_STEP }],
   piecesJointes: [],
 }
@@ -85,6 +87,7 @@ export function EditorGuides() {
       specialites: guide.specialites,
       referentiel: guide.referentiel ?? '',
       bonnesPratiques: guide.bonnesPratiques?.join('\n') ?? '',
+      guidesAssocies: guide.guidesAssocies ?? [],
       etapes: guide.etapes.map(e => ({
         titre: e.titre,
         action: e.action,
@@ -132,6 +135,7 @@ export function EditorGuides() {
       specialites: form.specialites,
       referentiel: form.referentiel.trim() || undefined,
       bonnesPratiques: form.bonnesPratiques.split('\n').map(s => s.trim()).filter(Boolean) || undefined,
+      guidesAssocies: form.guidesAssocies.length > 0 ? form.guidesAssocies : undefined,
       etapes,
       piecesJointes: form.piecesJointes.length > 0 ? form.piecesJointes : undefined,
     }
@@ -266,6 +270,34 @@ export function EditorGuides() {
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
             />
           </div>
+
+          {/* Guides associés */}
+          {guides.filter(g => g.id !== editingId).length > 0 && (
+            <div>
+              <p className="text-xs font-medium text-gray-600 mb-1">Guides associés</p>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                {guides.filter(g => g.id !== editingId).map(g => (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setForm(f => ({
+                      ...f,
+                      guidesAssocies: f.guidesAssocies.includes(g.id)
+                        ? f.guidesAssocies.filter(id => id !== g.id)
+                        : [...f.guidesAssocies, g.id]
+                    }))}
+                    className={`w-full text-left text-xs px-3 py-2 rounded-xl transition-all ${
+                      form.guidesAssocies.includes(g.id)
+                        ? 'bg-sncf-blue/10 text-sncf-blue font-medium'
+                        : 'bg-gray-50 text-gray-500'
+                    }`}
+                  >
+                    {form.guidesAssocies.includes(g.id) ? '✓ ' : ''}{g.titre}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Roles */}
           <div>
