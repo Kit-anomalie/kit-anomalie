@@ -6,10 +6,10 @@ import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 
 const DEFAULT_TIPS = [
-  "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'anciennete du defaut.",
-  "Verifiez toujours les anomalies existantes sur un actif avant d'en declarer une nouvelle.",
-  "Le classement S/I necessite une intervention immediate. En cas de doute, consultez le referentiel MT00342.",
-  "Pensez a renseigner la DLF (Date Limite de Fin) pour les anomalies de classement A.",
+  "Une bonne description d'anomalie contient : le composant, la localisation exacte et l'ancienneté du défaut.",
+  "Vérifiez toujours les anomalies existantes sur un actif avant d'en déclarer une nouvelle.",
+  "Le classement S/I nécessite une intervention immédiate. En cas de doute, consultez le référentiel MT00342.",
+  "Pensez à renseigner la DLF (Date Limite de Fin) pour les anomalies de classement A.",
 ]
 
 export function Home() {

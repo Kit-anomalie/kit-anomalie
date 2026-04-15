@@ -20,7 +20,7 @@ export function Placeholder({ titre, icon, description, brique }: PlaceholderPro
         className="inline-block mt-4 text-xs bg-sncf-blue/10 text-sncf-blue px-3 py-1.5 rounded-full font-medium spring-pop"
         style={{ animationDelay: '450ms' }}
       >
-        {brique} — A venir
+        {brique} — Bientôt disponible
       </span>
     </div>
   )

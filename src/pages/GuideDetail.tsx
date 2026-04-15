@@ -53,7 +53,7 @@ export function GuideDetail() {
         ))}
       </div>
       <div className="text-xs text-gray-400 text-center">
-        Étape{currentStep + 1} / {guide.etapes.length}
+        Étape {currentStep + 1} / {guide.etapes.length}
       </div>
 
       {/* Section — affichée quand elle change */}

@@ -67,7 +67,7 @@ export function Admin() {
         <div className="bg-white rounded-2xl border border-sncf-red/20 overflow-hidden">
           <div className="px-4 py-3 border-b border-sncf-red/20">
             <h2 className="text-xs font-bold text-sncf-red uppercase tracking-wide">Maintenance totale</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Bloque l'accès pour tous les utilisateurs. Télécharge le fichier puis demandez le déploiement à Claude.</p>
+            <p className="text-xs text-gray-400 mt-0.5">Bloque l'accès pour tous les utilisateurs. Téléchargez le fichier puis déposez-le dans le dépôt du projet.</p>
           </div>
           <div className="px-4 py-3 space-y-3">
             <textarea

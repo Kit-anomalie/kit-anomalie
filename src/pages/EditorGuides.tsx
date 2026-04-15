@@ -488,8 +488,8 @@ export function EditorGuides() {
                 </div>
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => startEdit(guide.id)} className="text-xs text-sncf-blue bg-sncf-blue/10 px-2 py-1 rounded-lg">Modifier</button>
-                <button onClick={() => { if (confirm('Supprimer ce guide ?')) deleteGuide(guide.id) }} className="text-xs text-sncf-red bg-sncf-red/10 px-2 py-1 rounded-lg">Suppr.</button>
+                <button onClick={() => startEdit(guide.id)} className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 rounded-xl">Modifier</button>
+                <button onClick={() => { if (confirm('Supprimer ce guide ?')) deleteGuide(guide.id) }} className="text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 rounded-xl">Suppr.</button>
               </div>
             </div>
           </div>

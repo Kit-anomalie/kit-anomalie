@@ -17,7 +17,7 @@ export function PlanTravail() {
             <button onClick={() => navigate('/')} className="text-white/50 text-xs font-mono hover:text-white/80 transition-colors">
               ← Kit
             </button>
-            <span className="text-white/30 text-[10px] font-mono">Wilfried & Mathilde</span>
+            <span className="text-white/30 text-[10px] font-mono">Équipe Kit Anomalie</span>
           </div>
 
           <h1 className="text-2xl font-black tracking-tight mb-1">Kit Anomalie</h1>
