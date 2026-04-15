@@ -76,6 +76,7 @@ export interface Guide {
   gesteMetier: string // ex : "Créer une anomalie"
   etapes: GuideStep[]
   referentiel?: string
+  bonnesPratiques?: string[]
   piecesJointes?: PieceJointe[]
 }
 

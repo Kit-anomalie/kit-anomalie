@@ -22,6 +22,7 @@ interface GuideForm {
   roles: Role[]
   specialites: Specialite[]
   referentiel: string
+  bonnesPratiques: string
   etapes: StepForm[]
   piecesJointes: PieceJointe[]
 }
@@ -35,6 +36,7 @@ const EMPTY_FORM: GuideForm = {
   roles: [],
   specialites: [],
   referentiel: '',
+  bonnesPratiques: '',
   etapes: [{ ...EMPTY_STEP }],
   piecesJointes: [],
 }
@@ -82,6 +84,7 @@ export function EditorGuides() {
       roles: guide.roles,
       specialites: guide.specialites,
       referentiel: guide.referentiel ?? '',
+      bonnesPratiques: guide.bonnesPratiques?.join('\n') ?? '',
       etapes: guide.etapes.map(e => ({
         titre: e.titre,
         action: e.action,
@@ -128,6 +131,7 @@ export function EditorGuides() {
       roles: form.roles,
       specialites: form.specialites,
       referentiel: form.referentiel.trim() || undefined,
+      bonnesPratiques: form.bonnesPratiques.split('\n').map(s => s.trim()).filter(Boolean) || undefined,
       etapes,
       piecesJointes: form.piecesJointes.length > 0 ? form.piecesJointes : undefined,
     }
@@ -217,6 +221,17 @@ export function EditorGuides() {
               onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
               placeholder="Ex: MT00342"
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Bonnes pratiques / À noter</label>
+            <textarea
+              value={form.bonnesPratiques}
+              onChange={e => setForm(f => ({ ...f, bonnesPratiques: e.target.value }))}
+              placeholder="Une par ligne (ex: Pensez à synchroniser avant de quitter le terrain)"
+              rows={3}
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
             />
           </div>
 

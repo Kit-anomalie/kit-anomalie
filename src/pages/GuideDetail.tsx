@@ -102,6 +102,21 @@ export function GuideDetail() {
         )}
       </div>
 
+      {/* Bonnes pratiques */}
+      {guide.bonnesPratiques && guide.bonnesPratiques.length > 0 && (
+        <div className="bg-sncf-green/5 rounded-2xl p-4 border border-sncf-green/20 spring-scale" style={{ animationDelay: '200ms' }}>
+          <h2 className="text-xs font-bold text-sncf-green uppercase tracking-wide mb-2">À noter</h2>
+          <div className="space-y-1.5">
+            {guide.bonnesPratiques.map((bp, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <span className="text-sncf-green text-sm mt-0.5">✓</span>
+                <p className="text-sm text-gray-700 leading-relaxed">{bp}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Pièces jointes */}
       {guide.piecesJointes && guide.piecesJointes.length > 0 && (
         <div>
