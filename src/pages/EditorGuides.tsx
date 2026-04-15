@@ -176,41 +176,53 @@ export function EditorGuides() {
         <div className="bg-white rounded-2xl p-4 border border-sncf-blue/30 space-y-3">
           <h3 className="text-sm font-bold text-sncf-dark">{editingId ? 'Modifier le guide' : 'Nouveau guide'}</h3>
 
-          <input
-            value={form.titre}
-            onChange={e => setForm(f => ({ ...f, titre: e.target.value }))}
-            placeholder="Titre du guide (ex: Créer une anomalie dans EF3C0)"
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Titre <span className="text-sncf-red">•</span></label>
+            <input
+              value={form.titre}
+              onChange={e => setForm(f => ({ ...f, titre: e.target.value }))}
+              placeholder="Ex: Créer une anomalie dans EF3C0"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
 
-          <select
-            value={form.appliMetier}
-            onChange={e => setForm(f => ({ ...f, appliMetier: e.target.value }))}
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue bg-white"
-          >
-            <option value="">-- Application métier --</option>
-            {APPLIS_METIER.map(app => (
-              <option key={app.id} value={app.id}>{app.nom}</option>
-            ))}
-          </select>
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Application métier <span className="text-sncf-red">•</span></label>
+            <select
+              value={form.appliMetier}
+              onChange={e => setForm(f => ({ ...f, appliMetier: e.target.value }))}
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue bg-white"
+            >
+              <option value="">-- Choisir --</option>
+              {APPLIS_METIER.map(app => (
+                <option key={app.id} value={app.id}>{app.nom}</option>
+              ))}
+            </select>
+          </div>
 
-          <input
-            value={form.gesteMetier}
-            onChange={e => setForm(f => ({ ...f, gesteMetier: e.target.value }))}
-            placeholder="Geste métier (ex: Créer une anomalie)"
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Geste métier <span className="text-sncf-red">•</span></label>
+            <input
+              value={form.gesteMetier}
+              onChange={e => setForm(f => ({ ...f, gesteMetier: e.target.value }))}
+              placeholder="Ex: Créer une anomalie"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
 
-          <input
-            value={form.referentiel}
-            onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
-            placeholder="Référentiel (ex: MT00342)"
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Référentiel</label>
+            <input
+              value={form.referentiel}
+              onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
+              placeholder="Ex: MT00342"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
 
           {/* Roles */}
           <div>
-            <p className="text-xs font-medium text-gray-600 mb-1">Rôles concernés</p>
+            <p className="text-xs font-medium text-gray-600 mb-1">Rôles concernés <span className="text-sncf-red">•</span></p>
             <div className="flex flex-wrap gap-2">
               {ALL_ROLES.map(role => (
                 <button
@@ -228,7 +240,7 @@ export function EditorGuides() {
 
           {/* Spécialités */}
           <div>
-            <p className="text-xs font-medium text-gray-600 mb-1">Spécialités</p>
+            <p className="text-xs font-medium text-gray-600 mb-1">Spécialités <span className="text-sncf-red">•</span></p>
             <div className="flex flex-wrap gap-2">
               {ALL_SPECIALITES.map(spec => (
                 <button

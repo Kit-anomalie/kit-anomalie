@@ -119,54 +119,72 @@ export function EditorFiches() {
         <div className="bg-white rounded-2xl p-4 border border-sncf-blue/30 space-y-3">
           <h3 className="text-sm font-bold text-sncf-dark">{editingId ? 'Modifier la fiche' : 'Nouvelle fiche'}</h3>
 
-          <input
-            value={form.titre}
-            onChange={e => setForm(f => ({ ...f, titre: e.target.value }))}
-            placeholder="Titre de la fiche"
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Titre <span className="text-sncf-red">•</span></label>
+            <input
+              value={form.titre}
+              onChange={e => setForm(f => ({ ...f, titre: e.target.value }))}
+              placeholder="Ex: Classer une anomalie"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
 
-          <textarea
-            value={form.quoiFaire}
-            onChange={e => setForm(f => ({ ...f, quoiFaire: e.target.value }))}
-            placeholder="Quoi faire (objectif de la fiche)"
-            rows={2}
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Quoi faire <span className="text-sncf-red">•</span></label>
+            <textarea
+              value={form.quoiFaire}
+              onChange={e => setForm(f => ({ ...f, quoiFaire: e.target.value }))}
+              placeholder="Objectif de la fiche"
+              rows={2}
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
+            />
+          </div>
 
-          <textarea
-            value={form.comment}
-            onChange={e => setForm(f => ({ ...f, comment: e.target.value }))}
-            placeholder="Comment (étapes détaillées)"
-            rows={5}
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Comment</label>
+            <textarea
+              value={form.comment}
+              onChange={e => setForm(f => ({ ...f, comment: e.target.value }))}
+              placeholder="Étapes détaillées"
+              rows={5}
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
+            />
+          </div>
 
-          <textarea
-            value={form.erreursAEviter}
-            onChange={e => setForm(f => ({ ...f, erreursAEviter: e.target.value }))}
-            placeholder="Erreurs à éviter (une par ligne)"
-            rows={3}
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Erreurs à éviter</label>
+            <textarea
+              value={form.erreursAEviter}
+              onChange={e => setForm(f => ({ ...f, erreursAEviter: e.target.value }))}
+              placeholder="Une par ligne"
+              rows={3}
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
+            />
+          </div>
 
-          <input
-            value={form.gestesCles}
-            onChange={e => setForm(f => ({ ...f, gestesCles: e.target.value }))}
-            placeholder="Mots-clés (séparés par des virgules)"
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Mots-clés</label>
+            <input
+              value={form.gestesCles}
+              onChange={e => setForm(f => ({ ...f, gestesCles: e.target.value }))}
+              placeholder="Séparés par des virgules"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
 
-          <input
-            value={form.referentiel}
-            onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
-            placeholder="Référentiel (ex: MT00342)"
-            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
-          />
+          <div>
+            <label className="text-xs text-gray-600 mb-1 block">Référentiel</label>
+            <input
+              value={form.referentiel}
+              onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
+              placeholder="Ex: MT00342"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
 
           {/* Roles */}
           <div>
-            <p className="text-xs font-medium text-gray-600 mb-1">Rôles concernés</p>
+            <p className="text-xs font-medium text-gray-600 mb-1">Rôles concernés <span className="text-sncf-red">•</span></p>
             <div className="flex flex-wrap gap-2">
               {ALL_ROLES.map(role => (
                 <button
@@ -184,7 +202,7 @@ export function EditorFiches() {
 
           {/* Spécialités */}
           <div>
-            <p className="text-xs font-medium text-gray-600 mb-1">Spécialités</p>
+            <p className="text-xs font-medium text-gray-600 mb-1">Spécialités <span className="text-sncf-red">•</span></p>
             <div className="flex flex-wrap gap-2">
               {ALL_SPECIALITES.map(spec => (
                 <button
