@@ -126,30 +126,6 @@ export function GuideDetail() {
         </div>
       )}
 
-      {/* Guides associés */}
-      {guide.guidesAssocies && guide.guidesAssocies.length > 0 && (
-        <div className="space-y-2">
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Voir aussi</h2>
-          {guide.guidesAssocies.map(gId => {
-            const linked = [...GUIDES, ...sharedGuides, ...customGuides].find(g => g.id === gId)
-            if (!linked) return null
-            return (
-              <button
-                key={gId}
-                onClick={() => { setCurrentStep(0); navigate(`/guides/${gId}`) }}
-                className="w-full text-left bg-white rounded-2xl p-3 border border-gray-100 flex items-center justify-between active:scale-[0.97] transition-transform"
-              >
-                <div>
-                  <div className="text-sm font-medium text-sncf-dark">{linked.titre}</div>
-                  <div className="text-[11px] text-gray-400">{linked.etapes.length} étape{linked.etapes.length > 1 ? 's' : ''}</div>
-                </div>
-                <span className="text-sncf-blue text-sm">→</span>
-              </button>
-            )
-          })}
-        </div>
-      )}
-
       {/* Pièces jointes */}
       {guide.piecesJointes && guide.piecesJointes.length > 0 && (
         <div>
@@ -178,6 +154,30 @@ export function GuideDetail() {
           {isLast ? 'Terminer ✓' : 'Suivant →'}
         </button>
       </div>
+
+      {/* Guides associés — seulement à la dernière étape */}
+      {isLast && guide.guidesAssocies && guide.guidesAssocies.length > 0 && (
+        <div className="space-y-2 spring-enter" style={{ animationDelay: '200ms' }}>
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Voir aussi</h2>
+          {guide.guidesAssocies.map(gId => {
+            const linked = [...GUIDES, ...sharedGuides, ...customGuides].find(g => g.id === gId)
+            if (!linked) return null
+            return (
+              <button
+                key={gId}
+                onClick={() => { setCurrentStep(0); navigate(`/guides/${gId}`) }}
+                className="w-full text-left bg-white rounded-2xl p-3 border border-gray-100 flex items-center justify-between active:scale-[0.97] transition-transform"
+              >
+                <div>
+                  <div className="text-sm font-medium text-sncf-dark">{linked.titre}</div>
+                  <div className="text-[11px] text-gray-400">{linked.etapes.length} étape{linked.etapes.length > 1 ? 's' : ''}</div>
+                </div>
+                <span className="text-sncf-blue text-sm">→</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
