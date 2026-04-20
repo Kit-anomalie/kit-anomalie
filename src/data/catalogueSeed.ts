@@ -568,7 +568,7 @@ export const CATALOGUE_SEED: CatalogueCategorie[] = [
     description: 'Planchéiage PN, revêtement routier PN, quai',
     couleur: '#475569', // slate harmonisé, minéral
     couleurFg: '#FFFFFF',
-    icon: '🪵',
+    icon: '🧱',
     types: [
       {
         id: 'plancheiage-pn',
