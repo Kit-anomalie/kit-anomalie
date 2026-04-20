@@ -25,6 +25,20 @@ export function Catalogue() {
         </div>
       </div>
 
+      {/* Bandeau prototype — forme inspirée DZP SE, données synthétiques */}
+      <div
+        className="bg-sncf-blue/5 border border-sncf-blue/20 rounded-2xl px-3 py-2 spring-scale"
+        style={{ animationDelay: '100ms' }}
+      >
+        <div className="flex items-start gap-2">
+          <span className="text-xs mt-0.5" aria-hidden>ℹ️</span>
+          <p className="text-[11px] text-sncf-dark leading-relaxed">
+            <span className="font-semibold">Prototype</span> — Présentation inspirée du catalogue DZP SE.
+            Les données affichées sont <span className="font-semibold">synthétiques</span>, à vocation de démonstration uniquement.
+          </p>
+        </div>
+      </div>
+
       {/* Barre de recherche */}
       <div className="spring-scale" style={{ animationDelay: '150ms' }}>
         <label htmlFor="catalogue-search" className="sr-only">Rechercher une anomalie</label>
