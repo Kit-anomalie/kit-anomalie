@@ -44,7 +44,7 @@ export function Catalogue() {
           <span className="text-2xl">📚</span>
           <div>
             <h1 className="text-lg font-bold text-sncf-dark">Catalogue anomalies</h1>
-            <p className="text-xs text-gray-500">Par type d'actif · lecture seule</p>
+            <p className="text-xs text-gray-500">Par type d'actif</p>
           </div>
         </div>
       </div>

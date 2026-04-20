@@ -230,7 +230,7 @@ export interface EditorData {
   exportDate?: string
 }
 
-// === Catalogue anomalies (lecture seule, référentiel transverse) ===
+// === Catalogue anomalies (référentiel transverse) ===
 
 export interface ClassementEntry {
   condition?: string // ex: "écart > seuil AL", null → classement par défaut
