@@ -12,7 +12,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'accueil', label: 'Accueil', icon: '🏠', path: '/' },
   { id: 'guides', label: 'Guides', icon: '📖', path: '/guides' },
   { id: 'fiches', label: 'Fiches', icon: '📋', path: '/fiches' },
-  { id: 'actifs', label: 'Actifs', icon: '🔍', path: '/actifs' },
+  { id: 'catalogue', label: 'Catalogue', icon: '📚', path: '/catalogue' },
   { id: 'assistant', label: 'IA', icon: '🤖', path: '/assistant' },
 ]
 

@@ -30,7 +30,7 @@ export function Home() {
     { icon: '📖', label: 'Guides', desc: 'Pas à pas par appli', path: '/guides', color: 'bg-blue-50 border-sncf-blue/20' },
     { icon: '📋', label: 'Fiches mémo', desc: "L'essentiel en un clin d'œil", path: '/fiches', color: 'bg-amber-50 border-sncf-orange/20' },
     { icon: '🧠', label: 'Quiz', desc: 'Testez vos connaissances', path: '/quiz', color: 'bg-green-50 border-sncf-green/20' },
-    { icon: '🔍', label: 'Anomalies', desc: 'Par actif', path: '/actifs', color: 'bg-purple-50 border-purple-200' },
+    { icon: '📚', label: 'Catalogue', desc: 'Anomalies par actif', path: '/catalogue', color: 'bg-purple-50 border-purple-200' },
     { icon: '🤖', label: 'Assistant IA', desc: 'Aide à la rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
     { icon: '🔔', label: 'Alertes', desc: 'Bon à savoir', path: '/alertes', color: 'bg-red-50 border-sncf-red/20' },
   ]

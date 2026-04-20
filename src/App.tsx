@@ -15,6 +15,7 @@ import { PlanTravail } from './pages/PlanTravail'
 import { Editor } from './pages/Editor'
 import { Réglages } from './pages/Reglages'
 import { Admin } from './pages/Admin'
+import { Catalogue } from './pages/Catalogue'
 
 function AppRoutes() {
   const { isConfigured } = useProfileStore()
@@ -43,9 +44,11 @@ function AppRoutes() {
         <Route path="/quiz" element={
           <Placeholder titre="Quiz" icon="🧠" description="Testez vos connaissances sur les anomalies" brique="Brique 3" />
         } />
-        <Route path="/actifs" element={
-          <Placeholder titre="Anomalies par actif" icon="🔍" description="Recherchez un actif et consultez ses anomalies" brique="Brique 4" />
-        } />
+        <Route path="/catalogue" element={<Catalogue />} />
+        <Route path="/catalogue/:catId" element={<Placeholder titre="Catégorie" icon="📂" description="Écran à venir en PR 2" brique="Catalogue" />} />
+        <Route path="/catalogue/:catId/:typeId" element={<Placeholder titre="Type d'actif" icon="🔧" description="Écran à venir en PR 2" brique="Catalogue" />} />
+        <Route path="/catalogue/:catId/:typeId/:anoId" element={<Placeholder titre="Fiche anomalie" icon="🔍" description="Écran à venir en PR 2" brique="Catalogue" />} />
+        <Route path="/actifs" element={<Navigate to="/catalogue" replace />} />
         <Route path="/assistant" element={
           <Placeholder titre="Assistant IA" icon="🤖" description="Aide à la rédaction et au classement de vos anomalies" brique="Brique 5" />
         } />

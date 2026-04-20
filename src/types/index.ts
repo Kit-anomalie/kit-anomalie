@@ -39,6 +39,44 @@ export const SPECIALITE_LABELS: Record<Specialite, string> = {
 
 export type Classement = 'S/I' | 'S/DP' | 'A/P' | 'A/M' | 'A/SURV' | 'A/DET' | 'VA' | 'VI' | 'VR'
 
+export const CLASSEMENT_LABELS: Record<Classement, string> = {
+  'S/I': 'Sécurité / Immédiat',
+  'S/DP': 'Sécurité / Délai prescrit',
+  'A/P': 'Autres / Prioritaire',
+  'A/M': 'Autres / Maintenance',
+  'A/SURV': 'Autres / Surveillance',
+  'A/DET': 'Autres / à Déterminer',
+  'VA': 'VA',
+  'VI': 'VI',
+  'VR': 'VR',
+}
+
+// Couleurs badges — palette SNCF stricte
+export const CLASSEMENT_COLORS: Record<Classement, { bg: string; text: string; border: string }> = {
+  'S/I':    { bg: '#E3051B', text: '#FFFFFF', border: '#B10414' },
+  'S/DP':   { bg: '#F7A600', text: '#FFFFFF', border: '#C68400' },
+  'A/P':    { bg: '#00A3E0', text: '#FFFFFF', border: '#0082B4' },
+  'A/M':    { bg: '#0C1E5B', text: '#FFFFFF', border: '#081642' },
+  'A/SURV': { bg: '#3AAA35', text: '#FFFFFF', border: '#2D8529' },
+  'A/DET':  { bg: '#9CA3AF', text: '#FFFFFF', border: '#6B7280' },
+  'VA':     { bg: '#E5E7EB', text: '#374151', border: '#9CA3AF' },
+  'VI':     { bg: '#E5E7EB', text: '#374151', border: '#9CA3AF' },
+  'VR':     { bg: '#E5E7EB', text: '#374151', border: '#9CA3AF' },
+}
+
+// Sévérité décroissante — sert à déterminer le classement principal d'une anomalie
+export const CLASSEMENT_SEVERITE: Record<Classement, number> = {
+  'S/I': 100,
+  'S/DP': 90,
+  'A/P': 70,
+  'A/M': 50,
+  'A/SURV': 40,
+  'A/DET': 20,
+  'VA': 10,
+  'VI': 10,
+  'VR': 10,
+}
+
 export type StatutAnomalie = 'brouillon' | 'ouverte' | 'en_cours' | 'resolue'
 
 export const STATUT_LABELS: Record<StatutAnomalie, string> = {
@@ -192,6 +230,51 @@ export interface EditorData {
   exportDate?: string
 }
 
+// === Catalogue anomalies (lecture seule, référentiel transverse) ===
+
+export interface ClassementEntry {
+  condition?: string // ex: "écart > seuil AL", null → classement par défaut
+  classement: Classement
+  action: string // action recommandée
+}
+
+export interface CatalogueAnomalie {
+  id: string
+  code: string // ex "VC-GEO-02"
+  name: string
+  description: string
+  defaut: string // manifestation observée
+  ecart: string // ce qu'on mesure + instrument
+  classements: ClassementEntry[]
+  reference: string | null
+  illus: { svg?: string; caption: string } | null
+}
+
+export interface TypeActif {
+  id: string
+  nom: string
+  icon?: string
+  anomalies: CatalogueAnomalie[]
+}
+
+export type CategorieId =
+  | 'voie-courante'
+  | 'appareils-voie'
+  | 'ouvrages'
+  | 'abords'
+  | 'signalisation'
+  | 'platelage'
+
+export interface CatalogueCategorie {
+  id: CategorieId
+  nom: string
+  description: string
+  couleur: string // token SNCF remappé
+  couleurFg: string // contraste texte (white ou dark)
+  icon: string
+  types: TypeActif[]
+}
+
 // === Navigation ===
 
-export type TabId = 'accueil' | 'guides' | 'fiches' | 'actifs' | 'assistant'
+export type TabId = 'accueil' | 'guides' | 'fiches' | 'catalogue' | 'assistant'
