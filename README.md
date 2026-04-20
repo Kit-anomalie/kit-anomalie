@@ -42,7 +42,7 @@ SPM est transverse (toutes spécialités). OPTISPOT et SPOT BO sont hors périm�
 | **1** | Guides par application | **Fait** (1 guide démo) | `Guides.tsx`, `GuideDetail.tsx`, `data/guides.ts` |
 | **2** | Fiches mémo réflexes | **Fait** (4 fiches) | `Fiches.tsx`, `FicheDetail.tsx`, `data/fiches.ts` |
 | **3** | Parcours onboarding | Placeholder | — |
-| **4** | Anomalies par actif | Placeholder | — |
+| **4** | Catalogue anomalies | **Fait** (prototype, 20 anomalies démo) | `Catalogue.tsx`, `CatalogueCategorie.tsx`, `CatalogueTypeActif.tsx`, `CatalogueFiche.tsx`, `EditorCatalogue.tsx`, `data/catalogueSeed.ts`, `stores/catalogueStore.ts` |
 | **5** | Assistant IA | Placeholder | — |
 | **6** | Bon à savoir & alertes | Placeholder | — |
 | **7** | Administration (BO) | Non commencé | App séparée |
@@ -68,7 +68,32 @@ SPM est transverse (toutes spécialités). OPTISPOT et SPOT BO sont hors périm�
 - Lien vers le guide associé en bas de fiche
 - **Contenu démo :** 4 fiches (classer, décrire, doublons, DLF)
 
-### Briques 3-7 — À construire
+### Brique 4 — Catalogue anomalies ✅
+
+Référentiel **transverse** lecture seule, organisé en 3 niveaux : **Catégorie › Type d'actif › Anomalie**.
+
+- **6 catégories** : Voie courante, Appareils de voie, Ouvrages & Gabarit, Abords, Installations de signalisation, Platelage (palette SNCF remappée)
+- **7 classements** métier affichés en badges (S/I, S/DP, A/P, A/M, A/SURV, A/DET, VA/VI/VR)
+- **Fiche anomalie** : 7 sections activables (illustration, description, défaut, écart, classements, actions, référence), sélecteur d'affichage persistant avec presets (Tout / Synthèse / Reset), partage presse-papier, favoris
+- **Recherche locale** groupée par catégorie (code, nom, défaut, type, description)
+- **Favoris + historique** (20 derniers consultés) visibles sur l'accueil de la brique
+- **8 SVG inline** : usure ondulatoire, fissure transversale, écart de dressage (seuils AL/AR/ALT), affaissement de soudure, pointe d'aiguille, fissure béton, glissement talus, dalle PN
+- **Deep-link** natif : `/catalogue/:catId/:typeId/:anoId`
+- **Bandeau prototype** rappelant que la forme est inspirée du catalogue DZP SE et que les données sont synthétiques
+
+**Édition via l'admin :**
+- Mode éditeur → onglet **Catalogue** → CRUD complet aux 3 niveaux avec preview couleur catégorie et classements multi-conditions dynamiques
+- Export / Import JSON (BOM UTF-8) : fichier `kit-anomalie-catalogue-YYYY-MM-DD.json`
+- Bouton **Réinitialiser au contenu démo** dans Admin (pour démos propres)
+
+**Remplacer les données de démo** par les vraies :
+1. `/reglages` → Admin → Mode éditeur → onglet Catalogue
+2. Ajouter/modifier/supprimer catégories et anomalies à la main, ou
+3. Exporter (bouton en bas) → éditer le JSON hors-ligne → Importer
+
+**Contenu démo :** 6 catégories × ~3 types × 1–2 anomalies = 20 anomalies, dont 6 à classements conditionnels multiples (dressage, usure rail, fissure, soudure, talus, PN).
+
+### Briques 3, 5, 6, 7 — À construire
 
 Voir le fichier de spécification complet : `/Projects/Anomalies/prompt-kit-anomalie.md`
 

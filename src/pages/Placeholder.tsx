@@ -14,7 +14,7 @@ export function Placeholder({ titre, icon, description, brique }: PlaceholderPro
     <div className="px-4 py-4">
       <button
         onClick={() => navigate('/')}
-        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity"
+        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
       >
         ← Retour
       </button>

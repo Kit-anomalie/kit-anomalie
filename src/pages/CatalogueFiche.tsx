@@ -71,13 +71,21 @@ export function CatalogueFiche() {
 
   return (
     <div className="px-4 py-4 space-y-4 pb-12">
-      {/* Retour */}
-      <button
-        onClick={() => navigate(`/catalogue/${categorie.id}/${type.id}`)}
-        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity"
-      >
-        ← Retour
-      </button>
+      {/* Retour + prototype */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigate(`/catalogue/${categorie.id}/${type.id}`)}
+          className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
+        >
+          ← Retour
+        </button>
+        <span
+          className="text-[10px] text-sncf-blue bg-sncf-blue/10 px-2 py-0.5 rounded-full font-medium spring-enter"
+          title="Forme inspirée DZP SE · données synthétiques"
+        >
+          Prototype
+        </span>
+      </div>
 
       {/* Breadcrumb */}
       <div className="text-[11px] text-gray-400 spring-enter" style={{ animationDelay: '30ms' }}>

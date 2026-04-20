@@ -28,7 +28,7 @@ export function GuideDetail() {
   return (
     <div className="px-4 py-4 space-y-4">
       {/* Header */}
-      <button onClick={() => navigate(-1)} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity">
+      <button onClick={() => navigate(-1)} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]">
         ← Retour
       </button>
 

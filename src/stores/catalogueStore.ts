@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { CatalogueCategorie, CategorieId, CatalogueAnomalie, TypeActif, ClassementEntry } from '../types'
+import type { CatalogueCategorie, CategorieId, CatalogueAnomalie, TypeActif } from '../types'
 import { CATALOGUE_SEED } from '../data/catalogueSeed'
 
 function uid() {
@@ -176,6 +176,3 @@ export const useCatalogueStore = create<CatalogueState>()(
     }
   )
 )
-
-// Types ré-exportés pour commodité côté éditeur
-export type { ClassementEntry }
