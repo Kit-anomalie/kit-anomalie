@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 
 interface SearchEntry {
   id: string
-  type: 'guide' | 'fiche' | 'actif'
+  type: 'guide' | 'fiche' | 'actif' | 'catalogue'
   count: number
   lastAccess: number
 }
@@ -11,12 +11,14 @@ interface SearchEntry {
 interface FavoritesState {
   favoriteGuides: string[]
   favoriteFiches: string[]
+  favoriteCatalogue: string[]
   recentGuides: string[]
   recentFiches: string[]
   searchHistory: SearchEntry[]
   // Actions
   toggleFavoriteGuide: (id: string) => void
   toggleFavoriteFiche: (id: string) => void
+  toggleFavoriteCatalogue: (id: string) => void
   addRecentGuide: (id: string) => void
   addRecentFiche: (id: string) => void
   trackSearch: (id: string, type: SearchEntry['type']) => void
@@ -30,6 +32,7 @@ export const useFavoritesStore = create<FavoritesState>()(
     (set, get) => ({
       favoriteGuides: [],
       favoriteFiches: [],
+      favoriteCatalogue: [],
       recentGuides: [],
       recentFiches: [],
       searchHistory: [],
@@ -49,6 +52,15 @@ export const useFavoritesStore = create<FavoritesState>()(
           set({ favoriteFiches: current.filter(f => f !== id) })
         } else {
           set({ favoriteFiches: [...current, id] })
+        }
+      },
+
+      toggleFavoriteCatalogue: (id) => {
+        const current = get().favoriteCatalogue
+        if (current.includes(id)) {
+          set({ favoriteCatalogue: current.filter(c => c !== id) })
+        } else {
+          set({ favoriteCatalogue: [...current, id] })
         }
       },
 
@@ -81,6 +93,20 @@ export const useFavoritesStore = create<FavoritesState>()(
           .slice(0, limit)
       },
     }),
-    { name: 'kit-anomalie-favorites' }
+    {
+      name: 'kit-anomalie-favorites',
+      version: 1,
+      migrate: (persistedState) => {
+        const state = (persistedState ?? {}) as Partial<FavoritesState>
+        return {
+          favoriteGuides: state.favoriteGuides ?? [],
+          favoriteFiches: state.favoriteFiches ?? [],
+          favoriteCatalogue: state.favoriteCatalogue ?? [],
+          recentGuides: state.recentGuides ?? [],
+          recentFiches: state.recentFiches ?? [],
+          searchHistory: state.searchHistory ?? [],
+        } as FavoritesState
+      },
+    }
   )
 )
