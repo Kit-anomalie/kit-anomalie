@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useCatalogueStore } from '../stores/catalogueStore'
-import { mixClassements } from '../utils/catalogue'
 import type { CategorieId, TypeActif } from '../types'
 
 export function CatalogueCategorie() {
@@ -78,12 +77,7 @@ interface TypeActifRowProps {
 }
 
 function TypeActifRow({ type, delay, onOpen }: TypeActifRowProps) {
-  const mix = mixClassements(type.anomalies)
   const nbAnos = type.anomalies.length
-  const total = Math.max(1, mix.securite + mix.surveillance + mix.autres)
-  const secPct = (mix.securite / total) * 100
-  const survPct = (mix.surveillance / total) * 100
-  const autresPct = (mix.autres / total) * 100
 
   return (
     <button
@@ -98,16 +92,7 @@ function TypeActifRow({ type, delay, onOpen }: TypeActifRowProps) {
             {nbAnos} anomalie{nbAnos > 1 ? 's' : ''}
           </div>
         </div>
-        <div className="shrink-0 flex flex-col items-end gap-1">
-          {nbAnos > 0 && (
-            <div className="flex h-1.5 w-20 rounded-full overflow-hidden bg-gray-100" aria-label="Mix classements">
-              <div style={{ width: `${secPct}%`, backgroundColor: '#E3051B' }} />
-              <div style={{ width: `${survPct}%`, backgroundColor: '#3AAA35' }} />
-              <div style={{ width: `${autresPct}%`, backgroundColor: '#9CA3AF' }} />
-            </div>
-          )}
-          <span className="text-gray-300 text-xs">→</span>
-        </div>
+        <span className="shrink-0 text-gray-300">→</span>
       </div>
     </button>
   )

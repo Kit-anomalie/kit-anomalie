@@ -24,20 +24,6 @@ export function matchesFamille(anomalie: CatalogueAnomalie, filtre: FamilleFiltr
   return anomalie.classements.some(e => familleClassement(e.classement) === filtre)
 }
 
-/** Mix de classements (pour les mini-barres sur la liste des types d'actifs). */
-export function mixClassements(anomalies: CatalogueAnomalie[]): { securite: number; surveillance: number; autres: number } {
-  const mix = { securite: 0, surveillance: 0, autres: 0 }
-  for (const a of anomalies) {
-    const main = mainClassement(a)
-    if (!main) continue
-    const f = familleClassement(main)
-    if (f === 'securite') mix.securite++
-    else if (f === 'surveillance') mix.surveillance++
-    else mix.autres++
-  }
-  return mix
-}
-
 /** Résultat de recherche groupé par catégorie. */
 export interface SearchResult {
   categorie: CatalogueCategorie
@@ -74,4 +60,24 @@ export function searchCatalogue(categories: CatalogueCategorie[], query: string)
 
 export function totalAnomalies(cat: CatalogueCategorie): number {
   return cat.types.reduce((sum, t) => sum + t.anomalies.length, 0)
+}
+
+export interface AnomalieLocation {
+  categorie: CatalogueCategorie
+  typeActifId: string
+  typeActifNom: string
+  anomalie: CatalogueAnomalie
+}
+
+/** Retrouve la localisation complète d'une anomalie par son id. */
+export function findAnomalie(categories: CatalogueCategorie[], anoId: string): AnomalieLocation | null {
+  for (const cat of categories) {
+    for (const type of cat.types) {
+      const ano = type.anomalies.find(a => a.id === anoId)
+      if (ano) {
+        return { categorie: cat, typeActifId: type.id, typeActifNom: type.nom, anomalie: ano }
+      }
+    }
+  }
+  return null
 }
