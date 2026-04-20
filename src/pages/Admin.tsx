@@ -1,17 +1,28 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
+import { useCatalogueStore } from '../stores/catalogueStore'
 import { Toggle } from '../components/Toggle'
 
 export function Admin() {
   const navigate = useNavigate()
   const store = useMaintenanceStore()
+  const resetCatalogueSeed = useCatalogueStore(s => s.resetSeed)
 
   const [planningEnabled, setPlanningEnabled] = useState(store.planningEnabled)
   const [planningMessage, setPlanningMessage] = useState(store.planningMessage)
   const [planningDate, setPlanningDate] = useState(store.planningDate)
   const [maintenanceMessage, setMaintenanceMessage] = useState('Mise a jour en cours, retour dans quelques instants.')
   const [saved, setSaved] = useState(false)
+  const [seedResetMsg, setSeedResetMsg] = useState(false)
+
+  const handleResetCatalogue = () => {
+    if (confirm('Réinitialiser le catalogue au contenu de démo (toutes modifications locales seront perdues) ?')) {
+      resetCatalogueSeed()
+      setSeedResetMsg(true)
+      setTimeout(() => setSeedResetMsg(false), 2000)
+    }
+  }
 
   const hasChanges =
     planningEnabled !== store.planningEnabled ||
@@ -131,6 +142,23 @@ export function Admin() {
           >
             <span className="text-sm text-sncf-dark font-medium">Mode éditeur</span>
             <span className="text-sncf-blue text-sm">→</span>
+          </button>
+        </div>
+
+        {/* Catalogue démo */}
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Catalogue anomalies</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Restaure les 6 catégories / 20 anomalies de démonstration (remet à zéro les éditions locales).</p>
+          </div>
+          <button
+            onClick={handleResetCatalogue}
+            className="w-full px-4 py-3 flex items-center justify-between text-left"
+          >
+            <span className="text-sm text-sncf-dark font-medium">
+              {seedResetMsg ? 'Catalogue réinitialisé ✓' : 'Réinitialiser au contenu démo'}
+            </span>
+            <span className="text-sncf-blue text-sm">↻</span>
           </button>
         </div>
 

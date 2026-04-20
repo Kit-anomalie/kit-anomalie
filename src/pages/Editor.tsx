@@ -1,16 +1,19 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEditorStore } from '../stores/editorStore'
+import { useCatalogueStore } from '../stores/catalogueStore'
 import { EditorTips } from './EditorTips'
 import { EditorFiches } from './EditorFiches'
 import { EditorGuides } from './EditorGuides'
+import { EditorCatalogue } from './EditorCatalogue'
 
-type Tab = 'tips' | 'fiches' | 'guides'
+type Tab = 'tips' | 'fiches' | 'guides' | 'catalogue'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'tips', label: 'Conseils', icon: '💡' },
   { id: 'fiches', label: 'Fiches', icon: '📋' },
   { id: 'guides', label: 'Guides', icon: '📖' },
+  { id: 'catalogue', label: 'Catalogue', icon: '📚' },
 ]
 
 export function Editor() {
@@ -19,9 +22,12 @@ export function Editor() {
   const [importMessage, setImportMessage] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { exportData, importData } = useEditorStore()
+  const exportCatalogue = useCatalogueStore(s => s.exportCatalogue)
+  const importCatalogue = useCatalogueStore(s => s.importCatalogue)
 
   const handleExport = () => {
-    const data = exportData()
+    const isCatalogue = activeTab === 'catalogue'
+    const data = isCatalogue ? exportCatalogue() : exportData()
     const json = JSON.stringify(data, null, 2)
     // BOM UTF-8 pour forcer l'encodage sur tous les navigateurs
     const bom = new Uint8Array([0xEF, 0xBB, 0xBF])
@@ -29,7 +35,9 @@ export function Editor() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `kit-anomalie-contenu-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = isCatalogue
+      ? `kit-anomalie-catalogue-${new Date().toISOString().slice(0, 10)}.json`
+      : `kit-anomalie-contenu-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -37,6 +45,7 @@ export function Editor() {
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    const isCatalogue = activeTab === 'catalogue'
     const reader = new FileReader()
     reader.readAsText(file, 'UTF-8')
     reader.onload = () => {
@@ -45,8 +54,16 @@ export function Editor() {
         let text = reader.result as string
         if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1)
         const data = JSON.parse(text)
-        importData(data)
-        setImportMessage(`Importation réussie — ${data.tips?.length ?? 0} tips, ${data.fiches?.length ?? 0} fiches, ${data.guides?.length ?? 0} guides, ${data.liens?.length ?? 0} liens`)
+        if (isCatalogue) {
+          if (!data.categories || !Array.isArray(data.categories)) throw new Error('format invalide')
+          importCatalogue(data)
+          const nbTypes = data.categories.reduce((s: number, c: { types?: unknown[] }) => s + (c.types?.length ?? 0), 0)
+          const nbAnos = data.categories.reduce((s: number, c: { types?: { anomalies?: unknown[] }[] }) => s + (c.types ?? []).reduce((x: number, t) => x + (t.anomalies?.length ?? 0), 0), 0)
+          setImportMessage(`Catalogue importé — ${data.categories.length} catégories, ${nbTypes} types, ${nbAnos} anomalies`)
+        } else {
+          importData(data)
+          setImportMessage(`Importation réussie — ${data.tips?.length ?? 0} tips, ${data.fiches?.length ?? 0} fiches, ${data.guides?.length ?? 0} guides`)
+        }
         setTimeout(() => setImportMessage(''), 4000)
       } catch {
         setImportMessage('Erreur : fichier invalide')
@@ -67,12 +84,12 @@ export function Editor() {
       </header>
 
       {/* Onglets */}
-      <div className="bg-white border-b border-gray-200 px-2 flex">
+      <div className="bg-white border-b border-gray-200 px-2 flex overflow-x-auto no-scrollbar">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+            className={`shrink-0 flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
                 ? 'border-sncf-blue text-sncf-blue'
                 : 'border-transparent text-gray-500'
@@ -89,6 +106,7 @@ export function Editor() {
         {activeTab === 'tips' && <EditorTips />}
         {activeTab === 'fiches' && <EditorFiches />}
         {activeTab === 'guides' && <EditorGuides />}
+        {activeTab === 'catalogue' && <EditorCatalogue />}
       </main>
 
       {/* Message d'import */}
