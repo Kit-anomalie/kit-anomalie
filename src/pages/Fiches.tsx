@@ -33,7 +33,14 @@ export function Fiches() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <div className="spring-enter">
+      <button
+        onClick={() => navigate('/')}
+        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity"
+      >
+        ← Retour
+      </button>
+
+      <div className="spring-enter" style={{ animationDelay: '50ms' }}>
         <h1 className="text-lg font-bold text-sncf-dark">Fiches mémo</h1>
         <p className="text-xs text-gray-500">Réflexes essentiels en un tap</p>
       </div>
