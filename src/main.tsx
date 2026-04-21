@@ -27,21 +27,34 @@ function checkMaintenance() {
     .catch(() => false)
 }
 
-// Auto-update : vérifie si une nouvelle version est disponible
-function checkForUpdate() {
+// Auto-update : vérifie si une nouvelle version est disponible.
+// Sur version mismatch : purge caches + unregister SW + reload → auto-healing sans action utilisateur.
+async function checkForUpdate(): Promise<boolean> {
   const STORAGE_KEY = 'kit-anomalie-version'
-  fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' })
-    .then(r => r.json())
-    .then(data => {
-      const current = localStorage.getItem(STORAGE_KEY)
-      if (current && current !== data.v) {
-        localStorage.setItem(STORAGE_KEY, data.v)
-        window.location.reload()
-      } else if (!current) {
-        localStorage.setItem(STORAGE_KEY, data.v)
+  try {
+    const res = await fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' })
+    const data = await res.json()
+    const current = localStorage.getItem(STORAGE_KEY)
+    if (current && current !== data.v) {
+      localStorage.setItem(STORAGE_KEY, data.v)
+      // Purge caches SW
+      if ('caches' in window) {
+        const keys = await caches.keys()
+        await Promise.all(keys.map(k => caches.delete(k)))
       }
-    })
-    .catch(() => {})
+      // Unregister SWs pour forcer re-install au prochain load
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations()
+        await Promise.all(regs.map(r => r.unregister()))
+      }
+      window.location.reload()
+      return true // reload en cours, on ne rend pas l'app
+    }
+    if (!current) localStorage.setItem(STORAGE_KEY, data.v)
+  } catch {
+    // offline ou version.json indisponible : continue avec l'app
+  }
+  return false
 }
 
 // Service Worker : mode offline
@@ -52,14 +65,16 @@ if ('serviceWorker' in navigator) {
   })
 }
 
-// Lancement : maintenance → update → app
-checkMaintenance().then(isDown => {
-  if (!isDown) {
-    checkForUpdate()
-    createRoot(root).render(
-      <StrictMode>
-        <App />
-      </StrictMode>,
-    )
-  }
+// Lancement : update (potentiellement reload) → maintenance → app
+checkForUpdate().then(reloading => {
+  if (reloading) return
+  checkMaintenance().then(isDown => {
+    if (!isDown) {
+      createRoot(root).render(
+        <StrictMode>
+          <App />
+        </StrictMode>,
+      )
+    }
+  })
 })

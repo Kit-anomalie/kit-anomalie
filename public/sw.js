@@ -1,24 +1,27 @@
+// SW Kit Anomalie — rev 2 (force réinstall pour purger anciens caches)
 const APP_PREFIX = 'kit-anomalie-'
 
-// Installation : precache les ressources essentielles
+// Installation : purge tout + precache frais. skipWaiting pour activer tout de suite.
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    fetch('/kit-anomalie/version.json')
-      .then(r => r.json())
-      .then(data => {
-        const cacheName = APP_PREFIX + data.v
-        return caches.open(cacheName).then((cache) => {
-          return cache.addAll([
-            '/kit-anomalie/',
-            '/kit-anomalie/index.html',
-            '/kit-anomalie/manifest.json',
-            '/kit-anomalie/icons/icon-192.svg',
-            '/kit-anomalie/icons/icon-512.svg',
-            '/kit-anomalie/favicon.svg',
-          ])
-        })
-      })
-  )
+  event.waitUntil((async () => {
+    // 1. Purge préventive de tous les anciens caches app
+    const oldKeys = await caches.keys()
+    await Promise.all(
+      oldKeys.filter(k => k.startsWith(APP_PREFIX)).map(k => caches.delete(k))
+    )
+    // 2. Precache la version courante
+    const res = await fetch('/kit-anomalie/version.json', { cache: 'no-store' })
+    const data = await res.json()
+    const cache = await caches.open(APP_PREFIX + data.v)
+    await cache.addAll([
+      '/kit-anomalie/',
+      '/kit-anomalie/index.html',
+      '/kit-anomalie/manifest.json',
+      '/kit-anomalie/icons/icon-192.svg',
+      '/kit-anomalie/icons/icon-512.svg',
+      '/kit-anomalie/favicon.svg',
+    ])
+  })())
   self.skipWaiting()
 })
 
