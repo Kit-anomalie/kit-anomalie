@@ -13,6 +13,8 @@ interface SharedContentState {
   restoreShared: () => Promise<void>
 }
 
+const EXPORT_DATE_KEY = 'kit-anomalie-content-exportdate'
+
 export const useSharedContentStore = create<SharedContentState>()((set, get) => ({
   tips: [],
   fiches: [],
@@ -27,10 +29,28 @@ export const useSharedContentStore = create<SharedContentState>()((set, get) => 
       const sharedTips: CustomTip[] = data.tips ?? []
       const sharedFiches: FicheMemo[] = data.fiches ?? []
       const sharedGuides: Guide[] = data.guides ?? []
+      const exportDate: string = data.exportDate ?? ''
 
       set({ tips: sharedTips, fiches: sharedFiches, guides: sharedGuides, loaded: true })
 
-      // Injecter dans l'éditeur les contenus partagés qui n'y sont pas encore
+      const lastSeen = localStorage.getItem(EXPORT_DATE_KEY)
+
+      // Auto-sync : si c'est une nouvelle version de content.json (ou 1ère visite),
+      // on écrase l'editorStore avec la version partagée. Aucune action utilisateur requise.
+      // Les devices de consultation voient toujours la dernière version publiée.
+      if (exportDate && lastSeen !== exportDate) {
+        useEditorStore.setState({
+          tips: sharedTips,
+          fiches: sharedFiches,
+          guides: sharedGuides,
+        })
+        localStorage.setItem(EXPORT_DATE_KEY, exportDate)
+        return
+      }
+
+      // Pas d'auto-sync (même version déjà vue) : fallback sur l'ancien comportement
+      // additif — on ajoute les guides/fiches/tips qui ne sont pas encore dans l'editor
+      // (cas d'un ancien utilisateur sans exportDate stocké la première fois).
       const editor = useEditorStore.getState()
       const editorGuidesTitres = new Set(editor.guides.map(g => g.titre))
       const editorFichesTitres = new Set(editor.fiches.map(f => f.titre))
@@ -53,8 +73,9 @@ export const useSharedContentStore = create<SharedContentState>()((set, get) => 
   },
 
   restoreShared: async () => {
-    // 1. Clear editor (local overrides)
+    // 1. Clear editor (local overrides) + force re-sync
     useEditorStore.setState({ tips: [], fiches: [], guides: [] })
+    localStorage.removeItem(EXPORT_DATE_KEY)
     // 2. Reset sharedContentStore for clean reload
     set({ loaded: false, tips: [], fiches: [], guides: [] })
     // 3. Re-fetch content.json et ré-injecte dans l'éditeur
