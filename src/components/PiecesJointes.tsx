@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { PieceJointe } from '../types'
 
 interface PiecesJointesEditorProps {
@@ -38,10 +38,24 @@ function fileToBase64(file: File): Promise<string> {
   })
 }
 
+// Extrait un nom lisible depuis une URL si l'utilisateur n'en fournit pas.
+function guessLinkName(url: string): string {
+  try {
+    const u = new URL(url)
+    // sharepoint → "Vidéo de formation" à partir du dernier segment
+    const last = decodeURIComponent(u.pathname.split('/').filter(Boolean).pop() ?? u.hostname)
+    // Retire extensions techniques
+    return last.replace(/\.[a-zA-Z0-9]{2,5}$/, '').replace(/[-_]/g, ' ').trim() || u.hostname
+  } catch {
+    return url.slice(0, 50)
+  }
+}
+
 export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const lienNomRef = useRef<HTMLInputElement>(null)
-  const lienUrlRef = useRef<HTMLInputElement>(null)
+  const [lienNom, setLienNom] = useState('')
+  const [lienUrl, setLienUrl] = useState('')
+  const [lienError, setLienError] = useState('')
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -79,9 +93,16 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
   }
 
   const handleAddLien = () => {
-    const nom = lienNomRef.current?.value.trim()
-    const url = lienUrlRef.current?.value.trim()
-    if (!nom || !url) return
+    const url = lienUrl.trim()
+    if (!url) {
+      setLienError('URL requise')
+      return
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      setLienError("L'URL doit commencer par http:// ou https://")
+      return
+    }
+    const nom = lienNom.trim() || guessLinkName(url)
 
     const piece: PieceJointe = {
       id: `pj-${uid()}`,
@@ -91,8 +112,9 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
     }
 
     onChange([...pieces, piece])
-    if (lienNomRef.current) lienNomRef.current.value = ''
-    if (lienUrlRef.current) lienUrlRef.current.value = ''
+    setLienNom('')
+    setLienUrl('')
+    setLienError('')
   }
 
   const handleRemove = (id: string) => {
@@ -144,24 +166,36 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
       </div>
 
       {/* Ajout lien */}
-      <div className="flex gap-2">
-        <input
-          ref={lienNomRef}
-          placeholder="Nom du lien"
-          className="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-sncf-blue"
-        />
-        <input
-          ref={lienUrlRef}
-          placeholder="https://..."
-          className="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-sncf-blue"
-        />
-        <button
-          type="button"
-          onClick={handleAddLien}
-          className="px-3 py-2 rounded-xl bg-sncf-blue/10 text-sncf-blue text-xs font-medium active:scale-[0.98] transition-transform"
-        >
-          🔗 +
-        </button>
+      <div className="space-y-1">
+        <div className="flex gap-2">
+          <input
+            value={lienNom}
+            onChange={e => { setLienNom(e.target.value); if (lienError) setLienError('') }}
+            placeholder="Nom (optionnel)"
+            className="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-sncf-blue"
+          />
+          <input
+            value={lienUrl}
+            onChange={e => { setLienUrl(e.target.value); if (lienError) setLienError('') }}
+            placeholder="https://..."
+            className="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-sncf-blue"
+          />
+          <button
+            type="button"
+            onClick={handleAddLien}
+            disabled={!lienUrl.trim()}
+            className={`px-3 py-2 rounded-xl text-xs font-medium transition-transform ${
+              lienUrl.trim()
+                ? 'bg-sncf-blue/10 text-sncf-blue active:scale-[0.98]'
+                : 'bg-gray-100 text-gray-300'
+            }`}
+          >
+            🔗 +
+          </button>
+        </div>
+        {lienError && (
+          <p className="text-[11px] text-sncf-red px-1">{lienError}</p>
+        )}
       </div>
     </div>
   )
