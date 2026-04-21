@@ -8,6 +8,9 @@ interface SharedContentState {
   guides: Guide[]
   loaded: boolean
   load: () => Promise<void>
+  // Remet l'éditeur local à l'état exact de content.json
+  // (écrase tips/fiches/guides locaux non exportés)
+  restoreShared: () => Promise<void>
 }
 
 export const useSharedContentStore = create<SharedContentState>()((set, get) => ({
@@ -47,5 +50,14 @@ export const useSharedContentStore = create<SharedContentState>()((set, get) => 
     } catch {
       set({ loaded: true })
     }
+  },
+
+  restoreShared: async () => {
+    // 1. Clear editor (local overrides)
+    useEditorStore.setState({ tips: [], fiches: [], guides: [] })
+    // 2. Reset sharedContentStore for clean reload
+    set({ loaded: false, tips: [], fiches: [], guides: [] })
+    // 3. Re-fetch content.json et ré-injecte dans l'éditeur
+    await get().load()
   },
 }))

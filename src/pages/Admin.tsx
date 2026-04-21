@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { useCatalogueStore } from '../stores/catalogueStore'
+import { useSharedContentStore } from '../stores/sharedContentStore'
 import { Toggle } from '../components/Toggle'
 
 export function Admin() {
   const navigate = useNavigate()
   const store = useMaintenanceStore()
   const resetCatalogueSeed = useCatalogueStore(s => s.resetSeed)
+  const restoreShared = useSharedContentStore(s => s.restoreShared)
 
   const [planningEnabled, setPlanningEnabled] = useState(store.planningEnabled)
   const [planningMessage, setPlanningMessage] = useState(store.planningMessage)
@@ -15,12 +17,29 @@ export function Admin() {
   const [maintenanceMessage, setMaintenanceMessage] = useState('Mise a jour en cours, retour dans quelques instants.')
   const [saved, setSaved] = useState(false)
   const [seedResetMsg, setSeedResetMsg] = useState(false)
+  const [restoreMsg, setRestoreMsg] = useState<'idle' | 'loading' | 'done'>('idle')
 
   const handleResetCatalogue = () => {
     if (confirm('Réinitialiser le catalogue au contenu de démo (toutes modifications locales seront perdues) ?')) {
       resetCatalogueSeed()
       setSeedResetMsg(true)
       setTimeout(() => setSeedResetMsg(false), 2000)
+    }
+  }
+
+  const handleRestoreShared = async () => {
+    if (!confirm(
+      'Restaurer le contenu partagé depuis content.json ?\n\n'
+      + '⚠️ Vos guides, fiches et conseils locaux non exportés seront écrasés.\n\n'
+      + 'Favoris, historique et catalogue anomalies ne sont pas affectés.'
+    )) return
+    setRestoreMsg('loading')
+    try {
+      await restoreShared()
+      setRestoreMsg('done')
+      setTimeout(() => setRestoreMsg('idle'), 2500)
+    } catch {
+      setRestoreMsg('idle')
     }
   }
 
@@ -138,10 +157,25 @@ export function Admin() {
           </div>
           <button
             onClick={() => navigate('/editeur')}
-            className="w-full px-4 py-3 flex items-center justify-between text-left"
+            className="w-full px-4 py-3 flex items-center justify-between text-left border-b border-gray-100"
           >
             <span className="text-sm text-sncf-dark font-medium">Mode éditeur</span>
             <span className="text-sncf-blue text-sm">→</span>
+          </button>
+          <button
+            onClick={handleRestoreShared}
+            disabled={restoreMsg === 'loading'}
+            className="w-full px-4 py-3 flex items-center justify-between text-left"
+          >
+            <div className="flex-1 min-w-0">
+              <span className="text-sm text-sncf-dark font-medium block">
+                {restoreMsg === 'loading' ? 'Restauration…' : restoreMsg === 'done' ? 'Restauré ✓' : 'Restaurer le contenu partagé'}
+              </span>
+              <span className="text-[11px] text-gray-400">
+                Synchronise tips/fiches/guides locaux avec content.json
+              </span>
+            </div>
+            <span className="text-sncf-blue text-sm shrink-0">↻</span>
           </button>
         </div>
 
