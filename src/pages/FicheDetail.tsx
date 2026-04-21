@@ -3,6 +3,7 @@ import { FICHES_MEMO } from '../data/fiches'
 import { useEditorStore } from '../stores/editorStore'
 import { useSharedContentStore } from '../stores/sharedContentStore'
 import { PiecesJointesView } from '../components/PiecesJointes'
+import { linkify } from '../utils/linkify'
 
 export function FicheDetail() {
   const { id } = useParams()
@@ -37,7 +38,7 @@ export function FicheDetail() {
       {/* Quoi faire — section 1 */}
       <div className="bg-white rounded-2xl p-4 border border-gray-100 spring-scale" style={{ animationDelay: '120ms' }}>
         <h2 className="text-xs font-bold text-sncf-dark uppercase tracking-wide mb-2">Quoi faire</h2>
-        <p className="text-sm text-gray-700 leading-relaxed">{fiche.quoiFaire}</p>
+        <p className="text-sm text-gray-700 leading-relaxed">{linkify(fiche.quoiFaire)}</p>
       </div>
 
       {/* Comment — section 2 */}
@@ -52,7 +53,7 @@ export function FicheDetail() {
                 {parts.map((part, j) =>
                   part.startsWith('**') && part.endsWith('**')
                     ? <strong key={j} className="text-sncf-dark">{part.slice(2, -2)}</strong>
-                    : <span key={j}>{part}</span>
+                    : <span key={j}>{linkify(part)}</span>
                 )}
               </div>
             )
@@ -67,7 +68,7 @@ export function FicheDetail() {
           {fiche.erreursAEviter.map((erreur, i) => (
             <div key={i} className="flex items-start gap-2">
               <span className="text-sncf-red text-sm mt-0.5">✕</span>
-              <p className="text-sm text-gray-700">{erreur}</p>
+              <p className="text-sm text-gray-700">{linkify(erreur)}</p>
             </div>
           ))}
         </div>

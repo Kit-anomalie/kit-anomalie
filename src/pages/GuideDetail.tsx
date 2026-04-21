@@ -4,6 +4,7 @@ import { GUIDES } from '../data/guides'
 import { useEditorStore } from '../stores/editorStore'
 import { useSharedContentStore } from '../stores/sharedContentStore'
 import { PiecesJointesView } from '../components/PiecesJointes'
+import { linkify } from '../utils/linkify'
 
 export function GuideDetail() {
   const { id } = useParams()
@@ -77,7 +78,7 @@ export function GuideDetail() {
           <h2 className="font-bold text-sncf-dark">{etape.titre}</h2>
         </div>
 
-        <p className="text-sm text-gray-700 leading-relaxed">{etape.action}</p>
+        <p className="text-sm text-gray-700 leading-relaxed">{linkify(etape.action)}</p>
 
         {/* Champs à remplir */}
         {etape.champsARemplir && etape.champsARemplir.length > 0 && (
@@ -85,7 +86,7 @@ export function GuideDetail() {
             <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide mb-1">Champs à remplir</div>
             {etape.champsARemplir.map((champ, i) => (
               <div key={i} className="text-xs text-gray-700 flex items-center gap-1.5 mt-1">
-                <span className="text-sncf-blue">→</span> {champ}
+                <span className="text-sncf-blue">→</span> <span>{linkify(champ)}</span>
               </div>
             ))}
           </div>
@@ -97,7 +98,7 @@ export function GuideDetail() {
             <div className="text-[11px] font-bold text-sncf-orange uppercase tracking-wide mb-1">Attention</div>
             {etape.erreursFrequentes.map((err, i) => (
               <div key={i} className="text-xs text-gray-700 flex items-start gap-1.5 mt-1">
-                <span className="text-sncf-orange mt-0.5">⚠</span> {err}
+                <span className="text-sncf-orange mt-0.5">⚠</span> <span>{linkify(err)}</span>
               </div>
             ))}
           </div>
@@ -119,7 +120,7 @@ export function GuideDetail() {
             {guide.bonnesPratiques.map((bp, i) => (
               <div key={i} className="flex items-start gap-2">
                 <span className="text-sncf-green text-sm mt-0.5">✓</span>
-                <p className="text-sm text-gray-700 leading-relaxed">{bp}</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{linkify(bp)}</p>
               </div>
             ))}
           </div>
