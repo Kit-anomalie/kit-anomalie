@@ -10,7 +10,7 @@ export function FicheDetail() {
   const navigate = useNavigate()
   const customFiches = useEditorStore(s => s.fiches)
   const sharedFiches = useSharedContentStore(s => s.fiches)
-  const fiche = [...FICHES_MEMO, ...sharedFiches, ...customFiches].find(f => f.id === id)
+  const fiche = [...customFiches, ...sharedFiches, ...FICHES_MEMO].find(f => f.id === id)
 
   if (!fiche) return (
     <div className="p-4 text-center text-gray-500 space-y-3 spring-enter">

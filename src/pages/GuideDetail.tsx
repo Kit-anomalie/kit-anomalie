@@ -11,7 +11,7 @@ export function GuideDetail() {
   const navigate = useNavigate()
   const customGuides = useEditorStore(s => s.guides)
   const sharedGuides = useSharedContentStore(s => s.guides)
-  const guide = [...GUIDES, ...sharedGuides, ...customGuides].find(g => g.id === id)
+  const guide = [...customGuides, ...sharedGuides, ...GUIDES].find(g => g.id === id)
   const [currentStep, setCurrentStep] = useState(0)
 
   if (!guide) return (
@@ -161,7 +161,7 @@ export function GuideDetail() {
         <div className="space-y-2 spring-enter" style={{ animationDelay: '200ms' }}>
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Voir aussi</h2>
           {guide.guidesAssocies.map(gId => {
-            const linked = [...GUIDES, ...sharedGuides, ...customGuides].find(g => g.id === gId)
+            const linked = [...customGuides, ...sharedGuides, ...GUIDES].find(g => g.id === gId)
             if (!linked) return null
             return (
               <button

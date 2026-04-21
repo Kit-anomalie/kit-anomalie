@@ -13,7 +13,8 @@ export function Fiches() {
   const [search, setSearch] = useState('')
 
   // Fusionner fiches codées en dur + partagées + locales (dédoublonner par titre)
-  const merged = [...FICHES_MEMO, ...sharedFiches, ...customFiches]
+  // Priorité : customFiches (edits locaux) > sharedFiches (content.json) > FICHES_MEMO (défauts)
+  const merged = [...customFiches, ...sharedFiches, ...FICHES_MEMO]
   const allFiches = merged.filter((f, i) => merged.findIndex(x => x.titre === f.titre) === i)
 
   // Filtrer par profil
