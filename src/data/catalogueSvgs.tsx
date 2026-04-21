@@ -124,7 +124,7 @@ function Talus(): JSX.Element {
       {/* rail au sommet */}
       <rect x="20" y="30" width="160" height="8" style={SVG_STYLES.rail} />
       {/* talus */}
-      <path d="M20 40 L180 40 L300 150 L20 150 Z" style={{ fill: '#7BA428' }} />
+      <path d="M20 40 L180 40 L300 150 L20 150 Z" style={{ fill: '#A85D3F' }} />
       {/* zone de glissement */}
       <path d="M170 42 Q210 80 240 150" style={{ stroke: '#E3051B', strokeWidth: 2, fill: 'none', strokeDasharray: '4 3' }} />
       {/* crevasses */}

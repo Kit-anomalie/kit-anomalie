@@ -4,12 +4,14 @@ import { useCatalogueStore } from '../stores/catalogueStore'
 import { useFavoritesStore } from '../stores/favoritesStore'
 import { mainClassement, matchesFamille, type FamilleFiltre } from '../utils/catalogue'
 import { CLASSEMENT_COLORS, CLASSEMENT_LABELS, type CategorieId } from '../types'
+import { BackButton } from '../components/BackButton'
 
-const FILTRES: { id: FamilleFiltre; label: string; color: string }[] = [
-  { id: 'tous', label: 'Tous', color: '#6B7280' },
-  { id: 'securite', label: 'Sécurité', color: '#E3051B' },
-  { id: 'surveillance', label: 'Surveillance', color: '#3AAA35' },
-  { id: 'autres', label: 'Autres', color: '#9CA3AF' },
+const FILTRES: { id: FamilleFiltre; label: string; color: string; fg: string }[] = [
+  { id: 'tous', label: 'Tous', color: '#6B7280', fg: '#FFFFFF' },
+  { id: 'securite', label: 'Sécurité', color: '#E3051B', fg: '#FFFFFF' },
+  // Vert sur blanc échoue AA → texte foncé sur fond vert saturé (contraste 7.9:1)
+  { id: 'surveillance', label: 'Surveillance', color: '#3AAA35', fg: '#0C1E5B' },
+  { id: 'autres', label: 'Autres', color: '#9CA3AF', fg: '#FFFFFF' },
 ]
 
 export function CatalogueTypeActif() {
@@ -48,12 +50,7 @@ export function CatalogueTypeActif() {
     <div className="px-4 py-4 space-y-4">
       {/* Retour + prototype */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate(`/catalogue/${categorie.id}`)}
-          className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-        >
-          ← Retour
-        </button>
+        <BackButton to={`/catalogue/${categorie.id}`} />
         <span
           className="text-[10px] text-sncf-blue bg-sncf-blue/10 px-2 py-0.5 rounded-full font-medium spring-enter"
           title="Forme inspirée DZP SE · données synthétiques"
@@ -92,12 +89,12 @@ export function CatalogueTypeActif() {
               role="tab"
               aria-selected={active}
               onClick={() => setFiltre(f.id)}
-              className={`shrink-0 text-xs font-medium px-3 py-2 rounded-full transition-all min-h-[40px] ${
+              className={`shrink-0 text-xs font-medium px-4 py-2 rounded-full transition-all min-h-[44px] ${
                 active
-                  ? 'text-white shadow'
+                  ? 'shadow'
                   : 'bg-white text-gray-600 border border-gray-200'
               }`}
-              style={active ? { backgroundColor: f.color } : {}}
+              style={active ? { backgroundColor: f.color, color: f.fg } : {}}
             >
               {f.label}
             </button>
@@ -120,7 +117,7 @@ export function CatalogueTypeActif() {
               <div
                 key={ano.id}
                 className="flex items-stretch spring-enter"
-                style={{ animationDelay: `${150 + i * 40}ms` }}
+                style={{ animationDelay: `${150 + Math.min(i, 6) * 35}ms` }}
               >
                 <button
                   onClick={() => navigate(`/catalogue/${categorie.id}/${type.id}/${ano.id}`)}
@@ -144,7 +141,7 @@ export function CatalogueTypeActif() {
                         return (
                           <span
                             key={idx}
-                            className="text-[10px] font-bold px-1.5 py-0.5 rounded"
+                            className="text-xs font-bold px-2 py-0.5 rounded-full"
                             style={{ backgroundColor: c.bg, color: c.text }}
                             title={CLASSEMENT_LABELS[entry.classement]}
                           >
@@ -155,7 +152,7 @@ export function CatalogueTypeActif() {
                     </div>
                   ) : main && colors && (
                     <span
-                      className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-2"
+                      className="inline-block text-xs font-bold px-2 py-0.5 rounded-full mt-2"
                       style={{ backgroundColor: colors.bg, color: colors.text }}
                       title={CLASSEMENT_LABELS[main]}
                     >

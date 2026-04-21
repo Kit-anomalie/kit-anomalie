@@ -4,6 +4,7 @@ import { useCatalogueStore } from '../stores/catalogueStore'
 import { useFavoritesStore } from '../stores/favoritesStore'
 import { searchCatalogue, totalAnomalies, mainClassement, findAnomalie, type AnomalieLocation } from '../utils/catalogue'
 import { CLASSEMENT_COLORS, CLASSEMENT_LABELS } from '../types'
+import { BackButton } from '../components/BackButton'
 
 export function Catalogue() {
   const navigate = useNavigate()
@@ -31,12 +32,7 @@ export function Catalogue() {
   return (
     <div className="px-4 py-4 space-y-4">
       {/* Retour accueil */}
-      <button
-        onClick={() => navigate('/')}
-        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-      >
-        ← Retour
-      </button>
+      <BackButton to="/" />
 
       {/* En-tête brique */}
       <div className="spring-enter" style={{ animationDelay: '50ms' }}>
@@ -118,7 +114,7 @@ export function Catalogue() {
                     onClick={() => navigate(`/catalogue/${cat.id}`)}
                     className="text-left p-4 rounded-2xl active:scale-[0.96] transition-transform duration-200 spring-scale min-h-[128px] flex flex-col justify-between"
                     style={{
-                      animationDelay: `${320 + i * 70}ms`,
+                      animationDelay: `${320 + Math.min(i, 4) * 60}ms`,
                       backgroundColor: cat.couleur,
                       color: cat.couleurFg,
                     }}
@@ -127,7 +123,7 @@ export function Catalogue() {
                       <span className="text-2xl block" aria-hidden>{cat.icon}</span>
                       <div className="font-semibold text-sm mt-2 leading-tight">{cat.nom}</div>
                     </div>
-                    <div className="text-[11px] opacity-90 mt-2">
+                    <div className="text-[11px] mt-2">
                       {nbTypes} type{nbTypes > 1 ? 's' : ''} · {nbAnos} anomalie{nbAnos > 1 ? 's' : ''}
                     </div>
                   </button>
@@ -161,7 +157,7 @@ function HScrollRow({ titre, icon, items, onOpen, onClear, delay }: HScrollRowPr
         {onClear && items.length > 0 && (
           <button
             onClick={onClear}
-            className="text-[11px] text-gray-400 active:opacity-60"
+            className="text-xs text-gray-500 active:opacity-60 px-3 py-2 min-h-[44px] -mr-2"
             aria-label="Effacer l'historique"
           >
             Effacer
@@ -191,7 +187,7 @@ function HScrollRow({ titre, icon, items, onOpen, onClear, delay }: HScrollRowPr
               </div>
               {main && colors && (
                 <span
-                  className="inline-block mt-2 text-[10px] font-bold px-1.5 py-0.5 rounded"
+                  className="inline-block mt-2 text-xs font-bold px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: colors.bg, color: colors.text }}
                   title={CLASSEMENT_LABELS[main]}
                 >
@@ -256,7 +252,7 @@ function SearchResults({ results, totalResults, onOpen }: SearchResultsProps) {
                   </div>
                   {main && colors && (
                     <span
-                      className="text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap"
+                      className="text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
                       style={{ backgroundColor: colors.bg, color: colors.text }}
                       title={CLASSEMENT_LABELS[main]}
                     >

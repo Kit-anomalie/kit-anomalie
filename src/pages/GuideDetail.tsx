@@ -5,6 +5,7 @@ import { useEditorStore } from '../stores/editorStore'
 import { useSharedContentStore } from '../stores/sharedContentStore'
 import { PiecesJointesView } from '../components/PiecesJointes'
 import { linkify } from '../utils/linkify'
+import { BackButton } from '../components/BackButton'
 
 export function GuideDetail() {
   const { id } = useParams()
@@ -29,9 +30,7 @@ export function GuideDetail() {
   return (
     <div className="px-4 py-4 space-y-4">
       {/* Header */}
-      <button onClick={() => navigate(-1)} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]">
-        ← Retour
-      </button>
+      <BackButton />
 
       <div className="spring-enter" style={{ animationDelay: '50ms' }}>
         <h1 className="text-lg font-bold text-sncf-dark">{guide.titre}</h1>

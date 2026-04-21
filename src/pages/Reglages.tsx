@@ -5,6 +5,7 @@ import { useThemeStore } from '../stores/themeStore'
 import { Toggle } from '../components/Toggle'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 import { ROLE_ICONS, SPECIALITE_ICONS } from '../data/roles'
+import { BackButton } from '../components/BackButton'
 
 export function Réglages() {
   const navigate = useNavigate()
@@ -36,9 +37,7 @@ export function Réglages() {
 
   return (
     <div className="px-4 py-4 space-y-4 max-w-4xl mx-auto">
-      <button onClick={() => navigate('/')} className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]">
-        ← Retour
-      </button>
+      <BackButton to="/" />
       <h1 className="text-lg font-bold text-sncf-dark spring-enter" style={{ animationDelay: '50ms' }}>Réglages</h1>
 
       {/* Mon profil */}

@@ -51,13 +51,15 @@ export const CLASSEMENT_LABELS: Record<Classement, string> = {
   'VR': 'VR',
 }
 
-// Couleurs badges — palette SNCF stricte
+// Couleurs badges — palette SNCF stricte, contraste WCAG AA vérifié
+// Pour S/DP (orange), A/P (bleu ciel), A/SURV (vert), texte noir car
+// fond saturé + blanc < 4.5:1 (échec AA). Noir sur ces fonds = 7.9:1+ ✅
 export const CLASSEMENT_COLORS: Record<Classement, { bg: string; text: string; border: string }> = {
   'S/I':    { bg: '#E3051B', text: '#FFFFFF', border: '#B10414' },
-  'S/DP':   { bg: '#F7A600', text: '#FFFFFF', border: '#C68400' },
-  'A/P':    { bg: '#00A3E0', text: '#FFFFFF', border: '#0082B4' },
+  'S/DP':   { bg: '#F7A600', text: '#0C1E5B', border: '#C68400' },
+  'A/P':    { bg: '#00A3E0', text: '#0C1E5B', border: '#0082B4' },
   'A/M':    { bg: '#0C1E5B', text: '#FFFFFF', border: '#081642' },
-  'A/SURV': { bg: '#3AAA35', text: '#FFFFFF', border: '#2D8529' },
+  'A/SURV': { bg: '#3AAA35', text: '#0C1E5B', border: '#2D8529' },
   'A/DET':  { bg: '#9CA3AF', text: '#FFFFFF', border: '#6B7280' },
   'VA':     { bg: '#E5E7EB', text: '#374151', border: '#9CA3AF' },
   'VI':     { bg: '#E5E7EB', text: '#374151', border: '#9CA3AF' },

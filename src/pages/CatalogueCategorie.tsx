@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useCatalogueStore } from '../stores/catalogueStore'
 import type { CategorieId, TypeActif } from '../types'
+import { BackButton } from '../components/BackButton'
 
 export function CatalogueCategorie() {
   const { catId } = useParams<{ catId: string }>()
@@ -27,12 +28,7 @@ export function CatalogueCategorie() {
     <div className="px-4 py-4 space-y-4">
       {/* Retour */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate('/catalogue')}
-          className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-        >
-          ← Retour
-        </button>
+        <BackButton to="/catalogue" />
         <span
           className="text-[10px] text-sncf-blue bg-sncf-blue/10 px-2 py-0.5 rounded-full font-medium spring-enter"
           title="Forme inspirée DZP SE · données synthétiques"
@@ -50,7 +46,7 @@ export function CatalogueCategorie() {
           <span className="text-2xl" aria-hidden>{categorie.icon}</span>
           <div>
             <h1 className="text-lg font-bold leading-tight">{categorie.nom}</h1>
-            <p className="text-[11px] opacity-90 mt-0.5">{categorie.description}</p>
+            <p className="text-[11px] mt-0.5">{categorie.description}</p>
           </div>
         </div>
       </div>

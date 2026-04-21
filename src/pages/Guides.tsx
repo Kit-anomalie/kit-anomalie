@@ -5,6 +5,7 @@ import { useEditorStore } from '../stores/editorStore'
 import { useSharedContentStore } from '../stores/sharedContentStore'
 import { GUIDES } from '../data/guides'
 import { APPLIS_METIER } from '../data/roles'
+import { BackButton } from '../components/BackButton'
 
 export function Guides() {
   const navigate = useNavigate()
@@ -36,12 +37,7 @@ export function Guides() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <button
-        onClick={() => navigate('/')}
-        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-      >
-        ← Retour
-      </button>
+      <BackButton to="/" />
 
       <div className="spring-enter" style={{ animationDelay: '50ms' }}>
         <h1 className="text-lg font-bold text-sncf-dark">Guides</h1>
@@ -86,7 +82,7 @@ export function Guides() {
               key={guide.id}
               onClick={() => navigate(`/guides/${guide.id}`)}
               className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.97] transition-transform duration-200 spring-scale"
-              style={{ animationDelay: `${180 + i * 70}ms` }}
+              style={{ animationDelay: `${180 + Math.min(i, 6) * 50}ms` }}
             >
               <div className="font-semibold text-sncf-dark text-sm">{guide.titre}</div>
               <div className="flex items-center gap-2 mt-2 flex-wrap">

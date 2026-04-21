@@ -4,6 +4,7 @@ import { useProfileStore } from '../stores/profileStore'
 import { useEditorStore } from '../stores/editorStore'
 import { useSharedContentStore } from '../stores/sharedContentStore'
 import { FICHES_MEMO } from '../data/fiches'
+import { BackButton } from '../components/BackButton'
 
 export function Fiches() {
   const navigate = useNavigate()
@@ -34,12 +35,7 @@ export function Fiches() {
 
   return (
     <div className="px-4 py-4 space-y-4">
-      <button
-        onClick={() => navigate('/')}
-        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-      >
-        ← Retour
-      </button>
+      <BackButton to="/" />
 
       <div className="spring-enter" style={{ animationDelay: '50ms' }}>
         <h1 className="text-lg font-bold text-sncf-dark">Fiches mémo</h1>
@@ -63,7 +59,7 @@ export function Fiches() {
             key={fiche.id}
             onClick={() => navigate(`/fiches/${fiche.id}`)}
             className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 active:scale-[0.97] transition-transform duration-200 spring-scale"
-            style={{ animationDelay: `${180 + i * 70}ms` }}
+            style={{ animationDelay: `${180 + Math.min(i, 6) * 50}ms` }}
           >
             <div className="font-semibold text-sncf-dark text-sm">{fiche.titre}</div>
             <p className="text-xs text-gray-500 mt-1 line-clamp-2">{fiche.quoiFaire}</p>

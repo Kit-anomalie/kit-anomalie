@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { BackButton } from '../components/BackButton'
 
 interface PlaceholderProps {
   titre: string
@@ -8,16 +8,9 @@ interface PlaceholderProps {
 }
 
 export function Placeholder({ titre, icon, description, brique }: PlaceholderProps) {
-  const navigate = useNavigate()
-
   return (
     <div className="px-4 py-4">
-      <button
-        onClick={() => navigate('/')}
-        className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-      >
-        ← Retour
-      </button>
+      <BackButton to="/" />
 
       <div className="py-10 text-center">
         <span

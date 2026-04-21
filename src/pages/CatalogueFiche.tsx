@@ -6,6 +6,7 @@ import { useCataloguePrefsStore, SECTION_LABELS, ALL_SECTIONS, type FicheSection
 import { mainClassement } from '../utils/catalogue'
 import { getCatalogueSvg } from '../data/catalogueSvgs'
 import { CLASSEMENT_COLORS, CLASSEMENT_LABELS, type CategorieId, type ClassementEntry } from '../types'
+import { BackButton } from '../components/BackButton'
 
 export function CatalogueFiche() {
   const { catId, typeId, anoId } = useParams<{ catId: string; typeId: string; anoId: string }>()
@@ -73,18 +74,30 @@ export function CatalogueFiche() {
     <div className="px-4 py-4 space-y-4 pb-12">
       {/* Retour + prototype */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate(`/catalogue/${categorie.id}/${type.id}`)}
-          className="text-sncf-blue text-sm flex items-center gap-1 spring-enter active:opacity-60 transition-opacity -ml-2 px-2 py-2 min-h-[40px]"
-        >
-          ← Retour
-        </button>
+        <BackButton to={`/catalogue/${categorie.id}/${type.id}`} />
         <span
           className="text-[10px] text-sncf-blue bg-sncf-blue/10 px-2 py-0.5 rounded-full font-medium spring-enter"
           title="Forme inspirée DZP SE · données synthétiques"
         >
           Prototype
         </span>
+      </div>
+
+      {/* Sticky mini-header — garde le contexte en scroll long */}
+      <div
+        className="sticky top-0 -mx-4 px-4 py-2 z-10 flex items-center gap-2 bg-bg/95 backdrop-blur-sm border-b border-gray-200/60"
+      >
+        <span className="text-[11px] font-mono text-gray-500 shrink-0">{anomalie.code}</span>
+        <span className="text-xs text-sncf-dark truncate flex-1 font-medium">{anomalie.name}</span>
+        {main && mainColors && (
+          <span
+            className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full"
+            style={{ backgroundColor: mainColors.bg, color: mainColors.text }}
+            aria-label={`Classement principal ${CLASSEMENT_LABELS[main]}`}
+          >
+            {main}
+          </span>
+        )}
       </div>
 
       {/* Breadcrumb */}
@@ -102,7 +115,7 @@ export function CatalogueFiche() {
             <h1 className="text-lg font-bold text-sncf-dark leading-tight mt-0.5">{anomalie.name}</h1>
             {main && mainColors && (
               <span
-                className="inline-block mt-2 text-[11px] font-bold px-2.5 py-1 rounded-full"
+                className="inline-block mt-2 text-sm font-bold px-3 py-1 rounded-full"
                 style={{ backgroundColor: mainColors.bg, color: mainColors.text }}
                 title={CLASSEMENT_LABELS[main]}
               >
@@ -144,19 +157,19 @@ export function CatalogueFiche() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setPreset('all')}
-                className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-sncf-blue/10 text-sncf-blue border border-sncf-blue/20 active:scale-95 transition-transform"
+                className="text-xs font-medium px-4 py-2 rounded-full bg-sncf-blue/10 text-sncf-blue border border-sncf-blue/20 active:scale-95 transition-transform min-h-[44px]"
               >
                 Tout afficher
               </button>
               <button
                 onClick={() => setPreset('synthese')}
-                className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 active:scale-95 transition-transform"
+                className="text-xs font-medium px-4 py-2 rounded-full bg-gray-100 text-gray-700 border border-gray-200 active:scale-95 transition-transform min-h-[44px]"
               >
                 Vue synthèse
               </button>
               <button
                 onClick={() => setPreset('reset')}
-                className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-white text-gray-500 border border-gray-200 active:scale-95 transition-transform"
+                className="text-xs font-medium px-4 py-2 rounded-full bg-white text-gray-500 border border-gray-200 active:scale-95 transition-transform min-h-[44px]"
               >
                 Réinitialiser
               </button>
@@ -277,7 +290,7 @@ export function CatalogueFiche() {
                   </div>
                   {m && c && (
                     <span
-                      className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                      className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full"
                       style={{ backgroundColor: c.bg, color: c.text }}
                     >
                       {m}
@@ -321,7 +334,7 @@ function ClassementCard({ entry, showClassement, showAction }: ClassementCardPro
       <div className="flex items-center gap-2 px-3 py-2 bg-gray-50">
         {showClassement && (
           <span
-            className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
+            className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
             style={{ backgroundColor: c.bg, color: c.text }}
             title={CLASSEMENT_LABELS[entry.classement]}
           >

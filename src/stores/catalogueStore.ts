@@ -172,7 +172,7 @@ export const useCatalogueStore = create<CatalogueState>()(
     }),
     {
       name: 'kit-anomalie-catalogue',
-      version: 2,
+      version: 3,
     }
   )
 )

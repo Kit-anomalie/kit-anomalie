@@ -364,7 +364,7 @@ export function EditorCatalogue() {
                         return (
                           <span
                             key={i}
-                            className="text-[10px] font-bold px-1.5 py-0.5 rounded"
+                            className="text-xs font-bold px-2 py-0.5 rounded-full"
                             style={{ backgroundColor: c.bg, color: c.text }}
                             title={CLASSEMENT_LABELS[e.classement]}
                           >
@@ -460,7 +460,7 @@ function AnoFormView({ form, setForm, onSave, onCancel, isEditing }: AnoFormView
           return (
             <div key={idx} className="border border-gray-100 rounded-xl p-2 space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0" style={{ backgroundColor: c.bg, color: c.text }}>{entry.classement}</span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style={{ backgroundColor: c.bg, color: c.text }}>{entry.classement}</span>
                 <select
                   value={entry.classement}
                   onChange={e => updateClassement(idx, { classement: e.target.value as Classement })}
@@ -471,7 +471,13 @@ function AnoFormView({ form, setForm, onSave, onCancel, isEditing }: AnoFormView
                   ))}
                 </select>
                 {form.classements.length > 1 && (
-                  <button onClick={() => removeClassement(idx)} className="text-sncf-red text-xs px-2 py-1 rounded-lg bg-sncf-red/10" aria-label="Supprimer ce classement">✕</button>
+                  <button
+                    onClick={() => removeClassement(idx)}
+                    className="text-sncf-red text-sm rounded-lg bg-sncf-red/10 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    aria-label="Supprimer ce classement"
+                  >
+                    ✕
+                  </button>
                 )}
               </div>
               <input

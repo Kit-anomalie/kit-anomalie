@@ -389,7 +389,7 @@ export const CATALOGUE_SEED: CatalogueCategorie[] = [
     id: 'abords',
     nom: 'Abords',
     description: 'Talus, remblai, végétation, drainage, clôture',
-    couleur: '#7BA428', // olive harmonisé sncf-green
+    couleur: '#A85D3F', // terracotta — distinct du sncf-green (Ouvrages)
     couleurFg: '#FFFFFF',
     icon: '🌲',
     types: [
