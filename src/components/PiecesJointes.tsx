@@ -245,7 +245,6 @@ export function PiecesJointesView({ pieces }: { pieces: PieceJointe[] }) {
               <span className="text-xl">🔗</span>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-sncf-dark truncate">{p.nom}</div>
-                <div className="text-[11px] text-sncf-blue truncate">{p.url}</div>
               </div>
               <span className="text-sncf-blue text-sm">→</span>
             </a>
