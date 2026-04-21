@@ -24,7 +24,21 @@ interface EditorState {
 
   // Export / Import
   exportData: () => EditorData
-  importData: (data: EditorData) => void
+  // Fusionne les données importées dans l'editor.
+  // - Par défaut (merge) : ajoute les items absents, préserve le local sur doublon (dédup par titre / texte)
+  // - Mode replace : écrase entièrement (utilisé par restoreShared)
+  // Retourne un rapport pour affichage UI.
+  importData: (data: EditorData, mode?: 'merge' | 'replace') => ImportReport
+}
+
+export interface ImportReport {
+  addedTips: number
+  addedFiches: number
+  addedGuides: number
+  skippedTips: number
+  skippedFiches: number
+  skippedGuides: number
+  mode: 'merge' | 'replace'
 }
 
 function uid() {
@@ -76,11 +90,50 @@ export const useEditorStore = create<EditorState>()(
         const { tips, fiches, guides } = get()
         return { tips, fiches, guides, exportDate: new Date().toISOString() }
       },
-      importData: (data) => set({
-        tips: data.tips ?? [],
-        fiches: data.fiches ?? [],
-        guides: data.guides ?? [],
-      }),
+      importData: (data, mode = 'merge') => {
+        const incomingTips = data.tips ?? []
+        const incomingFiches = data.fiches ?? []
+        const incomingGuides = data.guides ?? []
+
+        if (mode === 'replace') {
+          set({ tips: incomingTips, fiches: incomingFiches, guides: incomingGuides })
+          return {
+            addedTips: incomingTips.length,
+            addedFiches: incomingFiches.length,
+            addedGuides: incomingGuides.length,
+            skippedTips: 0,
+            skippedFiches: 0,
+            skippedGuides: 0,
+            mode: 'replace',
+          }
+        }
+
+        // Mode merge (par défaut) : dédup par titre/texte, local gagne en cas de conflit
+        const s = get()
+        const existingGuideTitres = new Set(s.guides.map(g => g.titre))
+        const existingFicheTitres = new Set(s.fiches.map(f => f.titre))
+        const existingTipTextes = new Set(s.tips.map(t => t.texte))
+
+        const newGuides = incomingGuides.filter(g => !existingGuideTitres.has(g.titre))
+        const newFiches = incomingFiches.filter(f => !existingFicheTitres.has(f.titre))
+        const newTips = incomingTips.filter(t => !existingTipTextes.has(t.texte))
+
+        set({
+          tips: [...s.tips, ...newTips],
+          fiches: [...s.fiches, ...newFiches],
+          guides: [...s.guides, ...newGuides],
+        })
+
+        return {
+          addedTips: newTips.length,
+          addedFiches: newFiches.length,
+          addedGuides: newGuides.length,
+          skippedTips: incomingTips.length - newTips.length,
+          skippedFiches: incomingFiches.length - newFiches.length,
+          skippedGuides: incomingGuides.length - newGuides.length,
+          mode: 'merge',
+        }
+      },
     }),
     { name: 'kit-anomalie-editor' }
   )

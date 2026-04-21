@@ -61,8 +61,13 @@ export function Editor() {
           const nbAnos = data.categories.reduce((s: number, c: { types?: { anomalies?: unknown[] }[] }) => s + (c.types ?? []).reduce((x: number, t) => x + (t.anomalies?.length ?? 0), 0), 0)
           setImportMessage(`Catalogue importé — ${data.categories.length} catégories, ${nbTypes} types, ${nbAnos} anomalies`)
         } else {
-          importData(data)
-          setImportMessage(`Importation réussie — ${data.tips?.length ?? 0} tips, ${data.fiches?.length ?? 0} fiches, ${data.guides?.length ?? 0} guides`)
+          const report = importData(data)
+          const added = report.addedTips + report.addedFiches + report.addedGuides
+          const skipped = report.skippedTips + report.skippedFiches + report.skippedGuides
+          const msg = added === 0 && skipped > 0
+            ? `Aucun nouvel item — ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''} (titres déjà présents)`
+            : `Fusion réussie — ajoutés : ${report.addedTips} tips, ${report.addedFiches} fiches, ${report.addedGuides} guides${skipped > 0 ? ` · ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''}` : ''}`
+          setImportMessage(msg)
         }
         setTimeout(() => setImportMessage(''), 4000)
       } catch {
@@ -129,8 +134,9 @@ export function Editor() {
         <button
           onClick={() => fileInputRef.current?.click()}
           className="flex-1 py-3 rounded-2xl bg-sncf-blue/10 text-sncf-blue font-medium text-sm active:scale-[0.98] transition-transform"
+          title="Fusionne avec l'existant — les doublons (mêmes titres) sont ignorés"
         >
-          Importer du contenu
+          {activeTab === 'catalogue' ? 'Importer (remplace)' : 'Fusionner un contenu'}
         </button>
         <input
           ref={fileInputRef}
