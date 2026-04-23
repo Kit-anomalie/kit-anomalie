@@ -4,7 +4,7 @@
 
 **Le kit n'est PAS une application métier.** La déclaration des anomalies se fait dans les applications métier existantes (EF3C0, S6A7, ADV Mobile, etc.). Le kit accompagne l'utilisateur.
 
-**En ligne :** https://willykaizen.github.io/kit-anomalie/
+**En ligne :** https://kit-anomalie.github.io/kit-anomalie/
 
 ---
 
@@ -193,5 +193,5 @@ Push sur `main` → GitHub Actions build + déploie automatiquement sur GitHub P
 
 ```bash
 git add -A && git commit -m "description" && git push
-# → https://willykaizen.github.io/kit-anomalie/
+# → https://kit-anomalie.github.io/kit-anomalie/
 ```

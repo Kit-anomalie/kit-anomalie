@@ -6,8 +6,8 @@ Le Kit Anomalie est un **compagnon mobile-first** (Samsung A52s/A54s) pour les a
 
 La **déclaration des anomalies se fait dans les applications métier existantes**. Le kit fournit le lien direct vers l'appli métier de l'utilisateur.
 
-**En ligne :** https://willykaizen.github.io/kit-anomalie/
-**Repo :** https://github.com/Willykaizen/kit-anomalie
+**En ligne :** https://kit-anomalie.github.io/kit-anomalie/
+**Repo :** https://github.com/Kit-anomalie/kit-anomalie
 
 ## Cible
 
