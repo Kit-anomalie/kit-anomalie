@@ -6,14 +6,16 @@ import { EditorTips } from './EditorTips'
 import { EditorFiches } from './EditorFiches'
 import { EditorGuides } from './EditorGuides'
 import { EditorCatalogue } from './EditorCatalogue'
+import { EditorQuiz } from './EditorQuiz'
 
-type Tab = 'tips' | 'fiches' | 'guides' | 'catalogue'
+type Tab = 'tips' | 'fiches' | 'guides' | 'catalogue' | 'quiz'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'tips', label: 'Conseils', icon: '💡' },
   { id: 'fiches', label: 'Fiches', icon: '📋' },
   { id: 'guides', label: 'Guides', icon: '📖' },
   { id: 'catalogue', label: 'Catalogue', icon: '📚' },
+  { id: 'quiz', label: 'Quiz', icon: '🧠' },
 ]
 
 export function Editor() {
@@ -62,11 +64,11 @@ export function Editor() {
           setImportMessage(`Catalogue importé — ${data.categories.length} catégories, ${nbTypes} types, ${nbAnos} anomalies`)
         } else {
           const report = importData(data)
-          const added = report.addedTips + report.addedFiches + report.addedGuides
-          const skipped = report.skippedTips + report.skippedFiches + report.skippedGuides
+          const added = report.addedTips + report.addedFiches + report.addedGuides + report.addedQuizQuestions
+          const skipped = report.skippedTips + report.skippedFiches + report.skippedGuides + report.skippedQuizQuestions
           const msg = added === 0 && skipped > 0
             ? `Aucun nouvel item — ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''} (titres déjà présents)`
-            : `Fusion réussie — ajoutés : ${report.addedTips} tips, ${report.addedFiches} fiches, ${report.addedGuides} guides${skipped > 0 ? ` · ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''}` : ''}`
+            : `Fusion réussie — ajoutés : ${report.addedTips} tips, ${report.addedFiches} fiches, ${report.addedGuides} guides, ${report.addedQuizQuestions} questions quiz${skipped > 0 ? ` · ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''}` : ''}`
           setImportMessage(msg)
         }
         setTimeout(() => setImportMessage(''), 4000)
@@ -112,6 +114,7 @@ export function Editor() {
         {activeTab === 'fiches' && <EditorFiches />}
         {activeTab === 'guides' && <EditorGuides />}
         {activeTab === 'catalogue' && <EditorCatalogue />}
+        {activeTab === 'quiz' && <EditorQuiz />}
       </main>
 
       {/* Message d'import */}

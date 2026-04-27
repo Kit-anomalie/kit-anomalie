@@ -229,6 +229,7 @@ export interface EditorData {
   tips: CustomTip[]
   fiches: FicheMemo[]
   guides: Guide[]
+  quizQuestions?: import('../data/quizQuestions').QuizQuestion[]
   exportDate?: string
 }
 

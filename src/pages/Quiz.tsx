@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { BackButton } from '../components/BackButton'
 import { QUIZ_QUESTIONS, QUIZ_THEMES_LABELS } from '../data/quizQuestions'
 import { useQuizStore, type QuizAttempt } from '../stores/quizStore'
+import { useEditorStore } from '../stores/editorStore'
 
 type Phase = 'idle' | 'playing' | 'done'
 
@@ -13,13 +14,21 @@ export function Quiz() {
   const selectAnswer = useQuizStore((s) => s.selectAnswer)
   const goToQuestion = useQuizStore((s) => s.goToQuestion)
   const finishAttempt = useQuizStore((s) => s.finishAttempt)
+  const customQuestions = useEditorStore((s) => s.quizQuestions)
 
   const [phase, setPhase] = useState<Phase>('idle')
   // Pour le feedback inline : a-t-on validé la réponse de la question courante ?
   const [validated, setValidated] = useState(false)
 
-  const total = QUIZ_QUESTIONS.length
-  const currentQuestion = QUIZ_QUESTIONS[currentIndex]
+  // Fusion : questions par défaut + questions custom de l'admin (dédup par texte)
+  const allQuestions = useMemo(() => {
+    const seen = new Set(QUIZ_QUESTIONS.map((q) => q.question))
+    const customs = customQuestions.filter((q) => !seen.has(q.question))
+    return [...QUIZ_QUESTIONS, ...customs]
+  }, [customQuestions])
+
+  const total = allQuestions.length
+  const currentQuestion = allQuestions[currentIndex]
   const selectedAnswer = currentQuestion ? answers[currentQuestion.id] : undefined
   const hasSelected = selectedAnswer !== undefined
 
@@ -46,7 +55,7 @@ export function Quiz() {
   const handleNext = () => {
     if (currentIndex + 1 >= total) {
       // Fin
-      const correct = QUIZ_QUESTIONS.reduce(
+      const correct = allQuestions.reduce(
         (acc, q) => acc + (answers[q.id] === q.correct ? 1 : 0),
         0
       )
@@ -263,7 +272,7 @@ export function Quiz() {
 
   // ── Phase DONE — résultat ──
   if (phase === 'done') {
-    const correctCount = QUIZ_QUESTIONS.reduce(
+    const correctCount = allQuestions.reduce(
       (acc, q) => acc + (answers[q.id] === q.correct ? 1 : 0),
       0
     )
@@ -294,7 +303,7 @@ export function Quiz() {
 
         <div className="space-y-2 spring-enter" style={{ animationDelay: '150ms' }}>
           <h2 className="text-sm font-bold text-sncf-dark px-1">Récapitulatif</h2>
-          {QUIZ_QUESTIONS.map((q, i) => {
+          {allQuestions.map((q, i) => {
             const userAnswer = answers[q.id]
             const isCorrect = userAnswer === q.correct
             return (

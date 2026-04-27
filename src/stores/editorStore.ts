@@ -1,11 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { CustomTip, FicheMemo, Guide, EditorData } from '../types'
+import type { QuizQuestion } from '../data/quizQuestions'
 
 interface EditorState {
   tips: CustomTip[]
   fiches: FicheMemo[]
   guides: Guide[]
+  quizQuestions: QuizQuestion[]
 
   // Tips
   addTip: (texte: string) => void
@@ -22,6 +24,11 @@ interface EditorState {
   updateGuide: (id: string, guide: Partial<Guide>) => void
   deleteGuide: (id: string) => void
 
+  // Quiz questions (custom — s'ajoutent aux questions par defaut)
+  addQuizQuestion: (q: Omit<QuizQuestion, 'id'>) => void
+  updateQuizQuestion: (id: string, q: Partial<QuizQuestion>) => void
+  deleteQuizQuestion: (id: string) => void
+
   // Export / Import
   exportData: () => EditorData
   // Fusionne les données importées dans l'editor.
@@ -35,9 +42,11 @@ export interface ImportReport {
   addedTips: number
   addedFiches: number
   addedGuides: number
+  addedQuizQuestions: number
   skippedTips: number
   skippedFiches: number
   skippedGuides: number
+  skippedQuizQuestions: number
   mode: 'merge' | 'replace'
 }
 
@@ -51,6 +60,7 @@ export const useEditorStore = create<EditorState>()(
       tips: [],
       fiches: [],
       guides: [],
+      quizQuestions: [],
 
       // Tips
       addTip: (texte) => set(s => ({
@@ -85,52 +95,71 @@ export const useEditorStore = create<EditorState>()(
         guides: s.guides.filter(g => g.id !== id)
       })),
 
+      // Quiz questions
+      addQuizQuestion: (q) => set(s => ({
+        quizQuestions: [...s.quizQuestions, { ...q, id: `quiz-custom-${uid()}` }]
+      })),
+      updateQuizQuestion: (id, q) => set(s => ({
+        quizQuestions: s.quizQuestions.map(x => x.id === id ? { ...x, ...q } : x)
+      })),
+      deleteQuizQuestion: (id) => set(s => ({
+        quizQuestions: s.quizQuestions.filter(x => x.id !== id)
+      })),
+
       // Export / Import
       exportData: () => {
-        const { tips, fiches, guides } = get()
-        return { tips, fiches, guides, exportDate: new Date().toISOString() }
+        const { tips, fiches, guides, quizQuestions } = get()
+        return { tips, fiches, guides, quizQuestions, exportDate: new Date().toISOString() }
       },
       importData: (data, mode = 'merge') => {
         const incomingTips = data.tips ?? []
         const incomingFiches = data.fiches ?? []
         const incomingGuides = data.guides ?? []
+        const incomingQuiz = data.quizQuestions ?? []
 
         if (mode === 'replace') {
-          set({ tips: incomingTips, fiches: incomingFiches, guides: incomingGuides })
+          set({ tips: incomingTips, fiches: incomingFiches, guides: incomingGuides, quizQuestions: incomingQuiz })
           return {
             addedTips: incomingTips.length,
             addedFiches: incomingFiches.length,
             addedGuides: incomingGuides.length,
+            addedQuizQuestions: incomingQuiz.length,
             skippedTips: 0,
             skippedFiches: 0,
             skippedGuides: 0,
+            skippedQuizQuestions: 0,
             mode: 'replace',
           }
         }
 
-        // Mode merge (par défaut) : dédup par titre/texte, local gagne en cas de conflit
+        // Mode merge (par défaut) : dédup par titre/texte/question, local gagne en cas de conflit
         const s = get()
         const existingGuideTitres = new Set(s.guides.map(g => g.titre))
         const existingFicheTitres = new Set(s.fiches.map(f => f.titre))
         const existingTipTextes = new Set(s.tips.map(t => t.texte))
+        const existingQuizQuestions = new Set(s.quizQuestions.map(q => q.question))
 
         const newGuides = incomingGuides.filter(g => !existingGuideTitres.has(g.titre))
         const newFiches = incomingFiches.filter(f => !existingFicheTitres.has(f.titre))
         const newTips = incomingTips.filter(t => !existingTipTextes.has(t.texte))
+        const newQuiz = incomingQuiz.filter(q => !existingQuizQuestions.has(q.question))
 
         set({
           tips: [...s.tips, ...newTips],
           fiches: [...s.fiches, ...newFiches],
           guides: [...s.guides, ...newGuides],
+          quizQuestions: [...s.quizQuestions, ...newQuiz],
         })
 
         return {
           addedTips: newTips.length,
           addedFiches: newFiches.length,
           addedGuides: newGuides.length,
+          addedQuizQuestions: newQuiz.length,
           skippedTips: incomingTips.length - newTips.length,
           skippedFiches: incomingFiches.length - newFiches.length,
           skippedGuides: incomingGuides.length - newGuides.length,
+          skippedQuizQuestions: incomingQuiz.length - newQuiz.length,
           mode: 'merge',
         }
       },
