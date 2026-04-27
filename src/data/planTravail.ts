@@ -64,7 +64,7 @@ export const SPRINTS: Sprint[] = [
     jalons: [
       { titre: 'Roadmap partageable', fait: true },
       { titre: 'Système de favoris et récents', fait: true },
-      { titre: 'Guides ADV Mobile & SPOT Mobile', fait: false, brique: 1 },
+      { titre: 'Guides ADV Mobile & SPOT Mobile', fait: true, brique: 1 },
       { titre: 'Guides S6A7 & EF4B1', fait: false, brique: 1 },
       { titre: 'Fiches mémo supplémentaires (embarquement, MPC, MC)', fait: false, brique: 2 },
       { titre: 'Recherche globale', fait: false },
@@ -81,11 +81,11 @@ export const SPRINTS: Sprint[] = [
     ],
   },
   {
-    nom: 'Sprint 4', codename: 'RADAR', icon: '📡', status: 'upcoming',
+    nom: 'Sprint 4', codename: 'RADAR', icon: '📡', status: 'active',
     periode: 'Juillet — Août 2025',
     objectif: 'Anomalies par actif — consultation, recherche, anti-doublons',
     jalons: [
-      { titre: 'Recherche d\'actif et fiche anomalies', fait: false, brique: 4 },
+      { titre: 'Recherche d\'actif et fiche anomalies', fait: true, brique: 4 },
       { titre: 'Détection de doublons', fait: false, brique: 4 },
       { titre: 'Import données de test (Excel)', fait: false, brique: 4 },
     ],

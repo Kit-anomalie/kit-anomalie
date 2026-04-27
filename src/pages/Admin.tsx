@@ -112,13 +112,13 @@ export function Admin() {
                 onClick={handleMaintenanceTotale}
                 className="flex-1 py-2.5 rounded-xl bg-sncf-red text-white font-medium text-sm active:scale-[0.98] transition-transform"
               >
-                Activer pour tous
+                Bloquer l'accès
               </button>
               <button
                 onClick={handleDesactiverTotale}
                 className="flex-1 py-2.5 rounded-xl bg-sncf-green text-white font-medium text-sm active:scale-[0.98] transition-transform"
               >
-                Désactiver pour tous
+                Rétablir l'accès
               </button>
             </div>
           </div>

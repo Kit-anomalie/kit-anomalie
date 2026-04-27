@@ -56,8 +56,10 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
   const [lienNom, setLienNom] = useState('')
   const [lienUrl, setLienUrl] = useState('')
   const [lienError, setLienError] = useState('')
+  const [fileError, setFileError] = useState('')
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError('')
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -65,12 +67,14 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
     const isPdf = file.type === 'application/pdf'
 
     if (!isImage && !isPdf) {
-      alert('Format non supporté. Utilisez une image (jpg, png) ou un PDF.')
+      setFileError('Format non supporté. Utilisez une image (jpg, png) ou un PDF.')
+      e.target.value = ''
       return
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert('Fichier trop volumineux (max 5 Mo)')
+      setFileError('Fichier trop volumineux (max 5 Mo).')
+      e.target.value = ''
       return
     }
 
@@ -148,21 +152,26 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
       )}
 
       {/* Boutons d'ajout */}
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="flex-1 py-2 rounded-xl border-2 border-dashed border-gray-300 text-xs text-gray-500 font-medium active:scale-[0.98] transition-transform"
-        >
-          🖼️ Image / 📄 PDF
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*,.pdf"
-          onChange={handleFileSelect}
-          className="hidden"
-        />
+      <div className="space-y-1">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => { setFileError(''); fileInputRef.current?.click() }}
+            className="flex-1 py-2 rounded-xl border-2 border-dashed border-gray-300 text-xs text-gray-600 font-medium active:scale-[0.98] transition-transform"
+          >
+            🖼️ Image / 📄 PDF
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,.pdf"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+        </div>
+        {fileError && (
+          <p role="alert" className="text-[11px] text-sncf-red px-1">{fileError}</p>
+        )}
       </div>
 
       {/* Ajout lien */}
