@@ -206,3 +206,28 @@ html, body, #root {
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
+
+/* ── A11y : focus visible au clavier ── */
+:focus-visible {
+  outline: 2px solid var(--color-sncf-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible {
+  outline: 2px solid var(--color-sncf-blue);
+  outline-offset: 2px;
+}
+
+/* ── A11y : respect de prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

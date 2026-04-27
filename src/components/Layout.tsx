@@ -18,7 +18,8 @@ export function Layout() {
           {role && (
             <button
               onClick={() => navigate('/reglages')}
-              className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center text-lg active:scale-95 transition-transform"
+              aria-label="Réglages et profil"
+              className="w-11 h-11 bg-white/20 rounded-full flex items-center justify-center text-lg active:scale-95 transition-transform"
             >
               {ROLE_ICONS[role]}
             </button>

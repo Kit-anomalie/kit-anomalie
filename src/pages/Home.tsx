@@ -43,7 +43,7 @@ export function Home() {
           <span className="text-2xl">🧑‍🔧</span>
           <div>
             <h1 className="text-lg font-bold text-sncf-dark">Bienvenue</h1>
-            <p className="text-xs text-gray-500">{ROLE_LABELS[role]} · {SPECIALITE_LABELS[specialite]}</p>
+            <p className="text-xs text-gray-600">{ROLE_LABELS[role]} · {SPECIALITE_LABELS[specialite]}</p>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@ export function Home() {
           <div className="flex items-start gap-2">
             <span className="text-sm">🔧</span>
             <div>
-              <div className="text-[11px] font-bold text-sncf-orange uppercase tracking-wide">Maintenance prévue</div>
+              <div className="text-[11px] font-bold text-orange-700 uppercase tracking-wide">Maintenance prévue</div>
               <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{planningMessage}</p>
             </div>
           </div>
@@ -72,7 +72,7 @@ export function Home() {
         <div className="flex items-start gap-2">
           <span className="text-sm">💡</span>
           <div>
-            <div className="text-[11px] font-bold text-sncf-blue uppercase tracking-wide">Conseil du jour</div>
+            <div className="text-[11px] font-bold text-sncf-dark uppercase tracking-wide">Conseil du jour</div>
             <p className="text-xs text-sncf-dark mt-0.5 leading-relaxed">{tipOfTheDay}</p>
           </div>
         </div>
@@ -96,7 +96,7 @@ export function Home() {
             >
               <span className="text-2xl block">{action.icon}</span>
               <div className="font-semibold text-sncf-dark text-sm mt-2">{action.label}</div>
-              <div className="text-[11px] text-gray-500 mt-0.5">{action.desc}</div>
+              <div className="text-[11px] text-gray-700 mt-0.5">{action.desc}</div>
             </button>
           ))}
         </div>
@@ -107,7 +107,7 @@ export function Home() {
         className="text-center py-4"
         style={{ animation: 'fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both', animationDelay: '900ms' }}
       >
-        <p className="text-[11px] text-gray-300 italic whitespace-nowrap">Les bons réflexes anomalie, dans la poche</p>
+        <p className="text-[11px] text-gray-600 italic whitespace-nowrap">Les bons réflexes anomalie, dans la poche</p>
       </div>
 
     </div>

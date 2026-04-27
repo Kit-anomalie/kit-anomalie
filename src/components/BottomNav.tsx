@@ -28,20 +28,24 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] md:max-w-[768px] lg:max-w-[1024px] bg-white border-t border-gray-200 px-2 pb-[env(safe-area-inset-bottom)]">
       <div className="flex justify-around">
-        {NAV_ITEMS.map(item => (
-          <button
-            key={item.id}
-            onClick={() => navigate(item.path)}
-            className={`flex flex-col items-center justify-center py-3 px-3 min-w-0 min-h-[48px] transition-colors ${
-              activeTab === item.id
-                ? 'text-sncf-blue'
-                : 'text-gray-500'
-            }`}
-          >
-            <span className="text-xl leading-none">{item.icon}</span>
-            <span className="text-[11px] mt-0.5 font-medium truncate">{item.label}</span>
-          </button>
-        ))}
+        {NAV_ITEMS.map(item => {
+          const isActive = activeTab === item.id
+          return (
+            <button
+              key={item.id}
+              onClick={() => navigate(item.path)}
+              aria-current={isActive ? 'page' : undefined}
+              className={`flex flex-col items-center justify-center py-3 px-3 min-w-0 min-h-[48px] transition-colors ${
+                isActive
+                  ? 'text-sncf-dark font-bold'
+                  : 'text-gray-600'
+              }`}
+            >
+              <span className="text-xl leading-none">{item.icon}</span>
+              <span className="text-[11px] mt-0.5 font-medium truncate">{item.label}</span>
+            </button>
+          )
+        })}
       </div>
     </nav>
   )
