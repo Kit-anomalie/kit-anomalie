@@ -230,6 +230,7 @@ export interface EditorData {
   fiches: FicheMemo[]
   guides: Guide[]
   quizQuestions?: import('../data/quizQuestions').QuizQuestion[]
+  customThemes?: import('../data/quizQuestions').QuizTheme[]
   exportDate?: string
 }
 

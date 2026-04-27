@@ -2,13 +2,39 @@
 // Source : fiches mémo, classements MT00342, terminologie métier
 // Note : données pédagogiques génériques, pas de référentiels confidentiels
 
+// theme = id libre (string). Voir getThemeLabel() en bas pour le rendu.
+// Themes par défaut listés dans DEFAULT_THEMES, l'admin peut en créer d'autres
+// via le mode éditeur.
 export interface QuizQuestion {
   id: string
-  theme: 'classement' | 'dlf' | 'description' | 'doublons' | 'terminologie'
+  theme: string
   question: string
   options: string[]
   correct: number // index dans options
   explanation: string
+}
+
+export interface QuizTheme {
+  id: string
+  label: string
+}
+
+export const DEFAULT_THEMES: QuizTheme[] = [
+  { id: 'classement', label: 'Classement' },
+  { id: 'dlf', label: 'DLF' },
+  { id: 'description', label: 'Description' },
+  { id: 'doublons', label: 'Doublons' },
+  { id: 'terminologie', label: 'Terminologie' },
+]
+
+// Renvoie le label affichable pour un theme. Cherche dans DEFAULT_THEMES,
+// puis dans les themes custom passés en parametre, sinon renvoie l'id brut.
+export function getThemeLabel(themeId: string, customThemes: QuizTheme[] = []): string {
+  const def = DEFAULT_THEMES.find((t) => t.id === themeId)
+  if (def) return def.label
+  const custom = customThemes.find((t) => t.id === themeId)
+  if (custom) return custom.label
+  return themeId
 }
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
@@ -170,10 +196,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
 ]
 
-export const QUIZ_THEMES_LABELS: Record<QuizQuestion['theme'], string> = {
-  classement: 'Classement',
-  dlf: 'DLF',
-  description: 'Description',
-  doublons: 'Doublons',
-  terminologie: 'Terminologie',
-}
+// Compatibilité — utiliser plutôt getThemeLabel(). Ne contient que les
+// thèmes par défaut, pas les customs définis par l'admin.
+export const QUIZ_THEMES_LABELS: Record<string, string> = Object.fromEntries(
+  DEFAULT_THEMES.map((t) => [t.id, t.label])
+)

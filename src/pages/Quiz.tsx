@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { BackButton } from '../components/BackButton'
-import { QUIZ_QUESTIONS, QUIZ_THEMES_LABELS } from '../data/quizQuestions'
+import { QUIZ_QUESTIONS, getThemeLabel } from '../data/quizQuestions'
 import { useQuizStore, type QuizAttempt } from '../stores/quizStore'
 import { useEditorStore } from '../stores/editorStore'
 
@@ -15,16 +15,21 @@ export function Quiz() {
   const goToQuestion = useQuizStore((s) => s.goToQuestion)
   const finishAttempt = useQuizStore((s) => s.finishAttempt)
   const customQuestions = useEditorStore((s) => s.quizQuestions)
+  const customThemes = useEditorStore((s) => s.customThemes)
 
   const [phase, setPhase] = useState<Phase>('idle')
   // Pour le feedback inline : a-t-on validé la réponse de la question courante ?
   const [validated, setValidated] = useState(false)
 
-  // Fusion : questions par défaut + questions custom de l'admin (dédup par texte)
+  // Fusion par id : si un custom partage l'id d'un default, il l'override.
+  // Sinon il est ajouté à la suite.
   const allQuestions = useMemo(() => {
-    const seen = new Set(QUIZ_QUESTIONS.map((q) => q.question))
-    const customs = customQuestions.filter((q) => !seen.has(q.question))
-    return [...QUIZ_QUESTIONS, ...customs]
+    const customsById = new Map(customQuestions.map((q) => [q.id, q]))
+    const defaultsWithOverrides = QUIZ_QUESTIONS.map((q) => customsById.get(q.id) ?? q)
+    const newCustoms = customQuestions.filter(
+      (q) => !QUIZ_QUESTIONS.some((d) => d.id === q.id)
+    )
+    return [...defaultsWithOverrides, ...newCustoms]
   }, [customQuestions])
 
   const total = allQuestions.length
@@ -168,7 +173,7 @@ export function Quiz() {
 
         <div className="spring-enter" key={currentQuestion.id}>
           <span className="inline-block text-[10px] font-bold text-sncf-dark bg-gray-100 px-2 py-0.5 rounded-full uppercase tracking-wide mb-2">
-            {QUIZ_THEMES_LABELS[currentQuestion.theme]}
+            {getThemeLabel(currentQuestion.theme, customThemes)}
           </span>
           <h2 className="text-base font-bold text-sncf-dark leading-relaxed">
             {currentQuestion.question}
@@ -324,7 +329,7 @@ export function Quiz() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">
-                      {QUIZ_THEMES_LABELS[q.theme]} · Q{i + 1}
+                      {getThemeLabel(q.theme, customThemes)} · Q{i + 1}
                     </div>
                     <div className="text-xs font-medium text-sncf-dark mt-0.5">{q.question}</div>
                     {!isCorrect && (

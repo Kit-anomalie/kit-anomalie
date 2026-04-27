@@ -64,11 +64,11 @@ export function Editor() {
           setImportMessage(`Catalogue importé — ${data.categories.length} catégories, ${nbTypes} types, ${nbAnos} anomalies`)
         } else {
           const report = importData(data)
-          const added = report.addedTips + report.addedFiches + report.addedGuides + report.addedQuizQuestions
-          const skipped = report.skippedTips + report.skippedFiches + report.skippedGuides + report.skippedQuizQuestions
+          const added = report.addedTips + report.addedFiches + report.addedGuides + report.addedQuizQuestions + report.addedCustomThemes
+          const skipped = report.skippedTips + report.skippedFiches + report.skippedGuides + report.skippedQuizQuestions + report.skippedCustomThemes
           const msg = added === 0 && skipped > 0
             ? `Aucun nouvel item — ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''} (titres déjà présents)`
-            : `Fusion réussie — ajoutés : ${report.addedTips} tips, ${report.addedFiches} fiches, ${report.addedGuides} guides, ${report.addedQuizQuestions} questions quiz${skipped > 0 ? ` · ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''}` : ''}`
+            : `Fusion réussie — ajoutés : ${report.addedTips} tips, ${report.addedFiches} fiches, ${report.addedGuides} guides, ${report.addedQuizQuestions} questions quiz, ${report.addedCustomThemes} thèmes${skipped > 0 ? ` · ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''}` : ''}`
           setImportMessage(msg)
         }
         setTimeout(() => setImportMessage(''), 4000)
