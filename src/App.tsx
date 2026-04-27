@@ -11,6 +11,7 @@ import { GuideDetail } from './pages/GuideDetail'
 import { Fiches } from './pages/Fiches'
 import { FicheDetail } from './pages/FicheDetail'
 import { Placeholder } from './pages/Placeholder'
+import { Quiz } from './pages/Quiz'
 import { PlanTravail } from './pages/PlanTravail'
 import { Editor } from './pages/Editor'
 import { Réglages } from './pages/Reglages'
@@ -44,9 +45,7 @@ function AppRoutes() {
         <Route path="/guides/:id" element={<GuideDetail />} />
         <Route path="/fiches" element={<Fiches />} />
         <Route path="/fiches/:id" element={<FicheDetail />} />
-        <Route path="/quiz" element={
-          <Placeholder titre="Quiz" icon="🧠" description="Testez vos connaissances sur les anomalies" brique="Brique 3" />
-        } />
+        <Route path="/quiz" element={<Quiz />} />
         <Route path="/catalogue" element={<Catalogue />} />
         <Route path="/catalogue/:catId" element={<CatalogueCategorie />} />
         <Route path="/catalogue/:catId/:typeId" element={<CatalogueTypeActif />} />

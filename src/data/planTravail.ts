@@ -71,12 +71,12 @@ export const SPRINTS: Sprint[] = [
     ],
   },
   {
-    nom: 'Sprint 3', codename: 'ACADEMY', icon: '🎓', status: 'upcoming',
+    nom: 'Sprint 3', codename: 'ACADEMY', icon: '🎓', status: 'active',
     periode: 'Mai — Juin 2025',
     objectif: 'Onboarding adaptatif avec quiz et progression',
     jalons: [
       { titre: 'Parcours de formation par rôle/spécialité', fait: false, brique: 3 },
-      { titre: 'Système de quiz avec feedback', fait: false, brique: 3 },
+      { titre: 'Système de quiz avec feedback', fait: true, brique: 3 },
       { titre: 'Contenu des modules de formation', fait: false, brique: 3 },
     ],
   },
