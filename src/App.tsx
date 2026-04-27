@@ -12,6 +12,7 @@ import { Fiches } from './pages/Fiches'
 import { FicheDetail } from './pages/FicheDetail'
 import { Placeholder } from './pages/Placeholder'
 import { Quiz } from './pages/Quiz'
+import { Assistant } from './pages/Assistant'
 import { PlanTravail } from './pages/PlanTravail'
 import { Editor } from './pages/Editor'
 import { Réglages } from './pages/Reglages'
@@ -51,9 +52,7 @@ function AppRoutes() {
         <Route path="/catalogue/:catId/:typeId" element={<CatalogueTypeActif />} />
         <Route path="/catalogue/:catId/:typeId/:anoId" element={<CatalogueFiche />} />
         <Route path="/actifs" element={<Navigate to="/catalogue" replace />} />
-        <Route path="/assistant" element={
-          <Placeholder titre="Assistant IA" icon="🤖" description="Aide à la rédaction et au classement de vos anomalies" brique="Brique 5" />
-        } />
+        <Route path="/assistant" element={<Assistant />} />
         <Route path="/alertes" element={
           <Placeholder titre="Alertes" icon="🔔" description="Informations, alertes et bonnes pratiques" brique="Brique 6" />
         } />

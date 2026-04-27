@@ -91,13 +91,13 @@ export const SPRINTS: Sprint[] = [
     ],
   },
   {
-    nom: 'Sprint 5', codename: 'ORACLE', icon: '🧠', status: 'upcoming',
+    nom: 'Sprint 5', codename: 'ORACLE', icon: '🧠', status: 'active',
     periode: 'Sept — Oct 2025',
-    objectif: 'Assistant IA — aide rédaction et classement',
+    objectif: 'Assistant — recherche locale (RAG Phase 1) + IA optionnelle plus tard',
     jalons: [
-      { titre: 'Interface assistant', fait: false, brique: 5 },
+      { titre: 'Interface assistant + recherche locale (Fuse.js)', fait: true, brique: 5 },
       { titre: 'Suggestions de description et classement', fait: false, brique: 5 },
-      { titre: 'Intégration LLM', fait: false, brique: 5 },
+      { titre: 'Intégration LLM (Phase 2 hybride, optionnel)', fait: false, brique: 5 },
     ],
   },
   {
