@@ -207,6 +207,12 @@ html, body, #root {
 
 .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
 
+/* Fade-out sur le bord droit pour signaler un scroll horizontal */
+.scroll-rail-fade {
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+}
+
 /* ── A11y : focus visible au clavier ── */
 :focus-visible {
   outline: 2px solid var(--color-sncf-blue);

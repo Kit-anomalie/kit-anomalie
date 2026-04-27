@@ -46,7 +46,7 @@ export function Guides() {
 
       {/* Filtre horizontal par appli */}
       {applisDisponibles.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 spring-enter" style={{ animationDelay: '100ms' }}>
+        <div className="flex gap-2 overflow-x-auto no-scrollbar scroll-rail-fade pb-1 spring-enter" style={{ animationDelay: '100ms' }}>
           <button
             onClick={() => setAppliFilter(null)}
             className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${

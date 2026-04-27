@@ -76,7 +76,7 @@ export function CatalogueTypeActif() {
 
       {/* Filtres classement */}
       <div
-        className="flex gap-2 overflow-x-auto no-scrollbar spring-scale"
+        className="flex gap-2 overflow-x-auto no-scrollbar scroll-rail-fade spring-scale"
         style={{ animationDelay: '120ms' }}
         role="tablist"
         aria-label="Filtrer par classement"

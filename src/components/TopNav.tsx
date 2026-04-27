@@ -1,7 +1,9 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { NAV_ITEMS, getActiveTab } from '../data/navItems'
 
-export function BottomNav() {
+// Navigation horizontale pour desktop (md+).
+// Rendue dans le header par Layout, masquée en mobile (la BottomNav prend le relais).
+export function TopNav() {
   const location = useLocation()
   const navigate = useNavigate()
   const activeTab = getActiveTab(location.pathname)
@@ -9,9 +11,9 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="md:hidden fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-200 px-2 pb-[env(safe-area-inset-bottom)]"
+      className="hidden md:flex border-t border-white/10 px-2"
     >
-      <div className="flex justify-around">
+      <div className="flex gap-1 overflow-x-auto no-scrollbar">
         {NAV_ITEMS.map(item => {
           const isActive = activeTab === item.id
           return (
@@ -19,14 +21,14 @@ export function BottomNav() {
               key={item.id}
               onClick={() => navigate(item.path)}
               aria-current={isActive ? 'page' : undefined}
-              className={`flex flex-col items-center justify-center py-3 px-3 min-w-0 min-h-[48px] transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
                 isActive
-                  ? 'text-sncf-dark font-bold'
-                  : 'text-gray-600'
+                  ? 'border-white text-white'
+                  : 'border-transparent text-white/70 hover:text-white hover:bg-white/5'
               }`}
             >
-              <span className="text-xl leading-none">{item.icon}</span>
-              <span className="text-[11px] mt-0.5 font-medium truncate">{item.label}</span>
+              <span className="text-base leading-none" aria-hidden="true">{item.icon}</span>
+              <span>{item.label}</span>
             </button>
           )
         })}
