@@ -19,6 +19,16 @@ export interface QuizTheme {
   label: string
 }
 
+// Un quiz = groupement de questions choisies dans le pool global.
+// Permet a l'admin de creer plusieurs quizzes (ex: "Fondamentaux", "Classement
+// approfondi"). Une question peut appartenir a plusieurs quizzes.
+export interface QuizDefinition {
+  id: string
+  name: string
+  description?: string
+  questionIds: string[]
+}
+
 export const DEFAULT_THEMES: QuizTheme[] = [
   { id: 'classement', label: 'Classement' },
   { id: 'dlf', label: 'DLF' },
@@ -201,3 +211,20 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
 export const QUIZ_THEMES_LABELS: Record<string, string> = Object.fromEntries(
   DEFAULT_THEMES.map((t) => [t.id, t.label])
 )
+
+// Quiz par défaut — groupe l'ensemble des 12 questions livrées avec l'app.
+// L'admin peut le modifier (override) ou créer ses propres quizzes.
+export const DEFAULT_QUIZZES: QuizDefinition[] = [
+  {
+    id: 'quiz-fondamentaux',
+    name: 'Fondamentaux',
+    description: 'Les 12 questions clés sur le métier — classement, DLF, doublons, terminologie',
+    questionIds: [
+      'q01', 'q02', 'q03', 'q04',
+      'q05', 'q06', 'q07',
+      'q08',
+      'q09',
+      'q10', 'q11', 'q12',
+    ],
+  },
+]

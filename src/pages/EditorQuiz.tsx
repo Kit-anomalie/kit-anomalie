@@ -3,11 +3,13 @@ import { useEditorStore } from '../stores/editorStore'
 import {
   QUIZ_QUESTIONS,
   DEFAULT_THEMES,
+  DEFAULT_QUIZZES,
   getThemeLabel,
   type QuizQuestion,
+  type QuizDefinition,
 } from '../data/quizQuestions'
 
-interface FormState {
+interface QuestionFormState {
   id: string | null // null = nouvelle question, sinon = id de la question editee/override
   theme: string
   question: string
@@ -17,7 +19,7 @@ interface FormState {
   isOverridingDefault: boolean
 }
 
-const EMPTY_FORM: FormState = {
+const EMPTY_QUESTION_FORM: QuestionFormState = {
   id: null,
   theme: 'classement',
   question: '',
@@ -27,17 +29,49 @@ const EMPTY_FORM: FormState = {
   isOverridingDefault: false,
 }
 
+interface QuizFormState {
+  id: string | null // null = nouveau, sinon = id du quiz
+  name: string
+  description: string
+  questionIds: Set<string>
+  isOverridingDefault: boolean
+}
+
+const EMPTY_QUIZ_FORM: QuizFormState = {
+  id: null,
+  name: '',
+  description: '',
+  questionIds: new Set(),
+  isOverridingDefault: false,
+}
+
+type View = 'list' | 'question-form' | 'quiz-form'
+
 export function EditorQuiz() {
+  // Stores
   const customQuestions = useEditorStore((s) => s.quizQuestions)
   const customThemes = useEditorStore((s) => s.customThemes)
+  const customQuizzes = useEditorStore((s) => s.customQuizzes)
   const addQuizQuestion = useEditorStore((s) => s.addQuizQuestion)
   const upsertQuizQuestion = useEditorStore((s) => s.upsertQuizQuestion)
   const deleteQuizQuestion = useEditorStore((s) => s.deleteQuizQuestion)
   const addCustomTheme = useEditorStore((s) => s.addCustomTheme)
   const updateCustomTheme = useEditorStore((s) => s.updateCustomTheme)
   const deleteCustomTheme = useEditorStore((s) => s.deleteCustomTheme)
+  const addQuiz = useEditorStore((s) => s.addQuiz)
+  const upsertQuiz = useEditorStore((s) => s.upsertQuiz)
+  const deleteQuiz = useEditorStore((s) => s.deleteQuiz)
 
-  // Liste effective des questions (default avec override + nouveaux ajouts)
+  // View state
+  const [view, setView] = useState<View>('list')
+  const [questionForm, setQuestionForm] = useState<QuestionFormState>(EMPTY_QUESTION_FORM)
+  const [quizForm, setQuizForm] = useState<QuizFormState>(EMPTY_QUIZ_FORM)
+  const [newThemeLabel, setNewThemeLabel] = useState('')
+  const [editingThemeId, setEditingThemeId] = useState<string | null>(null)
+  const [editingThemeLabel, setEditingThemeLabel] = useState('')
+
+  // ── Données fusionnées ──
+
   const effectiveQuestions = useMemo(() => {
     const customsById = new Map(customQuestions.map((q) => [q.id, q]))
     const defaultsMerged = QUIZ_QUESTIONS.map((q) => ({
@@ -51,32 +85,44 @@ export function EditorQuiz() {
     return [...defaultsMerged, ...newCustoms]
   }, [customQuestions])
 
-  const overrideCount = effectiveQuestions.filter((e) => e.isOverridden).length
-  const customAddedCount = effectiveQuestions.filter((e) => !e.isDefault).length
+  const effectiveQuizzes = useMemo(() => {
+    const customsById = new Map(customQuizzes.map((q) => [q.id, q]))
+    const defaultsMerged = DEFAULT_QUIZZES.map((q) => ({
+      quiz: customsById.get(q.id) ?? q,
+      isDefault: true,
+      isOverridden: customsById.has(q.id),
+    }))
+    const newCustoms = customQuizzes
+      .filter((q) => !DEFAULT_QUIZZES.some((d) => d.id === q.id))
+      .map((q) => ({ quiz: q, isDefault: false, isOverridden: false }))
+    return [...defaultsMerged, ...newCustoms]
+  }, [customQuizzes])
 
-  // Liste des thèmes utilisables (defaults + customs)
-  const allThemes = useMemo(() => [...DEFAULT_THEMES, ...customThemes], [customThemes])
+  // Pool global de questions disponibles (defaults + customs, overrides appliqués)
+  const allAvailableQuestions = useMemo<QuizQuestion[]>(
+    () => effectiveQuestions.map((e) => e.question),
+    [effectiveQuestions]
+  )
 
-  const [editing, setEditing] = useState<FormState | null>(null)
-  const [newThemeLabel, setNewThemeLabel] = useState('')
-  const [editingThemeId, setEditingThemeId] = useState<string | null>(null)
-  const [editingThemeLabel, setEditingThemeLabel] = useState('')
+  // ── Validation ──
 
-  const isFormValid = editing
-    ? editing.question.trim().length > 0 &&
-      editing.options.every((o) => o.trim().length > 0) &&
-      editing.explanation.trim().length > 0 &&
-      editing.theme.trim().length > 0
-    : false
+  const isQuestionFormValid =
+    questionForm.question.trim().length > 0 &&
+    questionForm.options.every((o) => o.trim().length > 0) &&
+    questionForm.explanation.trim().length > 0 &&
+    questionForm.theme.trim().length > 0
 
-  // ── Actions question ──
+  const isQuizFormValid = quizForm.name.trim().length > 0 && quizForm.questionIds.size > 0
 
-  const startNew = () => {
-    setEditing({ ...EMPTY_FORM })
+  // ── Question actions ──
+
+  const startNewQuestion = () => {
+    setQuestionForm({ ...EMPTY_QUESTION_FORM })
+    setView('question-form')
   }
 
-  const startEditCustom = (q: QuizQuestion) => {
-    setEditing({
+  const startEditCustomQuestion = (q: QuizQuestion) => {
+    setQuestionForm({
       id: q.id,
       theme: q.theme,
       question: q.question,
@@ -85,11 +131,11 @@ export function EditorQuiz() {
       explanation: q.explanation,
       isOverridingDefault: false,
     })
+    setView('question-form')
   }
 
-  const startOverrideDefault = (q: QuizQuestion) => {
-    // Pré-remplit avec la valeur effective (default ou override existant)
-    setEditing({
+  const startOverrideQuestion = (q: QuizQuestion) => {
+    setQuestionForm({
       id: q.id,
       theme: q.theme,
       question: q.question,
@@ -98,47 +144,108 @@ export function EditorQuiz() {
       explanation: q.explanation,
       isOverridingDefault: true,
     })
+    setView('question-form')
   }
 
-  const cancelEdit = () => setEditing(null)
-
-  const saveForm = () => {
-    if (!editing || !isFormValid) return
+  const saveQuestionForm = () => {
+    if (!isQuestionFormValid) return
     const payload: Omit<QuizQuestion, 'id'> = {
-      theme: editing.theme,
-      question: editing.question.trim(),
-      options: editing.options.map((o) => o.trim()),
-      correct: editing.correct,
-      explanation: editing.explanation.trim(),
+      theme: questionForm.theme,
+      question: questionForm.question.trim(),
+      options: questionForm.options.map((o) => o.trim()),
+      correct: questionForm.correct,
+      explanation: questionForm.explanation.trim(),
     }
-    if (editing.id === null) {
-      // Nouvelle question
+    if (questionForm.id === null) {
       addQuizQuestion(payload)
     } else {
-      // Override (default) ou modification (custom)
-      upsertQuizQuestion({ ...payload, id: editing.id })
+      upsertQuizQuestion({ ...payload, id: questionForm.id })
     }
-    setEditing(null)
+    setView('list')
   }
 
-  const resetOverride = (id: string) => {
+  const resetOverrideQuestion = (id: string) => {
     if (confirm('Réinitialiser cette question à sa version par défaut ?')) {
       deleteQuizQuestion(id)
     }
   }
 
-  const deleteCustom = (id: string) => {
+  const deleteCustomQuestion = (id: string) => {
     if (confirm('Supprimer cette question ?')) {
       deleteQuizQuestion(id)
     }
   }
 
-  // ── Actions thèmes ──
+  // ── Quiz actions ──
+
+  const startNewQuiz = () => {
+    setQuizForm({ ...EMPTY_QUIZ_FORM, questionIds: new Set() })
+    setView('quiz-form')
+  }
+
+  const startEditCustomQuiz = (q: QuizDefinition) => {
+    setQuizForm({
+      id: q.id,
+      name: q.name,
+      description: q.description ?? '',
+      questionIds: new Set(q.questionIds),
+      isOverridingDefault: false,
+    })
+    setView('quiz-form')
+  }
+
+  const startOverrideQuiz = (q: QuizDefinition) => {
+    setQuizForm({
+      id: q.id,
+      name: q.name,
+      description: q.description ?? '',
+      questionIds: new Set(q.questionIds),
+      isOverridingDefault: true,
+    })
+    setView('quiz-form')
+  }
+
+  const saveQuizForm = () => {
+    if (!isQuizFormValid) return
+    const payload: Omit<QuizDefinition, 'id'> = {
+      name: quizForm.name.trim(),
+      description: quizForm.description.trim() || undefined,
+      questionIds: Array.from(quizForm.questionIds),
+    }
+    if (quizForm.id === null) {
+      addQuiz(payload)
+    } else {
+      upsertQuiz({ ...payload, id: quizForm.id })
+    }
+    setView('list')
+  }
+
+  const resetOverrideQuiz = (id: string) => {
+    if (confirm('Réinitialiser ce quiz à sa version par défaut ?')) {
+      deleteQuiz(id)
+    }
+  }
+
+  const deleteCustomQuiz = (id: string) => {
+    if (confirm('Supprimer ce quiz ?')) {
+      deleteQuiz(id)
+    }
+  }
+
+  const toggleQuestionInQuiz = (id: string) => {
+    setQuizForm((s) => {
+      const next = new Set(s.questionIds)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return { ...s, questionIds: next }
+    })
+  }
+
+  // ── Theme actions ──
 
   const handleAddTheme = () => {
     const label = newThemeLabel.trim()
     if (!label) return
-    // Évite doublon avec defaults ou customs (case-insensitive)
     const lower = label.toLowerCase()
     const exists =
       DEFAULT_THEMES.some((t) => t.label.toLowerCase() === lower) ||
@@ -176,29 +283,35 @@ export function EditorQuiz() {
     }
   }
 
-  // ── Mode édition formulaire ──
-  if (editing !== null) {
+  // ── Vue : formulaire question ──
+  if (view === 'question-form') {
     const setOption = (idx: number, val: string) => {
-      const next: [string, string, string, string] = [...editing.options]
+      const next: [string, string, string, string] = [...questionForm.options]
       next[idx] = val
-      setEditing({ ...editing, options: next })
+      setQuestionForm({ ...questionForm, options: next })
     }
 
     const titre =
-      editing.id === null
+      questionForm.id === null
         ? 'Nouvelle question'
-        : editing.isOverridingDefault
+        : questionForm.isOverridingDefault
         ? 'Modifier (question par défaut)'
         : 'Modifier la question'
 
     return (
       <div className="space-y-4">
+        <button
+          onClick={() => setView('list')}
+          className="text-sncf-blue text-sm font-medium active:opacity-60"
+        >
+          ← Retour à la liste
+        </button>
+
         <div>
           <h2 className="text-sm font-bold text-sncf-dark">{titre}</h2>
-          {editing.isOverridingDefault && (
+          {questionForm.isOverridingDefault && (
             <p className="text-[11px] text-sncf-orange mt-1">
-              ⓘ Cette question fait partie des questions par défaut. La modification créera une
-              version override que tu pourras réinitialiser à tout moment.
+              ⓘ La modification créera une version override que tu pourras réinitialiser à tout moment.
             </p>
           )}
         </div>
@@ -210,30 +323,23 @@ export function EditorQuiz() {
               Thème <span className="text-sncf-red">*</span>
             </label>
             <select
-              value={editing.theme}
-              onChange={(e) => setEditing({ ...editing, theme: e.target.value })}
+              value={questionForm.theme}
+              onChange={(e) => setQuestionForm({ ...questionForm, theme: e.target.value })}
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
             >
               <optgroup label="Par défaut">
                 {DEFAULT_THEMES.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label}
-                  </option>
+                  <option key={t.id} value={t.id}>{t.label}</option>
                 ))}
               </optgroup>
               {customThemes.length > 0 && (
                 <optgroup label="Personnalisés">
                   {customThemes.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.label}
-                    </option>
+                    <option key={t.id} value={t.id}>{t.label}</option>
                   ))}
                 </optgroup>
               )}
             </select>
-            <p className="text-[11px] text-gray-600 mt-1">
-              Pour ajouter un thème, retourne à la liste et utilise la section « Mes thèmes ».
-            </p>
           </div>
 
           {/* Question */}
@@ -242,8 +348,8 @@ export function EditorQuiz() {
               Question <span className="text-sncf-red">*</span>
             </label>
             <textarea
-              value={editing.question}
-              onChange={(e) => setEditing({ ...editing, question: e.target.value })}
+              value={questionForm.question}
+              onChange={(e) => setQuestionForm({ ...questionForm, question: e.target.value })}
               rows={2}
               placeholder="Ex : Que signifie le classement S/I ?"
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
@@ -255,9 +361,9 @@ export function EditorQuiz() {
             <label className="text-xs font-medium text-gray-700 mb-1 block">
               4 réponses possibles <span className="text-sncf-red">*</span>
             </label>
-            <p className="text-[11px] text-gray-600 mb-2">Coche la bonne réponse à droite</p>
+            <p className="text-[11px] text-gray-700 mb-2">Coche la bonne réponse à droite</p>
             <div className="space-y-2">
-              {editing.options.map((opt, idx) => (
+              {questionForm.options.map((opt, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <span className="shrink-0 w-7 h-7 rounded-full bg-gray-100 text-sncf-dark text-xs font-bold flex items-center justify-center">
                     {String.fromCharCode(65 + idx)}
@@ -272,8 +378,8 @@ export function EditorQuiz() {
                     <input
                       type="radio"
                       name="correct"
-                      checked={editing.correct === idx}
-                      onChange={() => setEditing({ ...editing, correct: idx })}
+                      checked={questionForm.correct === idx}
+                      onChange={() => setQuestionForm({ ...questionForm, correct: idx })}
                       className="w-4 h-4 accent-sncf-green"
                       aria-label={`Réponse ${String.fromCharCode(65 + idx)} correcte`}
                     />
@@ -289,31 +395,29 @@ export function EditorQuiz() {
             <label className="text-xs font-medium text-gray-700 mb-1 block">
               Explication <span className="text-sncf-red">*</span>
             </label>
-            <p className="text-[11px] text-gray-600 mb-1">Affichée après validation, pédagogique</p>
             <textarea
-              value={editing.explanation}
-              onChange={(e) => setEditing({ ...editing, explanation: e.target.value })}
+              value={questionForm.explanation}
+              onChange={(e) => setQuestionForm({ ...questionForm, explanation: e.target.value })}
               rows={3}
-              placeholder="Ex : S/I = Sécurité / Immédiat. Anomalie nécessitant une intervention immédiate..."
+              placeholder="Affichée après validation, pédagogique"
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
             />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-2 pt-2">
             <button
-              onClick={saveForm}
-              disabled={!isFormValid}
+              onClick={saveQuestionForm}
+              disabled={!isQuestionFormValid}
               className={`flex-1 py-2.5 rounded-xl font-medium text-sm transition-transform ${
-                isFormValid
+                isQuestionFormValid
                   ? 'bg-sncf-blue text-white active:scale-[0.98]'
-                  : 'bg-gray-100 text-gray-600'
+                  : 'bg-gray-100 text-gray-700'
               }`}
             >
-              {editing.id === null ? 'Ajouter' : 'Enregistrer'}
+              {questionForm.id === null ? 'Ajouter' : 'Enregistrer'}
             </button>
             <button
-              onClick={cancelEdit}
+              onClick={() => setView('list')}
               className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-medium text-sm active:scale-[0.98] transition-transform"
             >
               Annuler
@@ -324,15 +428,238 @@ export function EditorQuiz() {
     )
   }
 
-  // ── Mode liste ──
+  // ── Vue : formulaire quiz ──
+  if (view === 'quiz-form') {
+    // Groupe les questions par thème pour la sélection
+    const grouped = new Map<string, QuizQuestion[]>()
+    for (const q of allAvailableQuestions) {
+      const arr = grouped.get(q.theme) ?? []
+      arr.push(q)
+      grouped.set(q.theme, arr)
+    }
+
+    const titre =
+      quizForm.id === null
+        ? 'Nouveau quiz'
+        : quizForm.isOverridingDefault
+        ? 'Modifier (quiz par défaut)'
+        : 'Modifier le quiz'
+
+    return (
+      <div className="space-y-4">
+        <button
+          onClick={() => setView('list')}
+          className="text-sncf-blue text-sm font-medium active:opacity-60"
+        >
+          ← Retour à la liste
+        </button>
+
+        <div>
+          <h2 className="text-sm font-bold text-sncf-dark">{titre}</h2>
+          {quizForm.isOverridingDefault && (
+            <p className="text-[11px] text-sncf-orange mt-1">
+              ⓘ Crée une version override réinitialisable.
+            </p>
+          )}
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+          <div>
+            <label className="text-xs font-medium text-gray-700 mb-1 block">
+              Nom du quiz <span className="text-sncf-red">*</span>
+            </label>
+            <input
+              value={quizForm.name}
+              onChange={(e) => setQuizForm({ ...quizForm, name: e.target.value })}
+              placeholder="Ex : Classement approfondi"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-gray-700 mb-1 block">
+              Description (optionnel)
+            </label>
+            <textarea
+              value={quizForm.description}
+              onChange={(e) => setQuizForm({ ...quizForm, description: e.target.value })}
+              rows={2}
+              placeholder="Une phrase pour situer le quiz"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue resize-none"
+            />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-medium text-gray-700">
+                Questions <span className="text-sncf-red">*</span>
+              </label>
+              <span className="text-[11px] text-gray-700">
+                {quizForm.questionIds.size} sélectionnée{quizForm.questionIds.size > 1 ? 's' : ''}
+              </span>
+            </div>
+            <p className="text-[11px] text-gray-700 mb-2">
+              Pioche dans les questions disponibles. Tu peux mélanger défauts et tes ajouts.
+            </p>
+
+            <div className="space-y-3">
+              {[...DEFAULT_THEMES, ...customThemes].map((theme) => {
+                const themeQuestions = grouped.get(theme.id) ?? []
+                if (themeQuestions.length === 0) return null
+                return (
+                  <div key={theme.id}>
+                    <div className="text-[10px] font-bold text-sncf-dark uppercase tracking-wide mb-1">
+                      {theme.label}
+                    </div>
+                    <div className="space-y-1">
+                      {themeQuestions.map((q) => {
+                        const checked = quizForm.questionIds.has(q.id)
+                        return (
+                          <label
+                            key={q.id}
+                            className={`flex items-start gap-2 p-2 rounded-xl cursor-pointer transition-colors ${
+                              checked ? 'bg-sncf-blue/10' : 'hover:bg-gray-50'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleQuestionInQuiz(q.id)}
+                              className="mt-0.5 w-4 h-4 accent-sncf-blue"
+                            />
+                            <span className="flex-1 text-xs text-sncf-dark leading-snug">
+                              {q.question}
+                            </span>
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="flex gap-2 pt-2">
+            <button
+              onClick={saveQuizForm}
+              disabled={!isQuizFormValid}
+              className={`flex-1 py-2.5 rounded-xl font-medium text-sm transition-transform ${
+                isQuizFormValid
+                  ? 'bg-sncf-blue text-white active:scale-[0.98]'
+                  : 'bg-gray-100 text-gray-700'
+              }`}
+            >
+              {quizForm.id === null ? 'Ajouter' : 'Enregistrer'}
+            </button>
+            <button
+              onClick={() => setView('list')}
+              className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-medium text-sm active:scale-[0.98] transition-transform"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Vue : liste ──
+
+  const overrideQuizCount = effectiveQuizzes.filter((e) => e.isOverridden).length
+  const customQuizCount = effectiveQuizzes.filter((e) => !e.isDefault).length
+  const overrideCount = effectiveQuestions.filter((e) => e.isOverridden).length
+  const customAddedCount = effectiveQuestions.filter((e) => !e.isDefault).length
+
   return (
     <div className="space-y-5">
-      {/* Section thèmes */}
+      {/* ── Section Quizzes ── */}
       <div>
+        <div className="flex items-end justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-bold text-sncf-dark">Mes quizzes</h2>
+            <p className="text-xs text-gray-700 mt-1">
+              {DEFAULT_QUIZZES.length} par défaut
+              {overrideQuizCount > 0 && ` · ${overrideQuizCount} modifié${overrideQuizCount > 1 ? 's' : ''}`}
+              {customQuizCount > 0 && ` · ${customQuizCount} ajouté${customQuizCount > 1 ? 's' : ''}`}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={startNewQuiz}
+          className="w-full mt-3 py-3 rounded-2xl bg-sncf-blue text-white font-semibold text-sm active:scale-[0.98] transition-transform"
+        >
+          + Nouveau quiz
+        </button>
+
+        <div className="space-y-2 mt-3">
+          {effectiveQuizzes.map(({ quiz, isDefault, isOverridden }) => (
+            <div
+              key={quiz.id}
+              className={`bg-white rounded-2xl border p-3 ${
+                isOverridden ? 'border-sncf-orange/40' : 'border-gray-100'
+              }`}
+            >
+              <div className="flex items-start gap-2 flex-wrap mb-1">
+                <span className="text-sm font-semibold text-sncf-dark">{quiz.name}</span>
+                {isDefault && !isOverridden && (
+                  <span className="text-[9px] font-medium text-gray-700 bg-gray-100 px-2 py-0.5 rounded-full">
+                    défaut
+                  </span>
+                )}
+                {isOverridden && (
+                  <span className="text-[9px] font-bold text-sncf-orange bg-sncf-orange/10 px-2 py-0.5 rounded-full uppercase tracking-wide">
+                    modifié
+                  </span>
+                )}
+                {!isDefault && (
+                  <span className="text-[9px] font-bold text-sncf-blue bg-sncf-blue/10 px-2 py-0.5 rounded-full uppercase tracking-wide">
+                    ajout
+                  </span>
+                )}
+              </div>
+              {quiz.description && (
+                <p className="text-xs text-gray-700 mb-2 leading-relaxed">{quiz.description}</p>
+              )}
+              <p className="text-[11px] text-gray-700 mb-3">
+                {quiz.questionIds.length} question{quiz.questionIds.length > 1 ? 's' : ''}
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => (isDefault ? startOverrideQuiz(quiz) : startEditCustomQuiz(quiz))}
+                  className="flex-1 min-w-[100px] text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 rounded-xl font-medium active:scale-[0.97] transition-transform"
+                >
+                  Modifier
+                </button>
+                {isOverridden && (
+                  <button
+                    onClick={() => resetOverrideQuiz(quiz.id)}
+                    className="flex-1 min-w-[100px] text-xs text-sncf-orange bg-sncf-orange/10 px-3 py-2 rounded-xl font-medium active:scale-[0.97] transition-transform"
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+                {!isDefault && (
+                  <button
+                    onClick={() => deleteCustomQuiz(quiz.id)}
+                    className="flex-1 min-w-[100px] text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 rounded-xl font-medium active:scale-[0.97] transition-transform"
+                  >
+                    Supprimer
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Section Thèmes ── */}
+      <div className="border-t border-gray-200 pt-5">
         <h2 className="text-sm font-bold text-sncf-dark">Mes thèmes</h2>
-        <p className="text-xs text-gray-600 mt-1">
-          {DEFAULT_THEMES.length} thème{DEFAULT_THEMES.length > 1 ? 's' : ''} par défaut
-          {customThemes.length > 0 && ` + ${customThemes.length} ajouté${customThemes.length > 1 ? 's' : ''}`}
+        <p className="text-xs text-gray-700 mt-1">
+          {DEFAULT_THEMES.length} par défaut
+          {customThemes.length > 0 && ` · ${customThemes.length} ajouté${customThemes.length > 1 ? 's' : ''}`}
         </p>
 
         <div className="mt-2 flex flex-wrap gap-2">
@@ -365,13 +692,7 @@ export function EditorQuiz() {
                     autoFocus
                     className="bg-white px-2 py-0.5 rounded text-xs w-24 focus:outline-none border border-sncf-blue"
                   />
-                  <button
-                    onClick={saveEditTheme}
-                    aria-label="Enregistrer"
-                    className="text-sncf-green text-xs"
-                  >
-                    ✓
-                  </button>
+                  <button onClick={saveEditTheme} aria-label="Enregistrer" className="text-sncf-green text-xs">✓</button>
                 </>
               ) : (
                 <>
@@ -396,7 +717,6 @@ export function EditorQuiz() {
           ))}
         </div>
 
-        {/* Ajout thème */}
         <div className="mt-3 flex gap-2">
           <input
             value={newThemeLabel}
@@ -411,7 +731,7 @@ export function EditorQuiz() {
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-transform ${
               newThemeLabel.trim()
                 ? 'bg-sncf-blue text-white active:scale-[0.97]'
-                : 'bg-gray-100 text-gray-600'
+                : 'bg-gray-100 text-gray-700'
             }`}
           >
             + Thème
@@ -419,23 +739,26 @@ export function EditorQuiz() {
         </div>
       </div>
 
+      {/* ── Section Questions ── */}
       <div className="border-t border-gray-200 pt-5">
-        <h2 className="text-sm font-bold text-sncf-dark">Questions de quiz</h2>
-        <p className="text-xs text-gray-600 mt-1">
+        <h2 className="text-sm font-bold text-sncf-dark">Banque de questions</h2>
+        <p className="text-xs text-gray-700 mt-1">
           {QUIZ_QUESTIONS.length} par défaut
           {overrideCount > 0 && ` · ${overrideCount} modifiée${overrideCount > 1 ? 's' : ''}`}
           {customAddedCount > 0 && ` · ${customAddedCount} ajoutée${customAddedCount > 1 ? 's' : ''}`}
         </p>
+        <p className="text-[11px] text-gray-700 italic mt-1">
+          Les questions sont la matière première — assigne-les à un quiz pour qu'elles apparaissent dans l'app.
+        </p>
       </div>
 
       <button
-        onClick={startNew}
-        className="w-full py-3 rounded-2xl bg-sncf-blue text-white font-semibold text-sm active:scale-[0.98] transition-transform"
+        onClick={startNewQuestion}
+        className="w-full py-3 rounded-2xl bg-sncf-blue/10 text-sncf-blue font-semibold text-sm active:scale-[0.98] transition-transform border border-sncf-blue/30"
       >
-        + Ajouter une question
+        + Nouvelle question
       </button>
 
-      {/* Liste unifiée */}
       <div className="space-y-2">
         {effectiveQuestions.map(({ question: q, isDefault, isOverridden }) => (
           <div
@@ -449,7 +772,7 @@ export function EditorQuiz() {
                 {getThemeLabel(q.theme, customThemes)}
               </span>
               {isDefault && !isOverridden && (
-                <span className="text-[10px] font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-medium text-gray-700 bg-gray-100 px-2 py-0.5 rounded-full">
                   défaut
                 </span>
               )}
@@ -481,14 +804,14 @@ export function EditorQuiz() {
             <p className="text-[11px] text-gray-700 italic mb-3 leading-relaxed">{q.explanation}</p>
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => (isDefault ? startOverrideDefault(q) : startEditCustom(q))}
+                onClick={() => (isDefault ? startOverrideQuestion(q) : startEditCustomQuestion(q))}
                 className="flex-1 min-w-[100px] text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 rounded-xl font-medium active:scale-[0.97] transition-transform"
               >
                 Modifier
               </button>
               {isOverridden && (
                 <button
-                  onClick={() => resetOverride(q.id)}
+                  onClick={() => resetOverrideQuestion(q.id)}
                   className="flex-1 min-w-[100px] text-xs text-sncf-orange bg-sncf-orange/10 px-3 py-2 rounded-xl font-medium active:scale-[0.97] transition-transform"
                 >
                   Réinitialiser
@@ -496,7 +819,7 @@ export function EditorQuiz() {
               )}
               {!isDefault && (
                 <button
-                  onClick={() => deleteCustom(q.id)}
+                  onClick={() => deleteCustomQuestion(q.id)}
                   className="flex-1 min-w-[100px] text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 rounded-xl font-medium active:scale-[0.97] transition-transform"
                 >
                   Supprimer
@@ -506,13 +829,6 @@ export function EditorQuiz() {
           </div>
         ))}
       </div>
-
-      {/* Astuce */}
-      {allThemes.length > DEFAULT_THEMES.length && (
-        <p className="text-[11px] text-gray-600 italic text-center">
-          ⓘ Tes thèmes personnalisés et tes modifications sont exportés via le bouton « Exporter le contenu » en bas.
-        </p>
-      )}
     </div>
   )
 }

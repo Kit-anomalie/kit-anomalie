@@ -231,6 +231,7 @@ export interface EditorData {
   guides: Guide[]
   quizQuestions?: import('../data/quizQuestions').QuizQuestion[]
   customThemes?: import('../data/quizQuestions').QuizTheme[]
+  customQuizzes?: import('../data/quizQuestions').QuizDefinition[]
   exportDate?: string
 }
 

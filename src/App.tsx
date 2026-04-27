@@ -12,6 +12,7 @@ import { Fiches } from './pages/Fiches'
 import { FicheDetail } from './pages/FicheDetail'
 import { Placeholder } from './pages/Placeholder'
 import { Quiz } from './pages/Quiz'
+import { QuizPlay } from './pages/QuizPlay'
 import { Assistant } from './pages/Assistant'
 import { PlanTravail } from './pages/PlanTravail'
 import { Editor } from './pages/Editor'
@@ -47,6 +48,7 @@ function AppRoutes() {
         <Route path="/fiches" element={<Fiches />} />
         <Route path="/fiches/:id" element={<FicheDetail />} />
         <Route path="/quiz" element={<Quiz />} />
+        <Route path="/quiz/:quizId" element={<QuizPlay />} />
         <Route path="/catalogue" element={<Catalogue />} />
         <Route path="/catalogue/:catId" element={<CatalogueCategorie />} />
         <Route path="/catalogue/:catId/:typeId" element={<CatalogueTypeActif />} />

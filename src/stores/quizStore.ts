@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware'
 // Une tentative passée — sauvegardée pour afficher la progression de l'agent
 export interface QuizAttempt {
   id: string
+  quizId: string
   date: string // ISO
   total: number
   correct: number
@@ -21,13 +22,15 @@ interface QuizState {
   startNewAttempt: () => void
   selectAnswer: (questionId: string, answerIndex: number) => void
   goToQuestion: (index: number) => void
-  finishAttempt: (total: number, correct: number) => void
+  finishAttempt: (quizId: string, total: number, correct: number) => void
   resetCurrent: () => void
+  // Helpers
+  attemptsForQuiz: (quizId: string) => QuizAttempt[]
 }
 
 export const useQuizStore = create<QuizState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       attempts: [],
       currentIndex: 0,
       answers: {},
@@ -39,12 +42,13 @@ export const useQuizStore = create<QuizState>()(
 
       goToQuestion: (index) => set({ currentIndex: index }),
 
-      finishAttempt: (total, correct) =>
+      finishAttempt: (quizId, total, correct) =>
         set((s) => ({
           attempts: [
             ...s.attempts,
             {
               id: `qa-${Date.now()}`,
+              quizId,
               date: new Date().toISOString(),
               total,
               correct,
@@ -55,6 +59,8 @@ export const useQuizStore = create<QuizState>()(
         })),
 
       resetCurrent: () => set({ currentIndex: 0, answers: {} }),
+
+      attemptsForQuiz: (quizId) => get().attempts.filter((a) => a.quizId === quizId),
     }),
     {
       name: 'kit-anomalie-quiz',

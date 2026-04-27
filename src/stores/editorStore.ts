@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { CustomTip, FicheMemo, Guide, EditorData } from '../types'
-import type { QuizQuestion, QuizTheme } from '../data/quizQuestions'
+import type { QuizQuestion, QuizTheme, QuizDefinition } from '../data/quizQuestions'
 
 interface EditorState {
   tips: CustomTip[]
@@ -9,6 +9,7 @@ interface EditorState {
   guides: Guide[]
   quizQuestions: QuizQuestion[]
   customThemes: QuizTheme[]
+  customQuizzes: QuizDefinition[]
 
   // Tips
   addTip: (texte: string) => void
@@ -41,6 +42,14 @@ interface EditorState {
   updateCustomTheme: (id: string, label: string) => void
   deleteCustomTheme: (id: string) => void
 
+  // Custom quizzes (groupements de questions). Suit le meme pattern que les
+  // questions : addQuiz cree un nouveau quiz, upsertQuiz override un default
+  // en utilisant son id, deleteQuiz supprime / reset le default si override.
+  addQuiz: (q: Omit<QuizDefinition, 'id'>) => string
+  upsertQuiz: (q: QuizDefinition) => void
+  updateQuiz: (id: string, q: Partial<QuizDefinition>) => void
+  deleteQuiz: (id: string) => void
+
   // Export / Import
   exportData: () => EditorData
   // Fusionne les données importées dans l'editor.
@@ -56,11 +65,13 @@ export interface ImportReport {
   addedGuides: number
   addedQuizQuestions: number
   addedCustomThemes: number
+  addedCustomQuizzes: number
   skippedTips: number
   skippedFiches: number
   skippedGuides: number
   skippedQuizQuestions: number
   skippedCustomThemes: number
+  skippedCustomQuizzes: number
   mode: 'merge' | 'replace'
 }
 
@@ -76,6 +87,7 @@ export const useEditorStore = create<EditorState>()(
       guides: [],
       quizQuestions: [],
       customThemes: [],
+      customQuizzes: [],
 
       // Tips
       addTip: (texte) => set(s => ({
@@ -142,10 +154,31 @@ export const useEditorStore = create<EditorState>()(
         customThemes: s.customThemes.filter(t => t.id !== id)
       })),
 
+      // Custom quizzes
+      addQuiz: (q) => {
+        const id = `quiz-custom-${uid()}`
+        set(s => ({ customQuizzes: [...s.customQuizzes, { ...q, id }] }))
+        return id
+      },
+      upsertQuiz: (q) => set(s => {
+        const exists = s.customQuizzes.some(x => x.id === q.id)
+        return {
+          customQuizzes: exists
+            ? s.customQuizzes.map(x => x.id === q.id ? q : x)
+            : [...s.customQuizzes, q]
+        }
+      }),
+      updateQuiz: (id, patch) => set(s => ({
+        customQuizzes: s.customQuizzes.map(q => q.id === id ? { ...q, ...patch } : q)
+      })),
+      deleteQuiz: (id) => set(s => ({
+        customQuizzes: s.customQuizzes.filter(q => q.id !== id)
+      })),
+
       // Export / Import
       exportData: () => {
-        const { tips, fiches, guides, quizQuestions, customThemes } = get()
-        return { tips, fiches, guides, quizQuestions, customThemes, exportDate: new Date().toISOString() }
+        const { tips, fiches, guides, quizQuestions, customThemes, customQuizzes } = get()
+        return { tips, fiches, guides, quizQuestions, customThemes, customQuizzes, exportDate: new Date().toISOString() }
       },
       importData: (data, mode = 'merge') => {
         const incomingTips = data.tips ?? []
@@ -153,6 +186,7 @@ export const useEditorStore = create<EditorState>()(
         const incomingGuides = data.guides ?? []
         const incomingQuiz = data.quizQuestions ?? []
         const incomingThemes = data.customThemes ?? []
+        const incomingQuizzes = data.customQuizzes ?? []
 
         if (mode === 'replace') {
           set({
@@ -161,6 +195,7 @@ export const useEditorStore = create<EditorState>()(
             guides: incomingGuides,
             quizQuestions: incomingQuiz,
             customThemes: incomingThemes,
+            customQuizzes: incomingQuizzes,
           })
           return {
             addedTips: incomingTips.length,
@@ -168,11 +203,13 @@ export const useEditorStore = create<EditorState>()(
             addedGuides: incomingGuides.length,
             addedQuizQuestions: incomingQuiz.length,
             addedCustomThemes: incomingThemes.length,
+            addedCustomQuizzes: incomingQuizzes.length,
             skippedTips: 0,
             skippedFiches: 0,
             skippedGuides: 0,
             skippedQuizQuestions: 0,
             skippedCustomThemes: 0,
+            skippedCustomQuizzes: 0,
             mode: 'replace',
           }
         }
@@ -185,16 +222,16 @@ export const useEditorStore = create<EditorState>()(
         const existingQuizIds = new Set(s.quizQuestions.map(q => q.id))
         const existingThemeIds = new Set(s.customThemes.map(t => t.id))
         const existingThemeLabels = new Set(s.customThemes.map(t => t.label.toLowerCase()))
+        const existingQuizDefIds = new Set(s.customQuizzes.map(q => q.id))
 
         const newGuides = incomingGuides.filter(g => !existingGuideTitres.has(g.titre))
         const newFiches = incomingFiches.filter(f => !existingFicheTitres.has(f.titre))
         const newTips = incomingTips.filter(t => !existingTipTextes.has(t.texte))
-        // Pour le quiz : merge par id (override des defaults inclus)
         const newQuiz = incomingQuiz.filter(q => !existingQuizIds.has(q.id))
-        // Pour les themes : dedup par id ET par label (case-insensitive)
         const newThemes = incomingThemes.filter(t =>
           !existingThemeIds.has(t.id) && !existingThemeLabels.has(t.label.toLowerCase())
         )
+        const newQuizzes = incomingQuizzes.filter(q => !existingQuizDefIds.has(q.id))
 
         set({
           tips: [...s.tips, ...newTips],
@@ -202,6 +239,7 @@ export const useEditorStore = create<EditorState>()(
           guides: [...s.guides, ...newGuides],
           quizQuestions: [...s.quizQuestions, ...newQuiz],
           customThemes: [...s.customThemes, ...newThemes],
+          customQuizzes: [...s.customQuizzes, ...newQuizzes],
         })
 
         return {
@@ -210,11 +248,13 @@ export const useEditorStore = create<EditorState>()(
           addedGuides: newGuides.length,
           addedQuizQuestions: newQuiz.length,
           addedCustomThemes: newThemes.length,
+          addedCustomQuizzes: newQuizzes.length,
           skippedTips: incomingTips.length - newTips.length,
           skippedFiches: incomingFiches.length - newFiches.length,
           skippedGuides: incomingGuides.length - newGuides.length,
           skippedQuizQuestions: incomingQuiz.length - newQuiz.length,
           skippedCustomThemes: incomingThemes.length - newThemes.length,
+          skippedCustomQuizzes: incomingQuizzes.length - newQuizzes.length,
           mode: 'merge',
         }
       },
