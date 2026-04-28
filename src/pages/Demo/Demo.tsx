@@ -1,10 +1,14 @@
 // src/pages/Demo/Demo.tsx
-// Page principale de la démo : 4 actes joués en séquence, 1m30 au total.
-// La timeline est pilotée par useDemoTimeline ; chaque acte est rendu visible/invisible
-// selon currentAct. Le texte et le fond changent en fonction de l'acte courant.
+// Page principale de la démo, deux modes :
+// - auto-play : timeline 1m30 fixe (livrable décideurs en réunion)
+// - explorer : scroll-driven, interactions, liens vers vraies briques (équipes internes)
 
 import { useEffect, useRef, useState } from 'react'
 import { useDemoTimeline } from './useDemoTimeline'
+import { useDemoMode, type DemoMode } from './useDemoMode'
+import { useScrollProgress } from './useScrollProgress'
+import { ProgressIndicator } from './ProgressIndicator'
+import { ExplorerSections } from './ExplorerSections'
 import { ACTS, type ActId } from '../../data/demoContent'
 import { BackgroundFade, type BgMode } from '../../components/demo/BackgroundFade'
 import { ActText } from '../../components/demo/ActText'
@@ -30,12 +34,24 @@ const ACT_TEXT_COLOR: Record<ActId, string> = {
 }
 
 export function Demo() {
-  // La timeline ne démarre qu'au premier clic (politique autoplay du navigateur).
+  const [mode, setMode] = useDemoMode()
+
+  return mode === 'auto' ? (
+    <DemoAutoPlay onSwitchMode={() => setMode('explore')} />
+  ) : (
+    <DemoExplorer onSwitchMode={() => setMode('auto')} />
+  )
+}
+
+// =================================================================
+// Mode AUTO-PLAY (existant) — timeline 1m30 pilotée par RAF
+// =================================================================
+
+function DemoAutoPlay({ onSwitchMode }: { onSwitchMode: () => void }) {
   const { currentAct, elapsed, finished, restart } = useDemoTimeline(false)
   const [hasInteracted, setHasInteracted] = useState(false)
   const hasStartedRef = useRef(false)
 
-  // Démarre la timeline une seule fois quand l'utilisateur clique
   useEffect(() => {
     if (hasInteracted && !hasStartedRef.current) {
       hasStartedRef.current = true
@@ -52,6 +68,7 @@ export function Demo() {
         <div className="text-center">
           <p className="text-3xl font-light mb-2">Démo Kit Anomalie</p>
           <p className="text-sm opacity-60">Cliquez pour démarrer · 1 min 30</p>
+          <ModeToggle mode="auto" onSwitch={onSwitchMode} className="mt-8" />
         </div>
       </div>
     )
@@ -65,32 +82,21 @@ export function Demo() {
     <div className="fixed inset-0 overflow-hidden">
       <BackgroundFade mode={bgMode} />
 
-      <DemoScene>
-        <Act1Problem active={currentAct === 'act1'} />
-        <Act2Solution active={currentAct === 'act2'} />
-        <Act3Coverage active={currentAct === 'act3'} />
-        <Act4Conclusion active={currentAct === 'act4'} />
-      </DemoScene>
+      <DemoStage currentAct={currentAct} />
 
-      {/* Texte de l'acte courant — key force le remount à chaque changement d'acte */}
       <div
         className={`absolute inset-0 flex items-center justify-center pointer-events-none ${textColor}`}
       >
         {currentActConfig && (
-          <ActText
-            key={currentActConfig.id}
-            lines={currentActConfig.text}
-          />
+          <ActText key={currentActConfig.id} lines={currentActConfig.text} />
         )}
       </div>
 
-      {/* Audio de l'acte courant */}
       {currentAct === 'act1' && <AudioPlayer src={ACTS[0].audio} />}
       {currentAct === 'act2' && <AudioPlayer src={ACTS[1].audio} />}
       {currentAct === 'act3' && <AudioPlayer src={ACTS[2].audio} />}
       {currentAct === 'act4' && <AudioPlayer src={ACTS[3].audio} />}
 
-      {/* Logo + URL en acte 4 */}
       {currentAct === 'act4' && (
         <div className="absolute bottom-12 left-0 right-0 text-center text-[#0C1E5B] pointer-events-none">
           <p className="text-2xl font-bold">Kit Anomalie</p>
@@ -98,7 +104,6 @@ export function Demo() {
         </div>
       )}
 
-      {/* Bouton replay quand fini */}
       {finished && (
         <button
           onClick={restart}
@@ -108,7 +113,8 @@ export function Demo() {
         </button>
       )}
 
-      {/* Indicateur temps en mode dev */}
+      <ModeToggle mode="auto" onSwitch={onSwitchMode} />
+
       {import.meta.env.DEV && (
         <div className="absolute top-4 right-4 text-xs opacity-30 font-mono text-white mix-blend-difference pointer-events-none">
           {elapsed.toFixed(1)}s · {currentAct ?? '—'}
@@ -118,9 +124,76 @@ export function Demo() {
   )
 }
 
-// Sous-composant interne pour jouer l'audio d'un acte
-// (le hook useAudioCue ne peut pas être conditionnel, donc on l'extrait dans un composant
-// qui se monte/démonte avec l'acte)
+// =================================================================
+// Mode EXPLORER (nouveau) — scroll-driven + interactions
+// =================================================================
+
+function DemoExplorer({ onSwitchMode }: { onSwitchMode: () => void }) {
+  const { currentAct, currentIndex, setSectionRef, scrollToSection } = useScrollProgress()
+  const bgMode: BgMode = ACT_BG[currentAct ?? 'act1']
+
+  return (
+    <>
+      {/* Fond fixe + scène 3D fixe : la 3D ne scroll pas, c'est l'overlay HTML
+          qui scroll et le fond change selon l'acte le plus visible */}
+      <BackgroundFade mode={bgMode} />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <DemoStage currentAct={currentAct ?? 'act1'} />
+      </div>
+
+      {/* Couche scrollable : 4 sections, une par acte. */}
+      <div className="relative z-10">
+        <ExplorerSections setSectionRef={setSectionRef} currentAct={currentAct} />
+      </div>
+
+      <ProgressIndicator
+        currentIndex={currentIndex}
+        onJump={scrollToSection}
+        activeColor={bgMode === 'white' ? '#0C1E5B' : '#FFFFFF'}
+      />
+
+      <ModeToggle mode="explore" onSwitch={onSwitchMode} />
+    </>
+  )
+}
+
+// =================================================================
+// Composants partagés
+// =================================================================
+
+/** Scène R3F + 4 actes — partagée entre auto-play et explorer */
+function DemoStage({ currentAct }: { currentAct: ActId | null }) {
+  return (
+    <DemoScene>
+      <Act1Problem active={currentAct === 'act1'} />
+      <Act2Solution active={currentAct === 'act2'} />
+      <Act3Coverage active={currentAct === 'act3'} />
+      <Act4Conclusion active={currentAct === 'act4'} />
+    </DemoScene>
+  )
+}
+
+/** Toggle compact en haut à droite, change selon le mode courant */
+function ModeToggle({
+  mode,
+  onSwitch,
+  className = '',
+}: {
+  mode: DemoMode
+  onSwitch: () => void
+  className?: string
+}) {
+  return (
+    <button
+      onClick={onSwitch}
+      className={`fixed top-4 right-4 z-40 px-4 py-2 rounded-full text-xs font-medium bg-white/85 backdrop-blur text-sncf-dark border border-sncf-dark/20 hover:bg-white shadow-sm transition ${className}`}
+    >
+      {mode === 'auto' ? '🧭 Mode explorer' : '▶ Mode vidéo'}
+    </button>
+  )
+}
+
+/** Joue l'audio de l'acte courant (en auto-play uniquement) */
 function AudioPlayer({ src }: { src: string }) {
   useAudioCue({ src, volume: 0.6 })
   return null
