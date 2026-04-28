@@ -24,7 +24,7 @@ function isVisibleForProfile(
 }
 
 export function AideListe() {
-  const aides = useEditorStore((s) => s.aides)
+  const aides = useEditorStore((s) => s.aides ?? [])
   // s.specialite et s.role sont directement sur le store (pas imbriqués dans s.profile)
   const { specialite, role } = useProfileStore((s) => ({ specialite: s.specialite, role: s.role }))
 

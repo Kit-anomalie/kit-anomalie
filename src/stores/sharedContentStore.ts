@@ -62,7 +62,7 @@ export const useSharedContentStore = create<SharedContentState>()((set, get) => 
       const editorGuidesTitres = new Set(editor.guides.map(g => g.titre))
       const editorFichesTitres = new Set(editor.fiches.map(f => f.titre))
       const editorTipsTextes = new Set(editor.tips.map(t => t.texte))
-      const editorAidesIds = new Set(editor.aides.map(a => a.id))
+      const editorAidesIds = new Set((editor.aides ?? []).map(a => a.id))
 
       const newGuides = sharedGuides.filter(g => !editorGuidesTitres.has(g.titre))
       const newFiches = sharedFiches.filter(f => !editorFichesTitres.has(f.titre))

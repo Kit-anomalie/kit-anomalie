@@ -305,6 +305,29 @@ export const useEditorStore = create<EditorState>()(
         }
       },
     }),
-    { name: 'kit-anomalie-editor' }
+    {
+      name: 'kit-anomalie-editor',
+      version: 2,
+      // Migration v1 → v2 : ajout du champ `aides` (brique 6).
+      // Garantit qu'aucun ancien state restauré depuis localStorage ne casse
+      // les composants qui font `aides.filter(...)` ou `aides.find(...)`.
+      migrate: (persisted: unknown, version: number) => {
+        const state = (persisted ?? {}) as Partial<EditorState>
+        if (version < 2 || !Array.isArray(state.aides)) {
+          return { ...state, aides: [] } as EditorState
+        }
+        return state as EditorState
+      },
+      // Sécurité supplémentaire : merge profond pour garantir que tous les
+      // champs initiaux existent même si le state persisté est partiel.
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<EditorState>
+        return {
+          ...current,
+          ...p,
+          aides: Array.isArray(p.aides) ? p.aides : [],
+        }
+      },
+    }
   )
 )

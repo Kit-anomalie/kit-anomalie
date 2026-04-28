@@ -36,7 +36,7 @@ function newEmptyTree(): DecisionTree {
 }
 
 export function EditorAides() {
-  const aides = useEditorStore((s) => s.aides)
+  const aides = useEditorStore((s) => s.aides ?? [])
   const upsertAide = useEditorStore((s) => s.upsertAide)
   const deleteAide = useEditorStore((s) => s.deleteAide)
 

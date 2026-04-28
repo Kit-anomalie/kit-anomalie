@@ -41,7 +41,7 @@ interface PathStep {
 export function AidePlayer() {
   const { treeId } = useParams<{ treeId: string }>()
   const navigate = useNavigate()
-  const tree = useEditorStore((s) => s.aides.find((a) => a.id === treeId))
+  const tree = useEditorStore((s) => (s.aides ?? []).find((a) => a.id === treeId))
 
   // Historique des nœuds visités (du root au nœud courant inclus)
   const [path, setPath] = useState<PathStep[]>(() =>
