@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useProfileStore } from './stores/profileStore'
 import { useSharedContentStore } from './stores/sharedContentStore'
@@ -22,7 +22,14 @@ import { Catalogue } from './pages/Catalogue'
 import { CatalogueCategorie } from './pages/CatalogueCategorie'
 import { CatalogueTypeActif } from './pages/CatalogueTypeActif'
 import { CatalogueFiche } from './pages/CatalogueFiche'
-import { Demo } from './pages/Demo/Demo'
+// La démo embarque Three.js (lourd) — chargée à la demande pour ne pas alourdir le bundle principal
+const Demo = lazy(() => import('./pages/Demo/Demo').then(m => ({ default: m.Demo })))
+
+const DemoFallback = () => (
+  <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
+    <p className="text-sm opacity-60">Chargement de la démo…</p>
+  </div>
+)
 
 function AppRoutes() {
   const { isConfigured } = useProfileStore()
@@ -33,7 +40,7 @@ function AppRoutes() {
   if (!isConfigured) {
     return (
       <Routes>
-        <Route path="/demo" element={<Demo />} />
+        <Route path="/demo" element={<Suspense fallback={<DemoFallback />}><Demo /></Suspense>} />
         <Route path="/plan" element={<PlanTravail />} />
         <Route path="/setup" element={<ProfileSetup />} />
         <Route path="*" element={<Navigate to="/setup" replace />} />
@@ -43,7 +50,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/demo" element={<Demo />} />
+      <Route path="/demo" element={<Suspense fallback={<DemoFallback />}><Demo /></Suspense>} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/guides" element={<Guides />} />
