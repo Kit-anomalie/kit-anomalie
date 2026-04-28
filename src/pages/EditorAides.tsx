@@ -13,10 +13,14 @@ function makeNodeId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
 }
 
+function makeAideId(): string {
+  return `aide-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 function newEmptyTree(): DecisionTree {
   const rootId = makeNodeId('q')
   return {
-    id: `aide-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    id: makeAideId(),
     title: 'Nouvel arbre',
     description: '',
     rootNodeId: rootId,
@@ -48,7 +52,7 @@ export function EditorAides() {
   const handleDuplicate = (tree: DecisionTree) => {
     const clone: DecisionTree = {
       ...tree,
-      id: `aide-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: makeAideId(),
       title: `${tree.title} (copie)`,
     }
     upsertAide(clone)
@@ -176,7 +180,10 @@ function TreeEditor({ tree, onSave, onClose }: TreeEditorProps) {
     }
     if (!confirm('Supprimer ce nœud ?')) return
     setDraft((d) => {
-      const { [id]: _removed, ...rest } = d.nodes
+      const rest: Record<string, DecisionNode> = {}
+      for (const [nid, node] of Object.entries(d.nodes)) {
+        if (nid !== id) rest[nid] = node
+      }
       // Nettoyer les références orphelines depuis les questions existantes
       const cleaned: Record<string, DecisionNode> = {}
       for (const [nid, node] of Object.entries(rest)) {
