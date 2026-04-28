@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="index, follow">
+<title>Kit Anomalie — Contenu textuel des briques (lecture pour IA et indexeurs)</title>
+<meta name="description" content="Snapshot textuel de tout le contenu du Kit Anomalie : briques, guides, fiches mémo, catalogue d'anomalies, glossaire métier, quiz. Page statique destinée aux outils qui ne savent pas exécuter le JavaScript de la PWA.">
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; max-width: 880px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; color: #0C1E5B; }
+  h1, h2, h3, h4 { color: #0C1E5B; }
+  h1 { font-size: 2rem; border-bottom: 2px solid #00A3E0; padding-bottom: .5rem; }
+  h2 { margin-top: 2.5rem; font-size: 1.5rem; border-bottom: 1px solid #ccc; padding-bottom: .25rem; }
+  h3 { margin-top: 1.5rem; font-size: 1.15rem; }
+  h4 { margin-top: 1rem; font-size: 1rem; }
+  code, .code { background: #F4F6FA; padding: 0 .2em; border-radius: 3px; font-family: ui-monospace, monospace; font-size: .9em; }
+  .palette { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .palette span { display: inline-block; padding: .25rem .75rem; border-radius: 999px; font-size: .85rem; font-family: monospace; }
+  .badge { display: inline-block; padding: 0 .5em; border-radius: 999px; font-weight: bold; font-size: .85em; }
+  .meta { color: #666; font-size: .9em; }
+  ul, ol { padding-left: 1.5rem; }
+  table { border-collapse: collapse; margin: .5rem 0; }
+  th, td { border: 1px solid #ccc; padding: .35rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #F4F6FA; }
+</style>
+</head>
+<body>
+
+<h1>Kit Anomalie — Contenu textuel</h1>
+
+<p><em>Cette page statique est un miroir lisible du contenu du Kit Anomalie pour
+les outils qui ne savent pas exécuter le JavaScript de la PWA (LLM, crawlers,
+lecteurs d'écran simplifiés). Le produit réel est une PWA React mobile-first
+disponible à la racine du domaine.</em></p>
+
+<h2>Identité du produit</h2>
+
+<p><strong>Nature.</strong> PWA mobile-first installable sur smartphone,
+fonctionne offline. Compagnon pour agents techniques terrain en maintenance
+d'infrastructure.</p>
+
+<p><strong>Positionnement.</strong> Le kit ne remplace pas les applications
+métier existantes. Il les rend utilisables sur le terrain (gants, bruit,
+zones sans réseau, contraintes de sécurité fortes).</p>
+
+<p><strong>Profils utilisateurs.</strong> 3 rôles × 5 spécialités. Chaque
+agent voit le contenu filtré selon son profil :</p>
+
+<ul>
+  <li>Rôles : Agent terrain / REQ (Responsable Équipe), Ordonnanceur, Référent Patrimoine (RP)</li>
+  <li>Spécialités : Voie, SEG, EALE, CAT, SM</li>
+</ul>
+
+<h2>Charte graphique</h2>
+
+<p class="palette">
+  <span style="background:#0C1E5B; color:#fff">#0C1E5B Bleu marine</span>
+  <span style="background:#00A3E0; color:#fff">#00A3E0 Bleu ciel</span>
+  <span style="background:#E3051B; color:#fff">#E3051B Rouge sécurité</span>
+  <span style="background:#F7A600; color:#0C1E5B">#F7A600 Orange warning</span>
+  <span style="background:#3AAA35; color:#fff">#3AAA35 Vert succès</span>
+  <span style="background:#F4F6FA; color:#0C1E5B; border:1px solid #ccc">#F4F6FA Fond clair</span>
+</p>
+
+<p><strong>Conventions UI.</strong> Bordures arrondies 16-20 px. Mobile-first,
+max-width 430 px. Touch targets ≥ 44 px (gants). Animations
+sobres, plafonnées à 400 ms en stagger.</p>
+
+<h2>Briques (architecture)</h2>
+
+<p>Le kit est organisé en briques, accessibles depuis une home avec tuiles :</p>
+
+<ul>
+  <li><strong>Brique 0 — Accueil & Profil</strong> : configuration du profil agent (rôle + spécialité), home avec tuiles vers chaque brique.</li>
+  <li><strong>Brique 1 — Guides par application</strong> : walkthroughs interactifs pas-à-pas qui aident l'agent à utiliser une appli métier.</li>
+  <li><strong>Brique 2 — Fiches mémo réflexes</strong> : aide-mémoires courts pour situations récurrentes.</li>
+  <li><strong>Brique 3 — Quiz</strong> : QCM thématiques pour acquérir le réflexe.</li>
+  <li><strong>Brique 4 — Catalogue des anomalies</strong> : référentiel hiérarchique Catégorie › Type d'actif › Anomalie. 6 catégories.</li>
+  <li><strong>Brique 5 — Assistant IA</strong> : recherche locale fuzzy (Fuse.js, offline).</li>
+  <li><strong>Brique 6 — Glossaire métier</strong> : sigles et termes avec définitions courtes.</li>
+  <li><strong>Brique 7 — Administration BO</strong> : édition des contenus (non exposée à l'agent).</li>
+</ul>
+
+<h2>Brique 1 — Guides (1 guide démo)</h2>
+
+<h3>Guide « Créer une anomalie dans EF3C0 »</h3>
+<p class="meta">Application métier : EF3C0 · Profil cible : agent terrain (rôle REQ), spécialité Voie · Référentiel MT00342</p>
+
+<ol>
+  <li><strong>Ouvrir la tournée en cours.</strong> Depuis l'écran d'accueil EF3C0, sélectionner sa tournée du jour. <em>Erreurs fréquentes : tournée non synchronisée (icône verte), pull-to-refresh nécessaire.</em></li>
+  <li><strong>Sélectionner l'actif concerné.</strong> Dans la liste des actifs, choisir celui où le défaut est constaté (recherche par PK ou numéro possible). Champs : Actif (obligatoire), PK ou localisation. <em>Erreurs : confondre actif linéaire (voie) et ponctuel (appareil de voie).</em></li>
+  <li><strong>Créer l'anomalie.</strong> Bouton « + » ou « Nouvelle anomalie ». <em>Erreurs : ne pas vérifier les anomalies existantes → risque de doublons.</em></li>
+  <li><strong>Renseigner la description.</strong> Libellé court (obligatoire) + description détaillée + photo (recommandé). Format : quoi (type de défaut), où (composant précis), depuis quand (ancienneté estimée). <em>Erreurs : « Anomalie constatée » n'est pas exploitable.</em></li>
+  <li><strong>Choisir le classement.</strong> Sélection dans liste déroulante. En cas de doute, privilégier le plus contraignant + ajouter une note. <em>Erreurs : laisser en NC (Non Classé), sur-classer en S/I.</em></li>
+  <li><strong>Valider et synchroniser.</strong> Vérification du récapitulatif, enregistrement, synchronisation au retour réseau.</li>
+</ol>
+
+<h2>Brique 2 — Fiches mémo (4 fiches démo)</h2>
+
+<h3>Fiche « Classer une anomalie »</h3>
+<p class="meta">Référentiel MT00342 · Mots-clés : classer, classement, S/I, S/DP, A/P</p>
+<p><strong>Quoi faire.</strong> Attribuer le bon classement réglementaire à une anomalie détectée lors d'une tournée ou visite.</p>
+<p><strong>Comment.</strong></p>
+<ol>
+  <li>Identifier le type de défaut (sécurité immédiate, sécurité différée, maintenance).</li>
+  <li>Vérifier le référentiel de classement applicable à sa spécialité.</li>
+  <li>Choisir le classement parmi : <strong>S/I</strong> (Sécurité / Immédiat), <strong>S/DP</strong> (Sécurité / Délai Prescrit), <strong>A/P</strong> (Autres / Prioritaires), <strong>A/M</strong> (Autres / Maintenance), <strong>A/SURV</strong> (Autres / Surveillance), <strong>A/DET</strong> (Autres / à Déterminer).</li>
+  <li>Renseigner la DLF (Date Limite de Fin) associée.</li>
+</ol>
+<p><strong>Erreurs à éviter.</strong> Sur-classer S/I → surcharge de la planification d'urgence. Laisser NC → invisible pour l'ordonnanceur. Oublier la DLF → l'anomalie sort du suivi.</p>
+
+<h3>Fiche « Rédiger une bonne description »</h3>
+<p class="meta">Mots-clés : description, rédiger, libellé</p>
+<p><strong>Quoi faire.</strong> Rédiger une description exploitable par le RP et l'Ordonnanceur, sans retour terrain.</p>
+<p><strong>Comment.</strong> Quoi (type de défaut) · Où exactement (composant + PK + repère, ex : « Joint isolant voie 1, PK 142+350, côté gauche sens croissant ») · Depuis quand · Gravité observée (dimensions, étendue) · Photo cadrée avec repère d'échelle.</p>
+<p><strong>Erreurs à éviter.</strong> « Anomalie constatée » sans précision. Description trop technique sans localisation. Pas de photo.</p>
+
+<h3>Fiche « Éviter les doublons »</h3>
+<p class="meta">Mots-clés : doublon, doublet, existant, vérifier</p>
+<p><strong>Quoi faire.</strong> Vérifier qu'une anomalie n'existe pas déjà sur l'actif avant d'en créer une nouvelle.</p>
+<p><strong>Comment.</strong></p>
+<ol>
+  <li>Avant de déclarer, vérifier les anomalies déjà embarquées sur l'actif.</li>
+  <li>Vérifier les anomalies ouvertes (même localisation, même type de défaut).</li>
+  <li>Si similaire : ne pas recréer, mettre à jour la description si évolution. Si même actif mais défaut différent : créer. Si même défaut mais actif différent (ex : 2 rails distincts) : créer.</li>
+  <li>En cas de doute, demander au Référent Patrimoine.</li>
+</ol>
+<p><strong>Erreurs à éviter.</strong> Créer sans vérifier. Mettre à jour une anomalie résolue. Confondre actif linéaire et ponctuel.</p>
+
+<h3>Fiche « Comprendre la DLF »</h3>
+<p class="meta">Référentiel MT00342 · Mots-clés : DLF, date limite, délai</p>
+<p><strong>Quoi faire.</strong> Comprendre et respecter la Date Limite de Fin associée à chaque anomalie classée.</p>
+<p><strong>Comment.</strong> La DLF dépend du classement : S/I → traitement immédiat · S/DP → délai prescrit · A/P → prioritaire · A/M → prochain cycle de maintenance · A/SURV → réévaluation à date.</p>
+<p><strong>Responsabilités.</strong> Agent terrain → renseigne le classement, la DLF en découle. Ordonnanceur → planifie avant la DLF. RP → vérifie la cohérence.</p>
+<p><strong>Erreurs à éviter.</strong> Ignorer la DLF, modifier sans analyse de risque, ne pas renseigner de classement.</p>
+
+<h2>Brique 4 — Catalogue des anomalies (6 catégories)</h2>
+
+<p>Le catalogue est hiérarchique : <strong>Catégorie › Type d'actif › Anomalie</strong>.
+Chaque anomalie contient : description, défaut visible, méthode de mesure (« écart »),
+matrice de classements selon conditions (avec action recommandée), illustration, référence
+réglementaire éventuelle.</p>
+
+<h3>Catégorie 1 — Voie courante <span class="badge" style="background:#00A3E0; color:#fff">#00A3E0</span></h3>
+<p>Rail, joint, traverse, ballast, attaches, soudure, géométrie.</p>
+<p><strong>Exemples d'anomalies :</strong></p>
+<ul>
+  <li><strong>VC-RAIL-01 — Usure ondulatoire.</strong> Corrugation du champignon. Mesure au gabarit ou Mauzin. Classements : A/DET (≤ 0,3 mm), A/SURV (0,3-0,5 mm), A/P (&gt; 0,5 mm).</li>
+  <li><strong>VC-RAIL-02 — Fissure transversale de rail.</strong> Fissure perpendiculaire à l'axe. Contrôle ultrasons. Classements : A/SURV (superficielle non évolutive), S/I (évolutive ou profondeur &gt; 3 mm) → pose immédiate de clips + remplacement sous 48 h.</li>
+  <li><strong>VC-JOINT-01 — Décalage au joint.</strong> Dénivelé au droit du joint. Mesure règle + pige. Classements : A/DET (≤ 1 mm), A/M (&gt; 1 mm).</li>
+  <li><strong>VC-TRAV-01 — Traverse dégradée.</strong> Bois pourri ou béton fissuré. A/P → remplacement programmé sous 1 mois.</li>
+</ul>
+
+<h3>Catégorie 2 — Appareils de voie <span class="badge" style="background:#0C1E5B; color:#fff">#0C1E5B</span></h3>
+<p>Aiguilles, cœurs, contre-rails, coussinets, traverses d'appareil de voie.</p>
+<p><strong>Exemples d'anomalies :</strong></p>
+<ul>
+  <li><strong>Usure de cœur de croisement.</strong> Mesure au gabarit. Classements progressifs selon la profondeur.</li>
+  <li><strong>Jeu d'aiguille.</strong> Contrôle au calibre. Classements selon le jeu mesuré.</li>
+  <li><strong>Coussinet déformé.</strong> Inspection visuelle + clé dynamométrique.</li>
+</ul>
+
+<h3>Catégorie 3 — Ouvrages & Gabarit <span class="badge" style="background:#3AAA35; color:#fff">#3AAA35</span></h3>
+<p>Ouvrages d'art (ponts, tunnels, murs de soutènement), gabarit cinématique.</p>
+<p><strong>Exemples d'anomalies :</strong></p>
+<ul>
+  <li>Fissure d'ouvrage en béton.</li>
+  <li>Corrosion d'éléments métalliques.</li>
+  <li>Empiètement de gabarit (végétation, structure).</li>
+</ul>
+
+<h3>Catégorie 4 — Abords <span class="badge" style="background:#A85D3F; color:#fff">#A85D3F</span></h3>
+<p>Végétation, propreté des emprises, accès, clôtures.</p>
+<p><strong>Exemples d'anomalies :</strong></p>
+<ul>
+  <li>Végétation envahissante sur emprise.</li>
+  <li>Clôture endommagée.</li>
+  <li>Accès non sécurisé.</li>
+</ul>
+
+<h3>Catégorie 5 — Installations signalisation <span class="badge" style="background:#F7A600; color:#0C1E5B">#F7A600</span></h3>
+<p>Feux, panneaux, balises, dispositifs de signalisation au sol.</p>
+<p><strong>Exemples d'anomalies :</strong></p>
+<ul>
+  <li>Feu défaillant (LED grillée, alimentation coupée).</li>
+  <li>Panneau dégradé ou illisible.</li>
+  <li>Balise déplacée ou manquante.</li>
+</ul>
+
+<h3>Catégorie 6 — Platelage <span class="badge" style="background:#475569; color:#fff">#475569</span></h3>
+<p>Passages à niveau, planches de platelage, fixations.</p>
+<p><strong>Exemples d'anomalies :</strong></p>
+<ul>
+  <li>Planche cassée ou décalée.</li>
+  <li>Écart entre planches dépassant la tolérance.</li>
+  <li>Fixation lâche ou manquante.</li>
+</ul>
+
+<h2>Brique 6 — Glossaire métier (29 entrées)</h2>
+
+<table>
+  <thead>
+    <tr><th>Terme</th><th>Définition</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>S/I</strong></td><td>Sécurité / Immédiat</td><td>Classement le plus critique. Risque immédiat de déraillement, heurt ou électrocution. Sécurisation et intervention sans délai.</td></tr>
+    <tr><td><strong>S/DP</strong></td><td>Sécurité / Délai Prescrit</td><td>Risque sécurité mais sans urgence absolue. Doit être traité dans la DLF prescrite.</td></tr>
+    <tr><td><strong>A/P</strong></td><td>Autres / Prioritaire</td><td>Hors sécurité mais peut s'aggraver rapidement. À traiter en priorité.</td></tr>
+    <tr><td><strong>A/M</strong></td><td>Autres / Maintenance</td><td>Maintenance courante, sans urgence.</td></tr>
+    <tr><td><strong>A/SURV</strong></td><td>Autres / Surveillance</td><td>À surveiller régulièrement sans intervention immédiate.</td></tr>
+    <tr><td><strong>A/DET</strong></td><td>Autres / à Déterminer</td><td>Classement à confirmer après analyse complémentaire.</td></tr>
+    <tr><td><strong>REQ</strong></td><td>Responsable Équipe</td><td>Encadre l'équipe terrain. Valide les anomalies remontées par les agents.</td></tr>
+    <tr><td><strong>CoSPOT</strong></td><td>Correspondant SPOT</td><td>Référent de l'outil GMAO dans l'unité. Forme et accompagne les autres utilisateurs.</td></tr>
+    <tr><td><strong>DPS</strong></td><td>Référent Patrimoine</td><td>Gère les équipements et arborescences GMAO.</td></tr>
+    <tr><td><strong>DOP</strong></td><td>Ordonnanceur</td><td>Planifie les interventions et tournées.</td></tr>
+    <tr><td><strong>DU</strong></td><td>Dirigeant d'Unité</td><td>Consulte les KPI et valide les décisions de l'unité.</td></tr>
+    <tr><td><strong>DLF</strong></td><td>Date Limite de Fin</td><td>Date avant laquelle l'anomalie doit être résolue. Dépend du classement. Sa modification nécessite une analyse de risque.</td></tr>
+    <tr><td><strong>MPC</strong></td><td>Maintenance Préventive Conditionnelle</td><td>Maintenance déclenchée par un état observé sur l'équipement (mesure ou inspection), pas par calendrier fixe.</td></tr>
+    <tr><td><strong>MC</strong></td><td>Maintenance Corrective</td><td>Intervention pour corriger une anomalie existante.</td></tr>
+    <tr><td><strong>Anomalie</strong></td><td>Écart sur le patrimoine nécessitant intervention</td><td>Défaut ou écart sur un équipement, classé selon sa criticité, avec une DLF associée.</td></tr>
+    <tr><td><strong>Constat</strong></td><td>Observation sans impact opérationnel</td><td>Observation sans traitement nécessaire (pas de classement ni de DLF).</td></tr>
+    <tr><td><strong>Embarquement</strong></td><td>Attribution automatique des anomalies aux tournées</td><td>Mécanisme qui assigne les anomalies aux tournées et applis terrain selon des règles de priorité et de spécialité.</td></tr>
+    <tr><td><strong>Tournée</strong></td><td>Parcours planifié sur le terrain</td><td>Liste d'interventions à réaliser dans la journée par un agent ou une équipe.</td></tr>
+    <tr><td><strong>SPOT Mobile</strong></td><td>Appli terrain pour saisir et consulter les anomalies</td><td>Utilisée transversalement par toutes les spécialités terrain.</td></tr>
+    <tr><td><strong>EF3C0</strong></td><td>Appli de saisie pour la Voie courante</td><td>Permet de créer et qualifier les anomalies de la voie courante.</td></tr>
+    <tr><td><strong>ADV Mobile</strong></td><td>Appli pour les Appareils De Voie</td><td>Saisie et suivi des anomalies sur aiguillages, traversées et autres.</td></tr>
+    <tr><td><strong>EF4B1</strong></td><td>Appli de saisie pour SEG, EALE, CAT, SM</td><td>Couvre signalisation électrique, alimentation, caténaire, signalisation mécanique.</td></tr>
+    <tr><td><strong>EF5A VSP</strong></td><td>Visites de Surveillance Périodique</td><td>Saisie des constats lors des visites périodiques.</td></tr>
+    <tr><td><strong>ARCAT</strong></td><td>Appli de gestion CAT (caténaire)</td><td>Outil dédié aux interventions sur la caténaire.</td></tr>
+    <tr><td><strong>Voie</strong></td><td>Spécialité voie ferrée</td><td>Couvre la voie courante et les appareils de voie.</td></tr>
+    <tr><td><strong>SEG</strong></td><td>Signalisation Électrique</td><td>Spécialité signalisation électrique.</td></tr>
+    <tr><td><strong>EALE</strong></td><td>Équipements et Alimentation Électriques</td><td>Spécialité de l'alimentation électrique des installations.</td></tr>
+    <tr><td><strong>CAT</strong></td><td>Caténaire</td><td>Spécialité des installations caténaires (alimentation des trains).</td></tr>
+    <tr><td><strong>SM</strong></td><td>Signalisation Mécanique</td><td>Spécialité de la signalisation mécanique au sol.</td></tr>
+  </tbody>
+</table>
+
+<h2>Brique 3 — Quiz</h2>
+
+<p>QCM thématiques avec score et historique. Thèmes couverts : classements,
+description d'anomalie, gestion des doublons, DLF. Format : question + 4
+réponses cliquables, feedback immédiat à chaque réponse, score final +
+recommandations de fiches mémo à revoir si erreurs.</p>
+
+<h2>Brique 5 — Assistant IA</h2>
+
+<p>Recherche fuzzy locale (Fuse.js) sur l'ensemble du contenu (guides, fiches,
+catalogue, glossaire). Aucun appel serveur — tout est indexé côté client.
+Résultats groupés par type, tri par pertinence. L'agent tape un mot-clé,
+voit immédiatement les ressources les plus pertinentes de son profil.</p>
+
+<h2>Caractéristiques techniques</h2>
+
+<ul>
+  <li>PWA installable (Service Worker, manifest.json)</li>
+  <li>Auto-healing : purge des caches au changement de version, sync auto du contenu via <code>content.json</code></li>
+  <li>Workflow contenu : un éditeur principal + contributeurs locaux (admin form-based, exports JSON, fusion sans écrasement)</li>
+  <li>Stack React 19 + TypeScript + Vite + Tailwind 4 + Zustand 5 + React Router 7</li>
+  <li>Hébergement actuel : GitHub Pages (statique)</li>
+  <li>Migration future : SI interne (GitLab + PostgreSQL) une fois adopté à plus grande échelle</li>
+</ul>
+
+<h2>Tonalité du produit</h2>
+
+<p><strong>Voix.</strong> Direct, factuel, terrain. Pas de jargon corporate.
+Phrases courtes. On tutoie l'agent quand on s'adresse à lui.</p>
+
+<p><strong>Conventions de wording.</strong> « DLF » et non « date de fiabilisation ».
+« Anomalie » et non « défaut » (un défaut peut être un constat sans anomalie).
+« Embarquement » pour l'assignation automatique aux tournées.</p>
+
+<p><strong>Limites assumées.</strong> Le kit n'a pas vocation à remplacer les
+applis métier. Il accompagne, il ne saisit pas pour l'agent.</p>
+
+</body>
+</html>
