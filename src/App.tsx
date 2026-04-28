@@ -10,7 +10,6 @@ import { Guides } from './pages/Guides'
 import { GuideDetail } from './pages/GuideDetail'
 import { Fiches } from './pages/Fiches'
 import { FicheDetail } from './pages/FicheDetail'
-import { Placeholder } from './pages/Placeholder'
 import { Quiz } from './pages/Quiz'
 import { QuizPlay } from './pages/QuizPlay'
 import { Assistant } from './pages/Assistant'
@@ -22,6 +21,8 @@ import { Catalogue } from './pages/Catalogue'
 import { CatalogueCategorie } from './pages/CatalogueCategorie'
 import { CatalogueTypeActif } from './pages/CatalogueTypeActif'
 import { CatalogueFiche } from './pages/CatalogueFiche'
+import { AideListe } from './pages/Aide/AideListe'
+import { AidePlayer } from './pages/Aide/AidePlayer'
 // La démo embarque Three.js (lourd) — chargée à la demande pour ne pas alourdir le bundle principal
 const Demo = lazy(() => import('./pages/Demo/Demo').then(m => ({ default: m.Demo })))
 
@@ -65,9 +66,9 @@ function AppRoutes() {
         <Route path="/catalogue/:catId/:typeId/:anoId" element={<CatalogueFiche />} />
         <Route path="/actifs" element={<Navigate to="/catalogue" replace />} />
         <Route path="/assistant" element={<Assistant />} />
-        <Route path="/alertes" element={
-          <Placeholder titre="Alertes" icon="🔔" description="Informations, alertes et bonnes pratiques" brique="Brique 6" />
-        } />
+        <Route path="/aide" element={<AideListe />} />
+        <Route path="/aide/:treeId" element={<AidePlayer />} />
+        <Route path="/alertes" element={<Navigate to="/aide" replace />} />
         <Route path="/reglages" element={<Réglages />} />
         <Route path="/setup" element={<ProfileSetup />} />
       </Route>
