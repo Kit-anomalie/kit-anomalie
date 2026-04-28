@@ -25,8 +25,11 @@ function isVisibleForProfile(
 
 export function AideListe() {
   const aides = useEditorStore((s) => s.aides ?? [])
-  // s.specialite et s.role sont directement sur le store (pas imbriqués dans s.profile)
-  const { specialite, role } = useProfileStore((s) => ({ specialite: s.specialite, role: s.role }))
+  // Sélecteurs séparés pour éviter la boucle infinie : un sélecteur qui retourne
+  // un nouvel objet { specialite, role } à chaque appel ferait croire à Zustand
+  // que l'état a changé à chaque render → re-render infini (React error #185).
+  const specialite = useProfileStore((s) => s.specialite)
+  const role = useProfileStore((s) => s.role)
 
   const visibles = aides.filter((a) => isVisibleForProfile(a, specialite, role))
 
