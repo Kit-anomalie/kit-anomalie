@@ -22,6 +22,7 @@ import { Catalogue } from './pages/Catalogue'
 import { CatalogueCategorie } from './pages/CatalogueCategorie'
 import { CatalogueTypeActif } from './pages/CatalogueTypeActif'
 import { CatalogueFiche } from './pages/CatalogueFiche'
+import { Demo } from './pages/Demo/Demo'
 
 function AppRoutes() {
   const { isConfigured } = useProfileStore()
@@ -32,6 +33,7 @@ function AppRoutes() {
   if (!isConfigured) {
     return (
       <Routes>
+        <Route path="/demo" element={<Demo />} />
         <Route path="/plan" element={<PlanTravail />} />
         <Route path="/setup" element={<ProfileSetup />} />
         <Route path="*" element={<Navigate to="/setup" replace />} />
@@ -41,6 +43,7 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/demo" element={<Demo />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/guides" element={<Guides />} />
