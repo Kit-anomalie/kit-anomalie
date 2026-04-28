@@ -232,6 +232,7 @@ export interface EditorData {
   quizQuestions?: import('../data/quizQuestions').QuizQuestion[]
   customThemes?: import('../data/quizQuestions').QuizTheme[]
   customQuizzes?: import('../data/quizQuestions').QuizDefinition[]
+  aides?: DecisionTree[]
   exportDate?: string
 }
 
@@ -283,3 +284,56 @@ export interface CatalogueCategorie {
 // === Navigation ===
 
 export type TabId = 'accueil' | 'guides' | 'fiches' | 'catalogue' | 'assistant'
+
+// === Brique 6 : Aide au choix (arbres de décision) ===
+
+/** Lien interne depuis une feuille vers une autre brique du kit */
+export interface DecisionLeafLink {
+  kind: 'fiche' | 'guide' | 'catalogue-categorie' | 'catalogue-anomalie'
+  /** Id de la fiche/guide/catégorie/anomalie cible */
+  id: string
+  /** Texte affiché du bouton (ex : "Voir la fiche réflexe") */
+  label: string
+}
+
+/** Résultat affiché au bout d'une feuille */
+export interface DecisionLeafResult {
+  /** Texte explicatif (markdown léger ou plain text) */
+  description?: string
+  /** Badge classement (réutilise CLASSEMENT_COLORS si label = clé Classement, sinon couleurs custom) */
+  badge?: { label: string; bg: string; text: string }
+  /** Liste de vérifications à cocher (côté UI uniquement, pas de persistence) */
+  checklist?: string[]
+  /** Lien vers une autre brique du kit */
+  link?: DecisionLeafLink
+}
+
+/** Nœud de l'arbre : soit une question, soit une feuille (résultat) */
+export type DecisionNode =
+  | {
+      id: string
+      type: 'question'
+      title: string
+      help?: string
+      answers: Array<{ label: string; nextId: string }>
+    }
+  | {
+      id: string
+      type: 'leaf'
+      title: string
+      result: DecisionLeafResult
+    }
+
+/** Arbre de décision complet */
+export interface DecisionTree {
+  id: string
+  title: string
+  description?: string
+  /** Id du nœud racine (doit exister dans nodes) */
+  rootNodeId: string
+  /** Map flat des nœuds, indexée par leur id */
+  nodes: Record<string, DecisionNode>
+  /** Filtres : si vides ou absents, l'arbre est visible par tous */
+  specialitesCibles?: Specialite[]
+  rolesCibles?: Role[]
+}
