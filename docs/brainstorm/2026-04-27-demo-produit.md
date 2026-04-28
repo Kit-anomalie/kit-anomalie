@@ -1,8 +1,8 @@
-# Brainstorm — Démo produit Kit Anomalie
+# Design — Démo produit Kit Anomalie
 
 **Date :** 27 avril 2026
-**Statut :** En cours — questions ouvertes en bas
-**Objectif :** Reprendre la conception de la démo depuis ce point.
+**Statut :** Design verrouillé, prêt pour implémentation
+**Objectif :** Vidéo cinématique 1m30 + site web interactif compagnon, livrés depuis une seule codebase React.
 
 ---
 
@@ -14,44 +14,35 @@ Le Kit est une PWA mobile-first qui accompagne des agents terrain. La démo doit
 
 ---
 
-## Décisions prises
+## 1. Public cible
 
-### 1. Public cible
 **Décideurs internes** — public sponsor/management qui doit valider, financer ou prioriser le déploiement.
 
-### 2. Format de diffusion
-Combo à deux livrables :
+## 2. Format de diffusion
 
-- **Vidéo cinématique 1m30 à 2 min** — registre Keynote Apple, projetable en réunion, envoyable par mail, fonctionne hors-ligne.
-- **Site web interactif compagnon** — pour les équipes internes et utilisateurs qui veulent creuser après la vidéo (interaction, exploration libre).
+Combo à deux livrables, **une seule codebase** :
+
+- **Vidéo cinématique 1m30** — registre Keynote Apple, projetable en réunion, envoyable par mail, fonctionne hors-ligne. Captée en 4K via Puppeteer + ffmpeg depuis l'app web.
+- **Site web interactif compagnon** — mêmes scènes 3D, navigables (scroll, hover, clic) pour les équipes internes et utilisateurs qui veulent creuser après la vidéo.
 
 La vidéo est le livrable principal. Le site web étend l'expérience sans la remplacer.
 
-### 3. Message principal
+## 3. Message principal
 
-**Angle dominant retenu : A — « Le terrain enfin équipé »**
+**Angle dominant : A — « Le terrain enfin équipé »**
 
 Émotionnel, humain : focus sur l'agent qui dégaine son téléphone et trouve la bonne réponse en quelques secondes. Le kit n'est pas un nouvel outil métier, c'est un compagnon.
 
 **Angles secondaires en appui :**
-- **B — « La couverture totale »** — au climax, on déplie l'arborescence complète (rôles × spécialités × classements × catégories d'anomalies) pour montrer la portée.
+- **B — « La couverture totale »** — au climax, on déplie l'arborescence complète (rôles × spécialités × catégories d'anomalies) pour montrer la portée.
 - **D — « Le compagnon, pas un nouvel outil »** — en conclusion, désamorcer la peur du « nouvel outil de plus » : le kit s'intègre avec l'existant, ne le remplace pas.
 
 **Angle écarté :**
 - C — « Offline-first / robustesse technique » — trop technique pour ce public, à réserver à une démo DSI.
 
-### 4. Dramaturgie de la vidéo
+## 4. Ambiance visuelle
 
-Quatre temps Keynote :
-
-1. **Ouverture** — l'agent face à un problème terrain (suggéré, sans humain visible)
-2. **Le kit sauve la situation** — la réponse arrive en quelques secondes
-3. **Climax** — zoom out sur la couverture totale du périmètre
-4. **Conclusion** — « il s'intègre, il ne remplace pas »
-
-### 5. Ambiance visuelle
-
-**Hybride : A en base + une séquence B au climax**
+**Hybride : Apple-premium en base + sci-fi sobre au climax**
 
 - **Ouverture et conclusion** — Apple-premium classique :
   - Fonds blancs et noirs alternés
@@ -72,24 +63,21 @@ Quatre temps Keynote :
 - Full sci-fi Tron — trop « tech-bro » pour le public décideurs
 - Full brand interne — moins distinctif, manque le côté premium
 
-### 6. Représentation humaine
+## 5. Représentation humaine
 
-**Pas de footage réel.** Décision prise pour éviter autorisations, image, RGPD, casting, droits.
-
-**Approche retenue : silhouette stylisée + « présence sans personne »**
+**Pas de footage réel.** Approche : silhouette stylisée + « présence sans personne ».
 
 - **Silhouette rim-lit** sur 1 à 2 plans clés (ouverture + climax) :
   - Silhouette noire avec éclairage de bord (rim light) bleu
   - Pas de visage, pas de peau apparente
   - Suggère casque, gilet haute visibilité, sac, téléphone à la main
-  - Production accessible : Mixamo (rig gratuit) + Blender ou After Effects
+  - Production : modèle Mixamo glTF + shader rim light custom dans React Three Fiber
 
 - **« Présence sans personne »** sur le reste de la vidéo :
   - Main gantée qui tient le téléphone (mockup 3D)
   - Casque posé au premier plan, hors-focus
   - Ombre projetée
   - Silhouette dans la brume en arrière-plan
-  - Sound design (bruit ambiant, pas, voix off éventuelle)
 
 **Écarté :**
 - 3D photoréaliste type MetaHuman — uncanny valley, casting implicite (couleur peau, genre, âge), explosion budget pour effet marginal.
@@ -97,55 +85,101 @@ Quatre temps Keynote :
 
 ---
 
-## Questions ouvertes — à trancher à la reprise
+## 6. Storyboard — 4 actes (1m30)
 
-### Q1. Stratégie V1 — silhouette ou pas ?
-- **Option α** (reco actuelle) — la silhouette dès la V1, intégrée à 1-2 plans clés
-- **Option β** — V1 sans humain (téléphone seul + ambiances + sound design), V2 ajoute la silhouette si retours le justifient
+### Acte 1 — Le problème (0:00 → 0:22)
+- Fond noir, particules très discrètes
+- Texte qui apparaît mot par mot : « Sur le terrain. À 6h12. Sans réseau. »
+- Plan large : silhouette rim-lit bleue qui marche, dos voûté, casque, sac
+- Sound design : pas, vent, ambiance lourde
+- Transition : la silhouette s'arrête, sort le téléphone
 
-### Q2. Durée précise
-- 60 secondes (teaser percutant)
-- 1m30 (cible actuelle)
-- 2 min (plein format)
-- À trancher selon le scénario
+### Acte 2 — Le kit sauve (0:22 → 0:50)
+- Caméra zoome sur l'écran du téléphone (mockup 3D Samsung qui flotte)
+- L'app Kit Anomalie apparaît, on traverse 3 écrans en swipe ultra-fluide
+- Texte : « Une réponse. Trois secondes. »
+- Bascule progressive du fond noir vers le blanc pur (passage Apple-premium)
 
-### Q3. Scénario détaillé / storyboard
-À écrire après Q1 et Q2 tranchées. Plan par plan, durée, action, texte à l'écran, voix off (si VO).
+### Acte 3 — La couverture (0:50 → 1:15) — climax sci-fi
+- Fond redevient sombre, glow bleu monte
+- Le téléphone se décompose en arborescence 3D qui se déploie : rôles → spécialités → catégories → fiches
+- Particules qui voyagent le long des branches
+- Texte au climax : « Tout le périmètre. Une seule app. »
+- Sound design : montée + drop musical au moment du déploiement complet
 
-### Q4. Stack technique de production
-- **Mockup téléphone 3D** — Spline (no-code, web), Blender (libre, plus de contrôle), Cinema 4D, autre ?
-- **Animation et compositing** — After Effects + Lottie, Da Vinci Resolve, motion graphics web (GSAP) ?
-- **Sound design** — banque libre type Artlist/Epidemic Sound, création custom ?
-- **Voix off** — oui/non, quelle langue, voix synthétique vs comédien ?
-
-### Q5. Site web compagnon
-- Structure (combien de pages, quel parcours)
-- Niveau d'interaction (juste lire vs cliquer pour zoomer dans la démo)
-- Hébergement (page dédiée du repo existant, sous-domaine, autre)
-- Réutilisation des assets de la vidéo (ou refonte spécifique web)
-
-### Q6. Effort de production
-- Budget temps acceptable
-- Faire seul vs déléguer certains assets (sound design, voix off, modélisation 3D)
-- Date cible de livraison
+### Acte 4 — La conclusion (1:15 → 1:30)
+- Retour fond blanc, le téléphone seul au centre
+- Texte : « Le compagnon. Pas un nouvel outil. »
+- Logo Kit Anomalie + URL du site compagnon
+- Fade out
 
 ---
 
-## Références visuelles à compiler
+## 7. Stack technique
 
-À faire à la reprise — collecter 5 à 10 références visuelles par direction pour caler les attentes :
+**100 % code, une seule codebase React.**
+
+| Couche | Outil | Rôle |
+|---|---|---|
+| 3D | React Three Fiber + Three.js + drei | Scènes 3D temps réel (téléphone, silhouette, arborescence, particules) |
+| Animation | GSAP + Timeline | Orchestration timeline 1m30, transitions, easing premium |
+| UI / texte | Framer Motion | Apparitions de texte, transitions DOM |
+| Modèle silhouette | Mixamo (glTF) + shader rim light custom | Personnage stylisé, sans recasting |
+| Mockup téléphone | Modèle Samsung A52s libre (Sketchfab CC0) ou modélisation low-poly perso | Téléphone qui flotte, écran navigable |
+| Audio | Banque libre (Pixabay, Freesound, Artlist trial) + Howler.js | Sound design, musique de fond |
+| Capture vidéo | Puppeteer + ffmpeg | Export 4K 60fps de la timeline complète en MP4 |
+| Hébergement | GitHub Pages (existant) | Vidéo téléchargeable + site web compagnon sur la même URL |
+
+**Justification du choix code-only :**
+- Une seule codebase pour les deux livrables
+- Réutilisation à 100 % entre vidéo et site web compagnon
+- Pas d'apprentissage Blender / After Effects requis
+- Itération rapide (chaque ajustement est un commit, pas un re-export Blender)
+- Tradeoff accepté : ~70-80 % du rendu Keynote Apple, pas le top 1 % cinéma
+
+---
+
+## 8. Site web compagnon
+
+- **Route séparée** dans la même app React (par exemple `/demo`).
+- **Mode auto-play** = la vidéo (timeline GSAP qui défile seule, pas d'interaction).
+- **Mode interactif** = mêmes scènes 3D mais navigables :
+  - Scroll pilote la progression
+  - Hover sur les branches de l'arborescence pour voir les libellés
+  - Clic sur une catégorie pour zoomer dessus
+  - Bouton « relancer la démo » en mode auto-play
+- **Lien** depuis la home du Kit Anomalie ou directement par URL pour partage interne.
+
+---
+
+## 9. Décisions locked
+
+| # | Question | Décision |
+|---|---|---|
+| Q1 | Silhouette en V1 ? | **Oui (option α)** — coût marginal faible en code |
+| Q2 | Durée ? | **1m30** — sweet spot 4 actes Keynote |
+| Q3 | Storyboard ? | **4 actes définis** ci-dessus |
+| Q4 | Stack ? | **100 % code React (Three Fiber + GSAP + Puppeteer/ffmpeg)** |
+| Q5 | Site compagnon ? | **Même codebase, route séparée, mêmes scènes en mode interactif** |
+| Q6 | Effort ? | **À cadrer dans le plan d'implémentation** |
+
+---
+
+## 10. Hors périmètre de ce design
+
+- Choix musical précis (à faire après le scaffold technique)
+- Texte définitif des plans (le squelette est posé, le wording final viendra à la première itération vidéo)
+- Voix off — non retenue par défaut, on s'appuie sur texte à l'écran + sound design (réversible si besoin)
+- Plan de diffusion (où, par qui, dans quel cadre) — relève du business, pas du design produit
+- Migration future hors GitHub Pages
+
+---
+
+## 11. Références visuelles à compiler
+
+À constituer en parallèle de l'implémentation :
 - Apple Keynote ouvertures produit (iPhone, iPad, Apple Watch)
-- Spots Apple « Privacy on iPhone » (silhouettes rim-lit)
+- Apple « Privacy on iPhone » (silhouettes rim-lit)
 - Démos web Spline / Three.js premium
-- Spots tech sobres style Linear, Notion, Arc Browser
-
----
-
-## Ce qui n'est pas dans ce brainstorm
-
-- Choix de la musique précise
-- Texte définitif de la voix off
-- Maquettes UI précises pour la vidéo
-- Plan de communication autour de la démo (où elle est présentée, par qui, dans quel cadre)
-
-Tous ces points viennent après avoir tranché Q1 à Q6.
+- Sites tech sobres : Linear, Notion, Arc Browser
+- Inception / Tron Legacy pour le HUD du climax (référence d'ambiance, pas de copie)
