@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { CustomTip, FicheMemo, Guide, EditorData, DecisionTree } from '../types'
+import type { CustomTip, FicheMemo, Guide, EditorData, GlossaireTerme } from '../types'
 import type { QuizQuestion, QuizTheme, QuizDefinition } from '../data/quizQuestions'
 
 interface EditorState {
@@ -50,13 +50,13 @@ interface EditorState {
   updateQuiz: (id: string, q: Partial<QuizDefinition>) => void
   deleteQuiz: (id: string) => void
 
-  aides: DecisionTree[]
+  glossaire: GlossaireTerme[]
 
-  // Aides (arbres de décision)
-  addAide: (aide: Omit<DecisionTree, 'id'>) => string
-  upsertAide: (aide: DecisionTree) => void
-  updateAide: (id: string, aide: Partial<DecisionTree>) => void
-  deleteAide: (id: string) => void
+  // Glossaire (sigles et termes métier)
+  addTerme: (terme: Omit<GlossaireTerme, 'id'>) => string
+  upsertTerme: (terme: GlossaireTerme) => void
+  updateTerme: (id: string, terme: Partial<GlossaireTerme>) => void
+  deleteTerme: (id: string) => void
 
   // Export / Import
   exportData: () => EditorData
@@ -74,14 +74,14 @@ export interface ImportReport {
   addedQuizQuestions: number
   addedCustomThemes: number
   addedCustomQuizzes: number
-  addedAides: number
+  addedGlossaire: number
   skippedTips: number
   skippedFiches: number
   skippedGuides: number
   skippedQuizQuestions: number
   skippedCustomThemes: number
   skippedCustomQuizzes: number
-  skippedAides: number
+  skippedGlossaire: number
   mode: 'merge' | 'replace'
 }
 
@@ -98,7 +98,7 @@ export const useEditorStore = create<EditorState>()(
       quizQuestions: [],
       customThemes: [],
       customQuizzes: [],
-      aides: [],
+      glossaire: [],
 
       // Tips
       addTip: (texte) => set(s => ({
@@ -186,35 +186,35 @@ export const useEditorStore = create<EditorState>()(
         customQuizzes: s.customQuizzes.filter(q => q.id !== id)
       })),
 
-      // Aides (arbres de décision)
-      addAide: (aide) => {
-        const id = `aide-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-        set((s) => ({ aides: [...s.aides, { ...aide, id }] }))
+      // Glossaire (sigles et termes métier)
+      addTerme: (terme) => {
+        const id = `glossaire-${uid()}`
+        set((s) => ({ glossaire: [...s.glossaire, { ...terme, id }] }))
         return id
       },
-      upsertAide: (aide) => {
+      upsertTerme: (terme) => {
         set((s) => {
-          const exists = s.aides.some((a) => a.id === aide.id)
+          const exists = s.glossaire.some((t) => t.id === terme.id)
           return {
-            aides: exists
-              ? s.aides.map((a) => (a.id === aide.id ? aide : a))
-              : [...s.aides, aide],
+            glossaire: exists
+              ? s.glossaire.map((t) => (t.id === terme.id ? terme : t))
+              : [...s.glossaire, terme],
           }
         })
       },
-      updateAide: (id, partial) => {
+      updateTerme: (id, partial) => {
         set((s) => ({
-          aides: s.aides.map((a) => (a.id === id ? { ...a, ...partial } : a)),
+          glossaire: s.glossaire.map((t) => (t.id === id ? { ...t, ...partial } : t)),
         }))
       },
-      deleteAide: (id) => {
-        set((s) => ({ aides: s.aides.filter((a) => a.id !== id) }))
+      deleteTerme: (id) => {
+        set((s) => ({ glossaire: s.glossaire.filter((t) => t.id !== id) }))
       },
 
       // Export / Import
       exportData: () => {
-        const { tips, fiches, guides, quizQuestions, customThemes, customQuizzes, aides } = get()
-        return { tips, fiches, guides, quizQuestions, customThemes, customQuizzes, aides, exportDate: new Date().toISOString() }
+        const { tips, fiches, guides, quizQuestions, customThemes, customQuizzes, glossaire } = get()
+        return { tips, fiches, guides, quizQuestions, customThemes, customQuizzes, glossaire, exportDate: new Date().toISOString() }
       },
       importData: (data, mode = 'merge') => {
         const incomingTips = data.tips ?? []
@@ -223,7 +223,7 @@ export const useEditorStore = create<EditorState>()(
         const incomingQuiz = data.quizQuestions ?? []
         const incomingThemes = data.customThemes ?? []
         const incomingQuizzes = data.customQuizzes ?? []
-        const incomingAides = data.aides ?? []
+        const incomingGlossaire = data.glossaire ?? []
 
         if (mode === 'replace') {
           set({
@@ -233,7 +233,7 @@ export const useEditorStore = create<EditorState>()(
             quizQuestions: incomingQuiz,
             customThemes: incomingThemes,
             customQuizzes: incomingQuizzes,
-            aides: incomingAides,
+            glossaire: incomingGlossaire,
           })
           return {
             addedTips: incomingTips.length,
@@ -242,14 +242,14 @@ export const useEditorStore = create<EditorState>()(
             addedQuizQuestions: incomingQuiz.length,
             addedCustomThemes: incomingThemes.length,
             addedCustomQuizzes: incomingQuizzes.length,
-            addedAides: incomingAides.length,
+            addedGlossaire: incomingGlossaire.length,
             skippedTips: 0,
             skippedFiches: 0,
             skippedGuides: 0,
             skippedQuizQuestions: 0,
             skippedCustomThemes: 0,
             skippedCustomQuizzes: 0,
-            skippedAides: 0,
+            skippedGlossaire: 0,
             mode: 'replace',
           }
         }
@@ -263,7 +263,8 @@ export const useEditorStore = create<EditorState>()(
         const existingThemeIds = new Set(s.customThemes.map(t => t.id))
         const existingThemeLabels = new Set(s.customThemes.map(t => t.label.toLowerCase()))
         const existingQuizDefIds = new Set(s.customQuizzes.map(q => q.id))
-        const existingAideIds = new Set(s.aides.map(a => a.id))
+        const existingGlossaireIds = new Set(s.glossaire.map(t => t.id))
+        const existingTermes = new Set(s.glossaire.map(t => t.terme.toLowerCase()))
 
         const newGuides = incomingGuides.filter(g => !existingGuideTitres.has(g.titre))
         const newFiches = incomingFiches.filter(f => !existingFicheTitres.has(f.titre))
@@ -273,8 +274,10 @@ export const useEditorStore = create<EditorState>()(
           !existingThemeIds.has(t.id) && !existingThemeLabels.has(t.label.toLowerCase())
         )
         const newQuizzes = incomingQuizzes.filter(q => !existingQuizDefIds.has(q.id))
-        // Merge aides : dédup par id (replace si même id existe, sinon ajoute)
-        const newAides = incomingAides.filter(a => !existingAideIds.has(a.id))
+        // Merge glossaire : dédup par id ET par terme (case-insensitive) pour éviter les doublons
+        const newGlossaire = incomingGlossaire.filter(t =>
+          !existingGlossaireIds.has(t.id) && !existingTermes.has(t.terme.toLowerCase())
+        )
 
         set({
           tips: [...s.tips, ...newTips],
@@ -283,7 +286,7 @@ export const useEditorStore = create<EditorState>()(
           quizQuestions: [...s.quizQuestions, ...newQuiz],
           customThemes: [...s.customThemes, ...newThemes],
           customQuizzes: [...s.customQuizzes, ...newQuizzes],
-          aides: [...s.aides, ...newAides],
+          glossaire: [...s.glossaire, ...newGlossaire],
         })
 
         return {
@@ -293,30 +296,29 @@ export const useEditorStore = create<EditorState>()(
           addedQuizQuestions: newQuiz.length,
           addedCustomThemes: newThemes.length,
           addedCustomQuizzes: newQuizzes.length,
-          addedAides: newAides.length,
+          addedGlossaire: newGlossaire.length,
           skippedTips: incomingTips.length - newTips.length,
           skippedFiches: incomingFiches.length - newFiches.length,
           skippedGuides: incomingGuides.length - newGuides.length,
           skippedQuizQuestions: incomingQuiz.length - newQuiz.length,
           skippedCustomThemes: incomingThemes.length - newThemes.length,
           skippedCustomQuizzes: incomingQuizzes.length - newQuizzes.length,
-          skippedAides: incomingAides.length - newAides.length,
+          skippedGlossaire: incomingGlossaire.length - newGlossaire.length,
           mode: 'merge',
         }
       },
     }),
     {
       name: 'kit-anomalie-editor',
-      version: 2,
-      // Migration v1 → v2 : ajout du champ `aides` (brique 6).
-      // Garantit qu'aucun ancien state restauré depuis localStorage ne casse
-      // les composants qui font `aides.filter(...)` ou `aides.find(...)`.
-      migrate: (persisted: unknown, version: number) => {
-        const state = (persisted ?? {}) as Partial<EditorState>
-        if (version < 2 || !Array.isArray(state.aides)) {
-          return { ...state, aides: [] } as EditorState
-        }
-        return state as EditorState
+      version: 3,
+      // Migration : la v2 utilisait `aides` (brique 6 « Aide au choix »).
+      // Cette brique a été remplacée par le glossaire en v3 — on supprime
+      // `aides` du state persisté et on initialise `glossaire: []` si absent.
+      migrate: (persisted: unknown) => {
+        const state = { ...((persisted ?? {}) as Record<string, unknown>) }
+        delete state.aides
+        const glossaire = Array.isArray(state.glossaire) ? state.glossaire : []
+        return { ...state, glossaire } as unknown as EditorState
       },
       // Sécurité supplémentaire : merge profond pour garantir que tous les
       // champs initiaux existent même si le state persisté est partiel.
@@ -325,7 +327,7 @@ export const useEditorStore = create<EditorState>()(
         return {
           ...current,
           ...p,
-          aides: Array.isArray(p.aides) ? p.aides : [],
+          glossaire: Array.isArray(p.glossaire) ? p.glossaire : [],
         }
       },
     }

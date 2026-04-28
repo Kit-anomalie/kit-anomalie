@@ -32,7 +32,7 @@ export function Home() {
     { icon: '🧠', label: 'Quiz', desc: 'Testez vos connaissances', path: '/quiz', color: 'bg-green-50 border-sncf-green/20' },
     { icon: '📚', label: 'Catalogue', desc: 'Anomalies par actif', path: '/catalogue', color: 'bg-purple-50 border-purple-200' },
     { icon: '🤖', label: 'Assistant IA', desc: 'Aide à la rédaction', path: '/assistant', color: 'bg-cyan-50 border-sncf-blue/20' },
-    { icon: '🧭', label: 'Aide au choix', desc: 'Quel choix faire ?', path: '/aide', color: 'bg-blue-50 border-sncf-blue/20' },
+    { icon: '🔤', label: 'Glossaire', desc: 'Sigles et termes métier', path: '/glossaire', color: 'bg-pink-50 border-pink-200' },
   ]
 
   return (

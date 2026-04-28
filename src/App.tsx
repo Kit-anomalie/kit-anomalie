@@ -21,8 +21,7 @@ import { Catalogue } from './pages/Catalogue'
 import { CatalogueCategorie } from './pages/CatalogueCategorie'
 import { CatalogueTypeActif } from './pages/CatalogueTypeActif'
 import { CatalogueFiche } from './pages/CatalogueFiche'
-import { AideListe } from './pages/Aide/AideListe'
-import { AidePlayer } from './pages/Aide/AidePlayer'
+import { Glossaire } from './pages/Glossaire'
 // La démo embarque Three.js (lourd) — chargée à la demande pour ne pas alourdir le bundle principal
 const Demo = lazy(() => import('./pages/Demo/Demo').then(m => ({ default: m.Demo })))
 
@@ -66,9 +65,9 @@ function AppRoutes() {
         <Route path="/catalogue/:catId/:typeId/:anoId" element={<CatalogueFiche />} />
         <Route path="/actifs" element={<Navigate to="/catalogue" replace />} />
         <Route path="/assistant" element={<Assistant />} />
-        <Route path="/aide" element={<AideListe />} />
-        <Route path="/aide/:treeId" element={<AidePlayer />} />
-        <Route path="/alertes" element={<Navigate to="/aide" replace />} />
+        <Route path="/glossaire" element={<Glossaire />} />
+        <Route path="/aide" element={<Navigate to="/glossaire" replace />} />
+        <Route path="/alertes" element={<Navigate to="/glossaire" replace />} />
         <Route path="/reglages" element={<Réglages />} />
         <Route path="/setup" element={<ProfileSetup />} />
       </Route>

@@ -7,9 +7,9 @@ import { EditorFiches } from './EditorFiches'
 import { EditorGuides } from './EditorGuides'
 import { EditorCatalogue } from './EditorCatalogue'
 import { EditorQuiz } from './EditorQuiz'
-import { EditorAides } from './EditorAides'
+import { EditorGlossaire } from './EditorGlossaire'
 
-type Tab = 'tips' | 'fiches' | 'guides' | 'catalogue' | 'quiz' | 'aides'
+type Tab = 'tips' | 'fiches' | 'guides' | 'catalogue' | 'quiz' | 'glossaire'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'tips', label: 'Conseils', icon: '💡' },
@@ -17,7 +17,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'guides', label: 'Guides', icon: '📖' },
   { id: 'catalogue', label: 'Catalogue', icon: '📚' },
   { id: 'quiz', label: 'Quiz', icon: '🧠' },
-  { id: 'aides', label: 'Aide au choix', icon: '🧭' },
+  { id: 'glossaire', label: 'Glossaire', icon: '🔤' },
 ]
 
 export function Editor() {
@@ -117,7 +117,7 @@ export function Editor() {
         {activeTab === 'guides' && <EditorGuides />}
         {activeTab === 'catalogue' && <EditorCatalogue />}
         {activeTab === 'quiz' && <EditorQuiz />}
-        {activeTab === 'aides' && <EditorAides />}
+        {activeTab === 'glossaire' && <EditorGlossaire />}
       </main>
 
       {/* Message d'import */}
