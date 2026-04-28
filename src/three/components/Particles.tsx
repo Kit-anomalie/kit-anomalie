@@ -2,7 +2,7 @@
 // Champ de particules 3D, rotation lente. Utilisé en ambient pour les actes 1 et 3.
 // Les particules sont réparties dans une sphère de rayon configurable.
 
-import { useMemo, useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -13,6 +13,22 @@ interface Props {
   size?: number
 }
 
+// Génère un tableau de positions sphériques. Sorti du composant pour rester pure
+// au sens React (Math.random est interdit pendant le render mais autorisé dans
+// l'initialiseur de useState, qui ne s'exécute qu'une fois).
+function generateSpherePositions(count: number, radius: number): Float32Array {
+  const arr = new Float32Array(count * 3)
+  for (let i = 0; i < count; i++) {
+    const r = Math.cbrt(Math.random()) * radius
+    const theta = Math.random() * Math.PI * 2
+    const phi = Math.acos(2 * Math.random() - 1)
+    arr[i * 3] = r * Math.sin(phi) * Math.cos(theta)
+    arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
+    arr[i * 3 + 2] = r * Math.cos(phi)
+  }
+  return arr
+}
+
 export function Particles({
   count = 800,
   radius = 8,
@@ -21,20 +37,9 @@ export function Particles({
 }: Props) {
   const pointsRef = useRef<THREE.Points>(null)
 
-  // Génère les positions une seule fois (réparties dans une sphère)
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      // Distribution sphérique uniforme
-      const r = Math.cbrt(Math.random()) * radius
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
-      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta)
-      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
-      arr[i * 3 + 2] = r * Math.cos(phi)
-    }
-    return arr
-  }, [count, radius])
+  // Génère les positions une seule fois au mount (l'initialiseur de useState
+  // peut contenir des effets impurs comme Math.random).
+  const [positions] = useState(() => generateSpherePositions(count, radius))
 
   // Rotation lente continue
   useFrame((_, delta) => {
