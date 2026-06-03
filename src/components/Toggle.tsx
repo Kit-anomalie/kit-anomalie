@@ -2,13 +2,16 @@ interface ToggleProps {
   enabled: boolean
   onChange: (value: boolean) => void
   color?: string
+  /** Libellé accessible (lecteur d'écran) — requis pour l'a11y */
+  'aria-label'?: string
 }
 
-export function Toggle({ enabled, onChange, color = 'bg-sncf-green' }: ToggleProps) {
+export function Toggle({ enabled, onChange, color = 'bg-sncf-green', 'aria-label': ariaLabel }: ToggleProps) {
   return (
     <button
       role="switch"
       aria-checked={enabled}
+      aria-label={ariaLabel}
       onClick={() => onChange(!enabled)}
       className={`relative inline-flex h-[31px] w-[51px] shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
         enabled ? color : 'bg-gray-200'

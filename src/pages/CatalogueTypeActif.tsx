@@ -163,7 +163,7 @@ export function CatalogueTypeActif() {
                 <button
                   onClick={() => toggleFav(ano.id)}
                   aria-label={isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                  className="px-4 flex items-center justify-center text-xl active:scale-90 transition-transform"
+                  className="px-4 min-h-[44px] min-w-[44px] flex items-center justify-center text-xl active:scale-90 transition-transform"
                 >
                   <span style={{ color: isFav ? '#F7A600' : '#D1D5DB' }}>{isFav ? '★' : '☆'}</span>
                 </button>

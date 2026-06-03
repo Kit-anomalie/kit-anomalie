@@ -27,6 +27,11 @@ export function ActText({
   useEffect(() => {
     if (!autoPlay || !containerRef.current) return
     const words = containerRef.current.querySelectorAll<HTMLSpanElement>('[data-word]')
+    // Respect de prefers-reduced-motion : on affiche le texte d'emblée, sans stagger.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(words, { opacity: 1, y: 0 })
+      return
+    }
     gsap.fromTo(
       words,
       { opacity: 0, y: 20 },

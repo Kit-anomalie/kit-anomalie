@@ -77,7 +77,7 @@ export function Réglages() {
             <span className="text-xl">{theme === 'light' ? '☀️' : '🌙'}</span>
             <span className="text-sm text-sncf-dark font-medium">{theme === 'light' ? 'Mode jour' : 'Mode nuit'}</span>
           </div>
-          <Toggle enabled={theme === 'dark'} onChange={toggleTheme} color="bg-sncf-blue" />
+          <Toggle enabled={theme === 'dark'} onChange={toggleTheme} color="bg-sncf-blue" aria-label="Activer le mode nuit" />
         </div>
       </div>
 
