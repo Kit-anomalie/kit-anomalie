@@ -8,7 +8,7 @@ export const GUIDES: Guide[] = [
     roles: ['agent_req'],
     specialites: ['voie'],
     gesteMetier: 'Créer une anomalie',
-    referentiel: 'MT00342',
+    referentiel: 'MT0XXXX',
     etapes: [
       {
         numero: 1,
@@ -56,7 +56,7 @@ export const GUIDES: Guide[] = [
           'Ne pas laisser en NC (Non Classé) — l\'anomalie devient invisible pour la planification',
           'S/I = intervention sous 24h, à réserver aux cas réels d\'urgence',
         ],
-        referentiel: 'MT00342',
+        referentiel: 'MT0XXXX',
       },
       {
         numero: 6,

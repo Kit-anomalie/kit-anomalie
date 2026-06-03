@@ -14,7 +14,7 @@ export const FICHES_MEMO: FicheMemo[] = [
       'Laisser une anomalie en NC (Non Classée) → invisible pour l\'ordonnanceur',
       'Oublier la DLF → l\'anomalie sort du radar de suivi',
     ],
-    referentiel: 'MT00342',
+    referentiel: 'MT0XXXX',
     guideAssocie: 'guide-creer-anomalie-ef3c0',
   },
   {
@@ -30,7 +30,7 @@ export const FICHES_MEMO: FicheMemo[] = [
       'Description trop technique sans localisation → le RP ne peut pas planifier',
       'Pas de photo → retour terrain nécessaire pour confirmer',
     ],
-    referentiel: 'MT00342',
+    referentiel: 'MT0XXXX',
     guideAssocie: 'guide-creer-anomalie-ef3c0',
   },
   {
@@ -60,6 +60,6 @@ export const FICHES_MEMO: FicheMemo[] = [
       'Modifier la DLF sans analyse de risque préalable',
       'Ne pas renseigner de classement → pas de DLF → anomalie invisible',
     ],
-    referentiel: 'MT00342',
+    referentiel: 'MT0XXXX',
   },
 ]

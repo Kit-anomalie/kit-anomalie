@@ -35,7 +35,7 @@ const STOPWORDS = new Set([
 const DEFAULT_TIPS = [
   'Une bonne description d\'anomalie contient : le composant, la localisation exacte et l\'ancienneté du défaut.',
   'Vérifiez toujours les anomalies existantes sur un actif avant d\'en déclarer une nouvelle.',
-  'Le classement S/I nécessite une intervention immédiate. En cas de doute, consultez le référentiel MT00342.',
+  'Le classement S/I nécessite une intervention immédiate. En cas de doute, consultez le référentiel MT0XXXX.',
   'Pensez à renseigner la DLF (Date Limite de Fin) pour les anomalies de classement A.',
 ]
 

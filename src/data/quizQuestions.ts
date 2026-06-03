@@ -1,5 +1,5 @@
 // Questions du quiz — fondamentaux anomalies SNCF
-// Source : fiches mémo, classements MT00342, terminologie métier
+// Source : fiches mémo, classements MT0XXXX, terminologie métier
 // Note : données pédagogiques génériques, pas de référentiels confidentiels
 
 // theme = id libre (string). Voir getThemeLabel() en bas pour le rendu.

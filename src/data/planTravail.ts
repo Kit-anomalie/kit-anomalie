@@ -106,7 +106,7 @@ export const SPRINTS: Sprint[] = [
     objectif: 'Alertes, bonnes pratiques, contenu réglementaire',
     jalons: [
       { titre: 'Système d\'alertes et notifications', fait: false, brique: 6 },
-      { titre: 'Contenu réglementaire (MT00342, DLF)', fait: false, brique: 6 },
+      { titre: 'Contenu réglementaire (MT0XXXX, DLF)', fait: false, brique: 6 },
       { titre: 'Bonnes pratiques contextuelles', fait: false, brique: 6 },
     ],
   },

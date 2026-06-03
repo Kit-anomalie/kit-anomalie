@@ -177,7 +177,7 @@ export function EditorFiches() {
             <input
               value={form.referentiel}
               onChange={e => setForm(f => ({ ...f, referentiel: e.target.value }))}
-              placeholder="Ex: MT00342"
+              placeholder="Ex: MT0XXXX"
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sncf-blue"
             />
           </div>

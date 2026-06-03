@@ -498,7 +498,7 @@ function AnoFormView({ form, setForm, onSave, onCancel, isEditing }: AnoFormView
         })}
       </div>
 
-      <FieldText label="Référence documentaire" value={form.reference} onChange={v => setForm(f => ({ ...f, reference: v }))} placeholder="Ex: IN0261 ou laisser vide" />
+      <FieldText label="Référence documentaire" value={form.reference} onChange={v => setForm(f => ({ ...f, reference: v }))} placeholder="Ex: IN0XXX ou laisser vide" />
       <FieldText label="Légende illustration" value={form.illusCaption} onChange={v => setForm(f => ({ ...f, illusCaption: v }))} placeholder="Ex: Écart de dressage — seuils AL/AR/ALT" />
 
       <FormActions onSave={onSave} onCancel={onCancel} canSave={!!form.code.trim() && !!form.name.trim()} isEditing={isEditing} />

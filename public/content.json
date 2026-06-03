@@ -91,7 +91,7 @@
       "specialites": [
         "voie"
       ],
-      "referentiel": "MT 07991",
+      "referentiel": "MT0XXXX",
       "etapes": [
         {
           "numero": 1,
@@ -131,7 +131,7 @@
       "specialites": [
         "voie"
       ],
-      "referentiel": "MT 07991",
+      "referentiel": "MT0XXXX",
       "bonnesPratiques": [
         "Téléchargez les interventions la veille au bureau — sur le terrain le réseau peut manquer",
         "Sans réseau, vos saisies sont stockées et envoyées automatiquement au retour du signal",
