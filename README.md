@@ -41,10 +41,10 @@ SPM est transverse (toutes spécialités). OPTISPOT et SPOT BO sont hors périm�
 | **0** | Accueil & Profil | **Fait** | `ProfileSetup.tsx`, `Home.tsx`, `Layout.tsx`, `BottomNav.tsx` |
 | **1** | Guides par application | **Fait** (1 guide démo) | `Guides.tsx`, `GuideDetail.tsx`, `data/guides.ts` |
 | **2** | Fiches mémo réflexes | **Fait** (4 fiches) | `Fiches.tsx`, `FicheDetail.tsx`, `data/fiches.ts` |
-| **3** | Parcours onboarding | Placeholder | — |
+| **3** | Quiz / Parcours | **Fait** | `Quiz.tsx`, `QuizPlay.tsx`, `data/quizQuestions.ts`, `stores/quizStore.ts`, `EditorQuiz.tsx` |
 | **4** | Catalogue anomalies | **Fait** (prototype, 20 anomalies démo) | `Catalogue.tsx`, `CatalogueCategorie.tsx`, `CatalogueTypeActif.tsx`, `CatalogueFiche.tsx`, `EditorCatalogue.tsx`, `data/catalogueSeed.ts`, `stores/catalogueStore.ts` |
-| **5** | Assistant IA | Placeholder | — |
-| **6** | Bon à savoir & alertes | Placeholder | — |
+| **5** | Assistant (recherche locale) | **Fait** | `Assistant.tsx`, `utils/assistantCorpus.ts`, `stores/assistantStore.ts` |
+| **6** | Glossaire métier | **Fait** | `Glossaire.tsx`, `EditorGlossaire.tsx`, `data/glossaireDefault.ts` |
 | **7** | Administration (BO) | Non commencé | App séparée |
 
 ### Brique 0 — Accueil & Profil ✅
@@ -93,9 +93,13 @@ Référentiel **transverse** lecture seule, organisé en 3 niveaux : **Catégori
 
 **Contenu démo :** 6 catégories × ~3 types × 1–2 anomalies = 20 anomalies, dont 6 à classements conditionnels multiples (dressage, usure rail, fissure, soudure, talus, PN).
 
-### Briques 3, 5, 6, 7 — À construire
+### Brique 7 — À construire
 
-Voir le fichier de spécification complet : `/Projects/Anomalies/prompt-kit-anomalie.md`
+La brique 7 (Administration / back-office) reste à faire comme application séparée. Voir le fichier de spécification complet : `/Projects/Anomalies/prompt-kit-anomalie.md`.
+
+### Mode démo (route `/demo`)
+
+Démo produit cinématique (4 actes, ~90 s) en React Three Fiber + GSAP, plus un mode explorer scroll-driven. La route `/demo` est hors `Layout` et accessible sans profil. Capture vidéo via `npm run record:demo` (Playwright). Le code 3D est lazy-loadé : les agents terrain ne téléchargent jamais Three.js. Design et plans dans `docs/`.
 
 ---
 
@@ -108,7 +112,7 @@ Voir le fichier de spécification complet : `/Projects/Anomalies/prompt-kit-anom
 | **CSS** | Tailwind CSS 4 |
 | **State** | Zustand (persist middleware → localStorage) |
 | **Routing** | React Router DOM 7 |
-| **PWA** | manifest.json, Service Worker (à compléter) |
+| **PWA** | manifest.json, Service Worker (offline + auto-healing), version.json |
 | **Hébergement** | GitHub Pages (déploiement auto via GitHub Actions) |
 
 ## Arborescence
