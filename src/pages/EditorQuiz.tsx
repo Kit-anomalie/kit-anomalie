@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
+import { useConfirm } from '../components/ConfirmSheet'
 import {
   QUIZ_QUESTIONS,
   DEFAULT_THEMES,
@@ -48,6 +49,7 @@ const EMPTY_QUIZ_FORM: QuizFormState = {
 type View = 'list' | 'question-form' | 'quiz-form'
 
 export function EditorQuiz() {
+  const { confirm, alert } = useConfirm()
   // Stores
   const customQuestions = useEditorStore((s) => s.quizQuestions)
   const customThemes = useEditorStore((s) => s.customThemes)
@@ -164,14 +166,14 @@ export function EditorQuiz() {
     setView('list')
   }
 
-  const resetOverrideQuestion = (id: string) => {
-    if (confirm('Réinitialiser cette question à sa version par défaut ?')) {
+  const resetOverrideQuestion = async (id: string) => {
+    if (await confirm({ message: 'Réinitialiser cette question à sa version par défaut ?', confirmLabel: 'Réinitialiser' })) {
       deleteQuizQuestion(id)
     }
   }
 
-  const deleteCustomQuestion = (id: string) => {
-    if (confirm('Supprimer cette question ?')) {
+  const deleteCustomQuestion = async (id: string) => {
+    if (await confirm({ message: 'Supprimer cette question ?', confirmLabel: 'Supprimer', danger: true })) {
       deleteQuizQuestion(id)
     }
   }
@@ -220,14 +222,14 @@ export function EditorQuiz() {
     setView('list')
   }
 
-  const resetOverrideQuiz = (id: string) => {
-    if (confirm('Réinitialiser ce quiz à sa version par défaut ?')) {
+  const resetOverrideQuiz = async (id: string) => {
+    if (await confirm({ message: 'Réinitialiser ce quiz à sa version par défaut ?', confirmLabel: 'Réinitialiser' })) {
       deleteQuiz(id)
     }
   }
 
-  const deleteCustomQuiz = (id: string) => {
-    if (confirm('Supprimer ce quiz ?')) {
+  const deleteCustomQuiz = async (id: string) => {
+    if (await confirm({ message: 'Supprimer ce quiz ?', confirmLabel: 'Supprimer', danger: true })) {
       deleteQuiz(id)
     }
   }
@@ -243,7 +245,7 @@ export function EditorQuiz() {
 
   // ── Theme actions ──
 
-  const handleAddTheme = () => {
+  const handleAddTheme = async () => {
     const label = newThemeLabel.trim()
     if (!label) return
     const lower = label.toLowerCase()
@@ -251,7 +253,7 @@ export function EditorQuiz() {
       DEFAULT_THEMES.some((t) => t.label.toLowerCase() === lower) ||
       customThemes.some((t) => t.label.toLowerCase() === lower)
     if (exists) {
-      alert('Ce thème existe déjà.')
+      await alert({ message: 'Ce thème existe déjà.' })
       return
     }
     addCustomTheme(label)
@@ -271,14 +273,14 @@ export function EditorQuiz() {
     setEditingThemeLabel('')
   }
 
-  const handleDeleteTheme = (id: string, label: string) => {
+  const handleDeleteTheme = async (id: string, label: string) => {
     const used = customQuestions.some((q) => q.theme === id) ||
       QUIZ_QUESTIONS.some((q) => q.theme === id)
     if (used) {
-      alert(`Impossible : le thème « ${label} » est utilisé par au moins une question.`)
+      await alert({ message: `Impossible : le thème « ${label} » est utilisé par au moins une question.` })
       return
     }
-    if (confirm(`Supprimer le thème « ${label} » ?`)) {
+    if (await confirm({ message: `Supprimer le thème « ${label} » ?`, confirmLabel: 'Supprimer', danger: true })) {
       deleteCustomTheme(id)
     }
   }

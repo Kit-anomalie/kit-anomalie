@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
+import { useConfirm } from '../components/ConfirmSheet'
 
 export function EditorTips() {
   const { tips, addTip, updateTip, deleteTip } = useEditorStore()
+  const { confirm } = useConfirm()
   const [newTip, setNewTip] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState('')
@@ -88,7 +90,7 @@ export function EditorTips() {
                     Modifier
                   </button>
                   <button
-                    onClick={() => { if (confirm('Supprimer ce conseil ?')) deleteTip(tip.id) }}
+                    onClick={async () => { if (await confirm({ message: 'Supprimer ce conseil ?', confirmLabel: 'Supprimer', danger: true })) deleteTip(tip.id) }}
                     className="text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 rounded-xl"
                   >
                     Suppr.

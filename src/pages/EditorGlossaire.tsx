@@ -4,6 +4,7 @@
 
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
+import { useConfirm } from '../components/ConfirmSheet'
 import type { GlossaireTerme } from '../types'
 
 function makeId() {
@@ -24,6 +25,7 @@ export function EditorGlossaire() {
   const glossaire = useEditorStore((s) => s.glossaire ?? [])
   const upsertTerme = useEditorStore((s) => s.upsertTerme)
   const deleteTerme = useEditorStore((s) => s.deleteTerme)
+  const { confirm } = useConfirm()
 
   const [editingId, setEditingId] = useState<string | null>(null)
   const editingTerme = glossaire.find((t) => t.id === editingId) ?? null
@@ -84,8 +86,8 @@ export function EditorGlossaire() {
                 Éditer
               </button>
               <button
-                onClick={() => {
-                  if (confirm(`Supprimer "${t.terme}" ?`)) deleteTerme(t.id)
+                onClick={async () => {
+                  if (await confirm({ message: `Supprimer « ${t.terme} » ?`, confirmLabel: 'Supprimer', danger: true })) deleteTerme(t.id)
                 }}
                 className="text-red-600 text-sm"
               >

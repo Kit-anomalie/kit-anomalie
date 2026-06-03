@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { PieceJointe } from '../types'
+import { useConfirm } from './ConfirmSheet'
 
 interface PiecesJointesEditorProps {
   pieces: PieceJointe[]
@@ -57,6 +58,7 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
   const [lienUrl, setLienUrl] = useState('')
   const [lienError, setLienError] = useState('')
   const [fileError, setFileError] = useState('')
+  const { confirm } = useConfirm()
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileError('')
@@ -121,8 +123,8 @@ export function PiecesJointesEditor({ pieces, onChange }: PiecesJointesEditorPro
     setLienError('')
   }
 
-  const handleRemove = (id: string) => {
-    if (confirm('Supprimer cette pièce jointe ?')) {
+  const handleRemove = async (id: string) => {
+    if (await confirm({ message: 'Supprimer cette pièce jointe ?', confirmLabel: 'Supprimer', danger: true })) {
       onChange(pieces.filter(p => p.id !== id))
     }
   }

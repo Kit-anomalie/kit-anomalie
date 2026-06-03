@@ -4,9 +4,11 @@ import { useMaintenanceStore } from '../stores/maintenanceStore'
 import { useCatalogueStore } from '../stores/catalogueStore'
 import { useSharedContentStore } from '../stores/sharedContentStore'
 import { Toggle } from '../components/Toggle'
+import { useConfirm } from '../components/ConfirmSheet'
 
 export function Admin() {
   const navigate = useNavigate()
+  const { confirm } = useConfirm()
   const store = useMaintenanceStore()
   const resetCatalogueSeed = useCatalogueStore(s => s.resetSeed)
   const restoreShared = useSharedContentStore(s => s.restoreShared)
@@ -19,8 +21,13 @@ export function Admin() {
   const [seedResetMsg, setSeedResetMsg] = useState(false)
   const [restoreMsg, setRestoreMsg] = useState<'idle' | 'loading' | 'done'>('idle')
 
-  const handleResetCatalogue = () => {
-    if (confirm('Réinitialiser le catalogue au contenu de démo (toutes modifications locales seront perdues) ?')) {
+  const handleResetCatalogue = async () => {
+    if (await confirm({
+      title: 'Réinitialiser le catalogue',
+      message: 'Réinitialiser le catalogue au contenu de démo ? Toutes les modifications locales seront perdues.',
+      confirmLabel: 'Réinitialiser',
+      danger: true,
+    })) {
       resetCatalogueSeed()
       setSeedResetMsg(true)
       setTimeout(() => setSeedResetMsg(false), 2000)
@@ -28,11 +35,14 @@ export function Admin() {
   }
 
   const handleRestoreShared = async () => {
-    if (!confirm(
-      'Restaurer le contenu partagé depuis content.json ?\n\n'
-      + '⚠️ Vos guides, fiches et conseils locaux non exportés seront écrasés.\n\n'
-      + 'Favoris, historique et catalogue anomalies ne sont pas affectés.'
-    )) return
+    if (!(await confirm({
+      title: 'Restaurer le contenu partagé',
+      message: 'Restaurer le contenu partagé depuis content.json ?\n\n'
+        + '⚠️ Vos guides, fiches et conseils locaux non exportés seront écrasés.\n\n'
+        + 'Favoris, historique et catalogue anomalies ne sont pas affectés.',
+      confirmLabel: 'Restaurer',
+      danger: true,
+    }))) return
     setRestoreMsg('loading')
     try {
       await restoreShared()
@@ -133,7 +143,7 @@ export function Admin() {
           <div className="px-4 py-3 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-sncf-dark font-medium">Activer le bandeau</span>
-              <Toggle enabled={planningEnabled} onChange={setPlanningEnabled} />
+              <Toggle enabled={planningEnabled} onChange={setPlanningEnabled} aria-label="Activer le bandeau de maintenance planifiée" />
             </div>
             <input
               value={planningMessage}

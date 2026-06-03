@@ -4,6 +4,7 @@ import { useProfileStore } from './stores/profileStore'
 import { useSharedContentStore } from './stores/sharedContentStore'
 import './stores/themeStore'
 import { Layout } from './components/Layout'
+import { ConfirmProvider } from './components/ConfirmSheet'
 import { ProfileSetup } from './pages/ProfileSetup'
 import { Home } from './pages/Home'
 import { Guides } from './pages/Guides'
@@ -82,7 +83,9 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter basename="/kit-anomalie">
-      <AppRoutes />
+      <ConfirmProvider>
+        <AppRoutes />
+      </ConfirmProvider>
     </BrowserRouter>
   )
 }

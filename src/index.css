@@ -201,6 +201,22 @@ html, body, #root {
   animation: slideFromLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
+/* Bottom sheet (ConfirmSheet) */
+@keyframes sheetUp {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.sheet-up {
+  animation: sheetUp 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.fade-in {
+  animation: fadeIn 0.2s ease-out both;
+}
+
 /* Utilitaires */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

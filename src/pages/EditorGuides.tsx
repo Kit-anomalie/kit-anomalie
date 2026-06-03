@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
+import { useConfirm } from '../components/ConfirmSheet'
 import { PiecesJointesEditor } from '../components/PiecesJointes'
 import { APPLIS_METIER } from '../data/roles'
 import type { Role, Specialite, GuideStep, PieceJointe, Guide } from '../types'
@@ -46,6 +47,7 @@ const EMPTY_FORM: GuideForm = {
 
 export function EditorGuides() {
   const { guides, addGuide, updateGuide, deleteGuide } = useEditorStore()
+  const { confirm } = useConfirm()
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<GuideForm>(EMPTY_FORM)
@@ -488,8 +490,8 @@ export function EditorGuides() {
                 </div>
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => startEdit(guide.id)} className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 rounded-xl">Modifier</button>
-                <button onClick={() => { if (confirm('Supprimer ce guide ?')) deleteGuide(guide.id) }} className="text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 rounded-xl">Suppr.</button>
+                <button onClick={() => startEdit(guide.id)} className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 min-h-[44px] rounded-xl">Modifier</button>
+                <button onClick={async () => { if (await confirm({ message: 'Supprimer ce guide ?', confirmLabel: 'Supprimer', danger: true })) deleteGuide(guide.id) }} className="text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 min-h-[44px] rounded-xl">Suppr.</button>
               </div>
             </div>
           </div>

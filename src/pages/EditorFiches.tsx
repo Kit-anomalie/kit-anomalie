@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
+import { useConfirm } from '../components/ConfirmSheet'
 import { PiecesJointesEditor } from '../components/PiecesJointes'
 import type { Role, Specialite, PieceJointe, FicheMemo } from '../types'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
@@ -33,6 +34,7 @@ const EMPTY_FORM: FicheForm = {
 
 export function EditorFiches() {
   const { fiches, addFiche, updateFiche, deleteFiche } = useEditorStore()
+  const { confirm } = useConfirm()
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<FicheForm>(EMPTY_FORM)
@@ -264,8 +266,8 @@ export function EditorFiches() {
                 </div>
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => startEdit(fiche.id)} className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 rounded-xl">Modifier</button>
-                <button onClick={() => { if (confirm('Supprimer cette fiche ?')) deleteFiche(fiche.id) }} className="text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 rounded-xl">Suppr.</button>
+                <button onClick={() => startEdit(fiche.id)} className="text-xs text-sncf-blue bg-sncf-blue/10 px-3 py-2 min-h-[44px] rounded-xl">Modifier</button>
+                <button onClick={async () => { if (await confirm({ message: 'Supprimer cette fiche ?', confirmLabel: 'Supprimer', danger: true })) deleteFiche(fiche.id) }} className="text-xs text-sncf-red bg-sncf-red/10 px-3 py-2 min-h-[44px] rounded-xl">Suppr.</button>
               </div>
             </div>
           </div>

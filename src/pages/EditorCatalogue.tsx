@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCatalogueStore } from '../stores/catalogueStore'
+import { useConfirm } from '../components/ConfirmSheet'
 import {
   CLASSEMENT_COLORS,
   CLASSEMENT_LABELS,
@@ -14,6 +15,7 @@ type Vue = 'categories' | 'types' | 'anomalies'
 const CLASSEMENTS: Classement[] = ['S/I', 'S/DP', 'A/P', 'A/M', 'A/SURV', 'A/DET', 'VA', 'VI', 'VR']
 
 export function EditorCatalogue() {
+  const { confirm } = useConfirm()
   const categories = useCatalogueStore(s => s.categories)
   const addCategorie = useCatalogueStore(s => s.addCategorie)
   const updateCategorie = useCatalogueStore(s => s.updateCategorie)
@@ -254,12 +256,12 @@ export function EditorCatalogue() {
                   <span className="text-gray-300">→</span>
                 </button>
                 <div className="flex border-t border-gray-100">
-                  <button onClick={() => startEditCat(c.id)} className="flex-1 py-2 text-xs text-sncf-blue active:bg-sncf-blue/5">Modifier</button>
+                  <button onClick={() => startEditCat(c.id)} className="flex-1 min-h-[44px] py-2 text-xs text-sncf-blue active:bg-sncf-blue/5">Modifier</button>
                   <button
-                    onClick={() => {
-                      if (confirm(`Supprimer « ${c.nom} » et tous ses types/anomalies ?`)) deleteCategorie(c.id)
+                    onClick={async () => {
+                      if (await confirm({ message: `Supprimer « ${c.nom} » et tous ses types/anomalies ?`, confirmLabel: 'Supprimer', danger: true })) deleteCategorie(c.id)
                     }}
-                    className="flex-1 py-2 text-xs text-sncf-red border-l border-gray-100 active:bg-sncf-red/5"
+                    className="flex-1 min-h-[44px] py-2 text-xs text-sncf-red border-l border-gray-100 active:bg-sncf-red/5"
                   >
                     Supprimer
                   </button>
@@ -309,12 +311,12 @@ export function EditorCatalogue() {
                   <span className="text-gray-300">→</span>
                 </button>
                 <div className="flex border-t border-gray-100">
-                  <button onClick={() => startEditType(t.id)} className="flex-1 py-2 text-xs text-sncf-blue active:bg-sncf-blue/5">Modifier</button>
+                  <button onClick={() => startEditType(t.id)} className="flex-1 min-h-[44px] py-2 text-xs text-sncf-blue active:bg-sncf-blue/5">Modifier</button>
                   <button
-                    onClick={() => {
-                      if (confirm(`Supprimer « ${t.nom} » et ses anomalies ?`) && selectedCatId) deleteTypeActif(selectedCatId, t.id)
+                    onClick={async () => {
+                      if ((await confirm({ message: `Supprimer « ${t.nom} » et ses anomalies ?`, confirmLabel: 'Supprimer', danger: true })) && selectedCatId) deleteTypeActif(selectedCatId, t.id)
                     }}
-                    className="flex-1 py-2 text-xs text-sncf-red border-l border-gray-100 active:bg-sncf-red/5"
+                    className="flex-1 min-h-[44px] py-2 text-xs text-sncf-red border-l border-gray-100 active:bg-sncf-red/5"
                   >
                     Supprimer
                   </button>
@@ -376,12 +378,12 @@ export function EditorCatalogue() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <button onClick={() => startEditAno(a.id)} className="flex-1 py-2 rounded-xl bg-sncf-blue/10 text-sncf-blue text-xs font-medium">Modifier</button>
+                  <button onClick={() => startEditAno(a.id)} className="flex-1 min-h-[44px] py-2 rounded-xl bg-sncf-blue/10 text-sncf-blue text-xs font-medium">Modifier</button>
                   <button
-                    onClick={() => {
-                      if (confirm(`Supprimer « ${a.name} » ?`) && selectedCatId && selectedTypeId) deleteAnomalie(selectedCatId, selectedTypeId, a.id)
+                    onClick={async () => {
+                      if ((await confirm({ message: `Supprimer « ${a.name} » ?`, confirmLabel: 'Supprimer', danger: true })) && selectedCatId && selectedTypeId) deleteAnomalie(selectedCatId, selectedTypeId, a.id)
                     }}
-                    className="flex-1 py-2 rounded-xl bg-sncf-red/10 text-sncf-red text-xs font-medium"
+                    className="flex-1 min-h-[44px] py-2 rounded-xl bg-sncf-red/10 text-sncf-red text-xs font-medium"
                   >
                     Supprimer
                   </button>
@@ -453,7 +455,7 @@ function AnoFormView({ form, setForm, onSave, onCancel, isEditing }: AnoFormView
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="text-xs font-medium text-gray-600">Classements <span className="text-sncf-red">•</span></label>
-          <button onClick={addClassement} className="text-[11px] text-sncf-blue bg-sncf-blue/10 px-2 py-1 rounded-full">+ Ajouter</button>
+          <button onClick={addClassement} className="inline-flex items-center justify-center min-h-[36px] text-[11px] text-sncf-blue bg-sncf-blue/10 px-3 py-1.5 rounded-full">+ Ajouter</button>
         </div>
         {form.classements.map((entry, idx) => {
           const c = CLASSEMENT_COLORS[entry.classement]
