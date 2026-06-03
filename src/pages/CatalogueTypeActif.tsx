@@ -53,7 +53,7 @@ export function CatalogueTypeActif() {
         <BackButton to={`/catalogue/${categorie.id}`} />
         <span
           className="text-[10px] text-sncf-blue bg-sncf-blue/10 px-2 py-0.5 rounded-full font-medium spring-enter"
-          title="Forme inspirée DZP SE · données synthétiques"
+          title="Forme inspirée d'un catalogue de référence interne · données synthétiques"
         >
           Prototype
         </span>
