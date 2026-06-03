@@ -173,6 +173,10 @@ export const useCatalogueStore = create<CatalogueState>()(
     {
       name: 'kit-anomalie-catalogue',
       version: 3,
+      // Migration pass-through : préserve les données locales lors d'un futur bump de version.
+      // Sans cette fonction, Zustand jette le state persisté et réinitialise au seed
+      // → perte silencieuse des éditions admin du catalogue.
+      migrate: (persisted) => persisted as CatalogueState,
     }
   )
 )

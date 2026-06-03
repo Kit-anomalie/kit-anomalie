@@ -1,46 +1,66 @@
-// SW Kit Anomalie — rev 2 (force réinstall pour purger anciens caches)
+// SW Kit Anomalie — rev 3 (install/activate tolèrent les erreurs réseau : ne plantent jamais)
 const APP_PREFIX = 'kit-anomalie-'
+const BASE = '/kit-anomalie/'
 
-// Installation : purge tout + precache frais. skipWaiting pour activer tout de suite.
+// Assets précachés pour fonctionner hors-ligne dès la 1re visite connectée.
+// content.json est inclus : sans lui, aucun conseil/guide partagé hors-réseau.
+const CORE_ASSETS = [
+  BASE,
+  BASE + 'index.html',
+  BASE + 'manifest.json',
+  BASE + 'icons/icon-192.svg',
+  BASE + 'icons/icon-512.svg',
+  BASE + 'favicon.svg',
+  BASE + 'content.json',
+]
+
+// Installation : purge les anciens caches + precache frais.
+// Tout est dans waitUntil + try/catch : un échec réseau ne doit JAMAIS empêcher l'install,
+// sinon le SW ne contrôle pas la page et l'app perd tout cache. skipWaiting attendu dans waitUntil.
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
-    // 1. Purge préventive de tous les anciens caches app
-    const oldKeys = await caches.keys()
-    await Promise.all(
-      oldKeys.filter(k => k.startsWith(APP_PREFIX)).map(k => caches.delete(k))
-    )
-    // 2. Precache la version courante
-    const res = await fetch('/kit-anomalie/version.json', { cache: 'no-store' })
-    const data = await res.json()
-    const cache = await caches.open(APP_PREFIX + data.v)
-    await cache.addAll([
-      '/kit-anomalie/',
-      '/kit-anomalie/index.html',
-      '/kit-anomalie/manifest.json',
-      '/kit-anomalie/icons/icon-192.svg',
-      '/kit-anomalie/icons/icon-512.svg',
-      '/kit-anomalie/favicon.svg',
-    ])
+    try {
+      // 1. Purge préventive de tous les anciens caches app
+      const oldKeys = await caches.keys()
+      await Promise.all(
+        oldKeys.filter(k => k.startsWith(APP_PREFIX)).map(k => caches.delete(k))
+      )
+      // 2. Precache la version courante (best-effort : un asset manquant ne casse pas l'install)
+      const res = await fetch(BASE + 'version.json', { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        const cache = await caches.open(APP_PREFIX + data.v)
+        await Promise.all(
+          CORE_ASSETS.map(asset => cache.add(asset).catch(() => { /* asset indisponible : ignoré */ }))
+        )
+      }
+    } catch {
+      // Offline ou Pages indisponible : on installe quand même
+    }
+    await self.skipWaiting()
   })())
-  self.skipWaiting()
 })
 
-// Activation : nettoie les anciens caches
+// Activation : nettoie les anciens caches. Tolère l'absence de réseau (ne purge rien si offline).
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    Promise.all([
-      fetch('/kit-anomalie/version.json').then(r => r.json()),
-      caches.keys(),
-    ]).then(([data, keys]) => {
-      const currentCache = APP_PREFIX + data.v
-      return Promise.all(
-        keys
-          .filter((key) => key.startsWith(APP_PREFIX) && key !== currentCache)
-          .map((key) => caches.delete(key))
-      )
-    })
-  )
-  self.clients.claim()
+  event.waitUntil((async () => {
+    try {
+      const res = await fetch(BASE + 'version.json', { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        const currentCache = APP_PREFIX + data.v
+        const keys = await caches.keys()
+        await Promise.all(
+          keys
+            .filter((key) => key.startsWith(APP_PREFIX) && key !== currentCache)
+            .map((key) => caches.delete(key))
+        )
+      }
+    } catch {
+      // Offline : on conserve le cache existant plutôt que de tout purger
+    }
+    await self.clients.claim()
+  })())
 })
 
 // Fetch : cache-first pour les assets, network-first pour la navigation
