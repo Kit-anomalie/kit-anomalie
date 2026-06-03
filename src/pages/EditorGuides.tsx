@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
 import { PiecesJointesEditor } from '../components/PiecesJointes'
 import { APPLIS_METIER } from '../data/roles'
-import type { Role, Specialite, GuideStep, PieceJointe } from '../types'
+import type { Role, Specialite, GuideStep, PieceJointe, Guide } from '../types'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 
 const ALL_ROLES: Role[] = ['agent_req', 'ordonnanceur', 'rp']
@@ -65,7 +65,7 @@ export function EditorGuides() {
         continue
       }
       // Format: "1. Titre | Action" ou "1. Action"
-      const cleaned = line.replace(/^\d+[\.\)\-]\s*/, '').trim()
+      const cleaned = line.replace(/^\d+[.)-]\s*/, '').trim()
       const parts = cleaned.split('|').map(s => s.trim())
       if (parts.length >= 2) {
         newSteps.push({ titre: parts[0], action: parts[1], section: currentSection, champsARemplir: '', erreursFrequentes: '' })
@@ -155,7 +155,7 @@ export function EditorGuides() {
     if (editingId) {
       updateGuide(editingId, guideData)
     } else {
-      addGuide(guideData as any)
+      addGuide(guideData as Omit<Guide, 'id'>)
     }
     resetForm()
   }

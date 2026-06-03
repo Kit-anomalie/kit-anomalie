@@ -52,7 +52,7 @@ export function CatalogueFiche() {
   const main = mainClassement(anomalie)
   const mainColors = main ? CLASSEMENT_COLORS[main] : null
   const isFav = favs.includes(anomalie.id)
-  const SvgComponent = getCatalogueSvg(anomalie.id)
+  const illustrationSvg = getCatalogueSvg(anomalie.id)
 
   const autresAnomalies = type.anomalies.filter(a => a.id !== anomalie.id)
 
@@ -197,9 +197,9 @@ export function CatalogueFiche() {
       {/* Sections */}
       {isVisible('illustration') && (
         <Section titre="Illustration référencée" delay={140}>
-          {SvgComponent ? (
+          {illustrationSvg ? (
             <div className="bg-gray-50 rounded-xl p-3">
-              <SvgComponent />
+              {illustrationSvg}
               {anomalie.illus?.caption && (
                 <p className="text-[11px] text-gray-500 mt-2 text-center italic">{anomalie.illus.caption}</p>
               )}

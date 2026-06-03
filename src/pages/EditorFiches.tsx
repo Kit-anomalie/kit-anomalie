@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useEditorStore } from '../stores/editorStore'
 import { PiecesJointesEditor } from '../components/PiecesJointes'
-import type { Role, Specialite, PieceJointe } from '../types'
+import type { Role, Specialite, PieceJointe, FicheMemo } from '../types'
 import { ROLE_LABELS, SPECIALITE_LABELS } from '../types'
 
 const ALL_ROLES: Role[] = ['agent_req', 'ordonnanceur', 'rp']
@@ -78,7 +78,7 @@ export function EditorFiches() {
     if (editingId) {
       updateFiche(editingId, ficheData)
     } else {
-      addFiche(ficheData as any)
+      addFiche(ficheData as Omit<FicheMemo, 'id'>)
     }
     resetForm()
   }

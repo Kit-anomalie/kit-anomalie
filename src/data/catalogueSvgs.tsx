@@ -16,7 +16,7 @@ const SVG_STYLES = {
   label: { fontFamily: 'system-ui', fontSize: 10, fill: '#0C1E5B' },
 } as const
 
-function Usure(): JSX.Element {
+function usureRail(): JSX.Element {
   return (
     <svg viewBox="0 0 400 160" role="img" aria-label="Usure ondulatoire du champignon du rail" className="w-full h-auto">
       <rect x="40" y="90" width="320" height="40" style={SVG_STYLES.rail} rx="2" />
@@ -30,7 +30,7 @@ function Usure(): JSX.Element {
   )
 }
 
-function Fissure(): JSX.Element {
+function fissureRail(): JSX.Element {
   return (
     <svg viewBox="0 0 400 160" role="img" aria-label="Fissure transversale de rail" className="w-full h-auto">
       <rect x="40" y="70" width="320" height="50" style={SVG_STYLES.rail} rx="2" />
@@ -42,7 +42,7 @@ function Fissure(): JSX.Element {
   )
 }
 
-function Dressage(): JSX.Element {
+function dressage(): JSX.Element {
   return (
     <svg viewBox="0 0 400 180" role="img" aria-label="Écart de dressage avec seuils AL / AR / ALT" className="w-full h-auto">
       {/* axe théorique */}
@@ -66,7 +66,7 @@ function Dressage(): JSX.Element {
   )
 }
 
-function Soudure(): JSX.Element {
+function soudure(): JSX.Element {
   return (
     <svg viewBox="0 0 400 160" role="img" aria-label="Affaissement de soudure sous règle 1 m" className="w-full h-auto">
       {/* rail avec cuvette */}
@@ -90,7 +90,7 @@ function Soudure(): JSX.Element {
   )
 }
 
-function Pointe(): JSX.Element {
+function pointeAiguille(): JSX.Element {
   return (
     <svg viewBox="0 0 400 160" role="img" aria-label="Pointe d'aiguille — gabarit d'usure" className="w-full h-auto">
       {/* contre-aiguille */}
@@ -104,7 +104,7 @@ function Pointe(): JSX.Element {
   )
 }
 
-function FissureBeton(): JSX.Element {
+function fissureBeton(): JSX.Element {
   return (
     <svg viewBox="0 0 400 180" role="img" aria-label="Fissure béton avec fissuromètre" className="w-full h-auto">
       <rect x="40" y="40" width="320" height="110" style={{ fill: '#D1D5DB' }} rx="2" />
@@ -118,7 +118,7 @@ function FissureBeton(): JSX.Element {
   )
 }
 
-function Talus(): JSX.Element {
+function talus(): JSX.Element {
   return (
     <svg viewBox="0 0 400 180" role="img" aria-label="Glissement de talus en coupe" className="w-full h-auto">
       {/* rail au sommet */}
@@ -136,7 +136,7 @@ function Talus(): JSX.Element {
   )
 }
 
-function DallePN(): JSX.Element {
+function dallePN(): JSX.Element {
   return (
     <svg viewBox="0 0 400 160" role="img" aria-label="Dalle PN désaffleurée — règle au rail" className="w-full h-auto">
       {/* dalle */}
@@ -155,17 +155,20 @@ function DallePN(): JSX.Element {
   )
 }
 
-export const CATALOGUE_SVGS: Record<string, () => JSX.Element> = {
-  'vc-rail-01': Usure,
-  'vc-rail-02': Fissure,
-  'vc-geo-01': Dressage,
-  'vc-soud-01': Soudure,
-  'adv-aig-01': Pointe,
-  'oa-pont-01': FissureBeton,
-  'ab-tal-01': Talus,
-  'pla-pn-01': DallePN,
+const CATALOGUE_SVGS: Record<string, () => JSX.Element> = {
+  'vc-rail-01': usureRail,
+  'vc-rail-02': fissureRail,
+  'vc-geo-01': dressage,
+  'vc-soud-01': soudure,
+  'adv-aig-01': pointeAiguille,
+  'oa-pont-01': fissureBeton,
+  'ab-tal-01': talus,
+  'pla-pn-01': dallePN,
 }
 
-export function getCatalogueSvg(anoId: string): (() => JSX.Element) | null {
-  return CATALOGUE_SVGS[anoId] ?? null
+// Retourne l'élément SVG déjà rendu (ReactNode), pas un composant — évite de
+// créer un composant pendant le render côté appelant (react-hooks/static-components).
+export function getCatalogueSvg(anoId: string): JSX.Element | null {
+  const render = CATALOGUE_SVGS[anoId]
+  return render ? render() : null
 }
