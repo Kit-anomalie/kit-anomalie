@@ -64,8 +64,11 @@ export const useQuizStore = create<QuizState>()(
     }),
     {
       name: 'kit-anomalie-quiz',
+      version: 1,
       // On ne persiste QUE l'historique. La session courante est volatile.
       partialize: (s) => ({ attempts: s.attempts }),
+      // Pass-through : préserve l'historique des tentatives lors d'un futur bump
+      migrate: (persisted) => persisted as QuizState,
     }
   )
 )

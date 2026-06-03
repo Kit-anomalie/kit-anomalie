@@ -21,7 +21,7 @@ export function Réglages() {
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' })
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(); return r.json() })
       .then(data => setVersion(data.v))
       .catch(() => setVersion('?'))
   }, [])

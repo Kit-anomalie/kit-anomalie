@@ -36,6 +36,11 @@ export const useProfileStore = create<ProfileState>()(
         isConfigured: false,
       }),
     }),
-    { name: 'kit-anomalie-profile' }
+    {
+      name: 'kit-anomalie-profile',
+      version: 1,
+      // Pass-through : point d'ancrage pour de futures migrations sans perte de profil
+      migrate: (persisted) => persisted as ProfileState,
+    }
   )
 )

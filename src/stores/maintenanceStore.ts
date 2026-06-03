@@ -22,6 +22,11 @@ export const useMaintenanceStore = create<MaintenanceState>()(
         planningDate: date ?? s.planningDate,
       })),
     }),
-    { name: 'kit-anomalie-maintenance' }
+    {
+      name: 'kit-anomalie-maintenance',
+      version: 1,
+      // Pass-through : la config maintenance (admin) n'est pas reconstructible, on la préserve
+      migrate: (persisted) => persisted as MaintenanceState,
+    }
   )
 )

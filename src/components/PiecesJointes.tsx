@@ -217,7 +217,9 @@ export function PiecesJointesView({ pieces }: { pieces: PieceJointe[] }) {
   return (
     <div className="space-y-3">
       {pieces.map(p => {
-        if (p.type === 'image' && p.data) {
+        // Garde de protocole : p.data vient potentiellement d'un JSON importé.
+        // On n'accepte qu'une data-URL image, jamais une URL exécutable (javascript:…).
+        if (p.type === 'image' && p.data && /^data:image\//i.test(p.data)) {
           return (
             <div key={p.id} className="rounded-xl overflow-hidden border border-gray-100">
               <img src={p.data} alt={p.nom} className="w-full" />
@@ -225,7 +227,8 @@ export function PiecesJointesView({ pieces }: { pieces: PieceJointe[] }) {
             </div>
           )
         }
-        if (p.type === 'pdf' && p.data) {
+        // Garde de protocole : on n'ouvre qu'une data-URL (fichier uploadé), jamais javascript:…
+        if (p.type === 'pdf' && p.data && /^data:/i.test(p.data)) {
           return (
             <a
               key={p.id}
@@ -242,7 +245,9 @@ export function PiecesJointesView({ pieces }: { pieces: PieceJointe[] }) {
             </a>
           )
         }
-        if (p.type === 'lien' && p.url) {
+        // Filtre de protocole : on n'ouvre que des liens http(s), jamais javascript:/data:
+        // (un JSON importé malveillant pourrait sinon injecter une URL exécutable).
+        if (p.type === 'lien' && p.url && /^https?:\/\//i.test(p.url)) {
           return (
             <a
               key={p.id}

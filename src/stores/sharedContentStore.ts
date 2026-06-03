@@ -28,6 +28,9 @@ export const useSharedContentStore = create<SharedContentState>()((set, get) => 
     if (get().loaded) return
     try {
       const res = await fetch(`${import.meta.env.BASE_URL}content.json?t=${Date.now()}`, { cache: 'no-store' })
+      // Sans res.ok, un 404 GitHub Pages renvoie du HTML → res.json() throw → capté plus bas.
+      // On rend l'échec explicite plutôt que de parser une page d'erreur.
+      if (!res.ok) throw new Error(`content.json HTTP ${res.status}`)
       const data = await res.json()
       const sharedTips: CustomTip[] = data.tips ?? []
       const sharedFiches: FicheMemo[] = data.fiches ?? []

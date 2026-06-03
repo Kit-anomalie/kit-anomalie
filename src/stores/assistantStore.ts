@@ -32,6 +32,11 @@ export const useAssistantStore = create<AssistantState>()(
       },
       clearHistory: () => set({ history: [] }),
     }),
-    { name: 'kit-anomalie-assistant' }
+    {
+      name: 'kit-anomalie-assistant',
+      version: 1,
+      // Pass-through : préserve l'historique des requêtes lors d'un futur bump
+      migrate: (persisted) => persisted as AssistantState,
+    }
   )
 )
