@@ -22,11 +22,13 @@ export function Layout() {
   }, [location.pathname])
 
   return (
-    <div className="min-h-full bg-bg flex flex-col">
-      {/* Header — sticky, contient TopNav en desktop.
-          pt safe-area : en PWA plein écran (status bar translucide), réserve la hauteur
-          de la barre d'état iOS pour que le titre ne passe pas dessous. */}
-      <header className="bg-sncf-dark text-white sticky top-0 z-50 pt-[env(safe-area-inset-top)]">
+    // Shell à hauteur fixe (h-dvh) + overflow-hidden : le DOCUMENT ne scrolle jamais,
+    // c'est <main> qui scrolle. Indispensable en PWA standalone iOS, sinon le document
+    // pouvait glisser sous la status bar (safe-area) à chaque navigation.
+    <div className="h-dvh bg-bg flex flex-col overflow-hidden">
+      {/* Header — hauteur fixe (shrink-0), reste en haut car le shell ne scrolle pas.
+          pt safe-area : réserve la hauteur de la barre d'état iOS en PWA plein écran. */}
+      <header className="bg-sncf-dark text-white z-50 shrink-0 pt-[env(safe-area-inset-top)]">
         <div className="px-4 py-3 flex items-center justify-between">
           <span className="text-lg font-bold">Kit Anomalie</span>
           <div className="flex items-center gap-3">
@@ -46,8 +48,9 @@ export function Layout() {
         <TopNav />
       </header>
 
-      {/* Contenu — padding bottom pour la nav mobile, neutralisé en desktop */}
-      <main ref={mainRef} className="flex-1 overflow-y-auto pb-20 md:pb-0">
+      {/* Contenu — min-h-0 pour que flex-1 puisse rétrécir et activer overflow-y-auto
+          (sans ça main grandit avec le contenu et c'est le document qui scrolle). */}
+      <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto pb-20 md:pb-0">
         <Outlet />
       </main>
 
