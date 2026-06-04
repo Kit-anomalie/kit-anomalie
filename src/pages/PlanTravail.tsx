@@ -11,7 +11,7 @@ export function PlanTravail() {
   return (
     <div className="min-h-screen bg-[#F4F6FA]">
       {/* === HEADER === */}
-      <header className="bg-gradient-to-br from-[#0C1E5B] to-[#1a3a8f] text-white">
+      <header className="bg-gradient-to-br from-[#0C1E5B] to-[#1a3a8f] text-white pt-[env(safe-area-inset-top)]">
         <div className="max-w-3xl mx-auto px-4 py-6 lg:px-8">
           <div className="flex items-center justify-between mb-4">
             <button onClick={() => navigate('/')} className="text-white/50 text-xs font-mono hover:text-white/80 transition-colors">

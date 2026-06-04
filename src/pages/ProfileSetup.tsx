@@ -24,7 +24,7 @@ export function ProfileSetup() {
   }
 
   return (
-    <div className="min-h-screen bg-bg px-4 py-8">
+    <div className="min-h-screen bg-bg px-4 pb-8 pt-[calc(2rem+env(safe-area-inset-top))]">
       {/* Logo et titre — respiration douce */}
       <div className="text-center mb-8 spring-enter">
         <div

@@ -96,7 +96,7 @@ export function Admin() {
 
   return (
     <div className="min-h-full bg-bg flex flex-col">
-      <header className="bg-sncf-dark text-white px-4 py-3 flex items-center gap-3 sticky top-0 z-50">
+      <header className="bg-sncf-dark text-white px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] flex items-center gap-3 sticky top-0 z-50">
         <button onClick={() => navigate('/reglages')} className="text-sncf-blue text-sm">← Retour</button>
         <span className="text-lg font-bold">Administration</span>
       </header>

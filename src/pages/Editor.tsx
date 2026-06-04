@@ -85,7 +85,7 @@ export function Editor() {
   return (
     <div className="min-h-full bg-bg flex flex-col">
       {/* Header */}
-      <header className="bg-sncf-dark text-white px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+      <header className="bg-sncf-dark text-white px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate('/')} className="text-sncf-blue text-sm">← Retour</button>
           <span className="text-lg font-bold">Mode Éditeur</span>

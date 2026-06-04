@@ -11,8 +11,10 @@ export function Layout() {
 
   return (
     <div className="min-h-full bg-bg flex flex-col">
-      {/* Header — sticky, contient TopNav en desktop */}
-      <header className="bg-sncf-dark text-white sticky top-0 z-50">
+      {/* Header — sticky, contient TopNav en desktop.
+          pt safe-area : en PWA plein écran (status bar translucide), réserve la hauteur
+          de la barre d'état iOS pour que le titre ne passe pas dessous. */}
+      <header className="bg-sncf-dark text-white sticky top-0 z-50 pt-[env(safe-area-inset-top)]">
         <div className="px-4 py-3 flex items-center justify-between">
           <span className="text-lg font-bold">Kit Anomalie</span>
           <div className="flex items-center gap-3">
