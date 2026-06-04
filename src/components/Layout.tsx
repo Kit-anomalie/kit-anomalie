@@ -1,4 +1,5 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
 import { TopNav } from './TopNav'
 import { OfflineBadge } from './OfflineBadge'
@@ -7,7 +8,17 @@ import { ROLE_ICONS } from '../data/roles'
 
 export function Layout() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { role } = useProfileStore()
+  const mainRef = useRef<HTMLElement>(null)
+
+  // Le conteneur de scroll (<main>) est persistant entre les routes : sans reset,
+  // une nouvelle page hérite de la position de scroll de la précédente et apparaît
+  // décalée vers le haut. On remet en haut à chaque changement de route.
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 })
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   return (
     <div className="min-h-full bg-bg flex flex-col">
@@ -35,7 +46,7 @@ export function Layout() {
       </header>
 
       {/* Contenu — padding bottom pour la nav mobile, neutralisé en desktop */}
-      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
+      <main ref={mainRef} className="flex-1 overflow-y-auto pb-20 md:pb-0">
         <Outlet />
       </main>
 
