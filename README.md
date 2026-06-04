@@ -79,7 +79,7 @@ Référentiel **transverse** lecture seule, organisé en 3 niveaux : **Catégori
 - **Favoris + historique** (20 derniers consultés) visibles sur l'accueil de la brique
 - **8 SVG inline** : usure ondulatoire, fissure transversale, écart de dressage (seuils AL/AR/ALT), affaissement de soudure, pointe d'aiguille, fissure béton, glissement talus, dalle PN
 - **Deep-link** natif : `/catalogue/:catId/:typeId/:anoId`
-- **Bandeau prototype** rappelant que la forme est inspirée du catalogue DZP SE et que les données sont synthétiques
+- **Bandeau prototype** rappelant que la forme est inspirée d'un catalogue de référence interne et que les données sont synthétiques
 
 **Édition via l'admin :**
 - Mode éditeur → onglet **Catalogue** → CRUD complet aux 3 niveaux avec preview couleur catégorie et classements multi-conditions dynamiques

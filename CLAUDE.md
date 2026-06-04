@@ -44,11 +44,12 @@ La **déclaration des anomalies se fait dans les applications métier existantes
 | 0 | Accueil & Profil | ✅ Fait | ProfileSetup + Home + Layout + BottomNav + OfflineBadge |
 | 1 | Guides par application | ✅ Fait (prototype) | 4 guides content.json (MPC SPM, Participant ADV, Relevé MPC, Visite PN) |
 | 2 | Fiches mémo réflexes | ✅ Fait (prototype) | 4 fiches démo (classer, décrire, doublons, DLF) |
-| 3 | Parcours onboarding / Quiz | ⚪ Placeholder | Route `/quiz` |
-| 4 | **Catalogue anomalies** | ✅ Fait (prototype) | 6 catégories × 20 anomalies démo + 8 SVG + admin CRUD. Forme inspirée DZP SE. |
-| 5 | Assistant IA | ⚪ Placeholder | Route `/assistant` |
-| 6 | Bon à savoir & alertes | ⚪ Placeholder | Route `/alertes` |
+| 3 | Quiz / Parcours | ✅ Fait (prototype) | `/quiz` — QuizPlay + EditorQuiz + quizStore. Questions démo |
+| 4 | **Catalogue anomalies** | ✅ Fait (prototype) | 6 catégories × 20 anomalies démo + 8 SVG + admin CRUD. Forme inspirée d'un catalogue de référence interne. |
+| 5 | Assistant (recherche locale) | ✅ Fait (prototype) | `/assistant` — recherche Fuse.js sur catalogue+fiches+guides+tips (PAS d'IA générative). assistantStore |
+| 6 | Glossaire métier | ✅ Fait (prototype) | `/glossaire` (ex-Alertes/Aide au choix) — Glossaire + EditorGlossaire + glossaireDefault. `/alertes` et `/aide` redirigent |
 | 7 | Administration (BO) | ⚪ Non commencé | App séparée à terme |
+| — | Démo produit | ✅ Fait | `/demo` — cinématique 4 actes (Three.js + GSAP, lazy-loadé) + mode explorer. `npm run record:demo` (Playwright) |
 
 ### Brique 4 — Catalogue anomalies (détail)
 
@@ -57,7 +58,7 @@ La **déclaration des anomalies se fait dans les applications métier existantes
 - **Fiche anomalie** : 7 sections activables (illustration, description, défaut, écart, classements, actions, référence) + sélecteur persistant avec presets (Tout / Synthèse / Reset) + favoris + partage presse-papier + sticky header + autres anomalies du même type en pied
 - **Recherche locale** groupée par catégorie (code, nom, défaut, type, description)
 - **Deep-link** : `/catalogue/:catId/:typeId/:anoId`
-- **Badge « Prototype »** discret + bandeau en accueil (DZP SE inspiration, données synthétiques)
+- **Badge « Prototype »** discret + bandeau en accueil (catalogue de référence interne, données synthétiques)
 
 ## Stack technique
 
@@ -71,15 +72,18 @@ La **déclaration des anomalies se fait dans les applications métier existantes
 
 ### Stores Zustand
 
-- `profileStore` — profil utilisateur (role + spécialité)
-- `editorStore` — tips/fiches/guides locaux éditables (persist)
-- `sharedContentStore` — sync automatique depuis `public/content.json`
-- `catalogueStore` — catégories/types/anomalies du catalogue (persist, version 3)
-- `cataloguePrefsStore` — préférences sections fiche (persist)
-- `favoritesStore` — favoris guides/fiches/catalogue + historique (persist, version 1)
-- `maintenanceStore` — planning maintenance
-- `themeStore` — dark mode
-- `sharedContentStore` — fetch + auto-sync content.json
+- `profileStore` — profil utilisateur (role + spécialité) — persist v1
+- `editorStore` — tips/fiches/guides/glossaire/quiz locaux éditables — persist v3 (migrate)
+- `sharedContentStore` — fetch + auto-sync depuis `public/content.json` (NON persisté)
+- `catalogueStore` — catégories/types/anomalies du catalogue — persist v3 (migrate)
+- `cataloguePrefsStore` — préférences sections fiche — persist
+- `favoritesStore` — favoris guides/fiches/catalogue + historique — persist v1
+- `quizStore` — historique des tentatives quiz — persist v1 (partialize `attempts`)
+- `assistantStore` — historique des requêtes assistant — persist v1
+- `maintenanceStore` — bandeau maintenance planifiée — persist v1
+- `themeStore` — dark mode — persist
+
+**Tous les stores persistés ont un `version` + une fonction `migrate` (pass-through).** Ne JAMAIS bumper la version d'un store sans `migrate` : Zustand jetterait le state persisté → perte des données locales/éditions admin.
 
 ## Charte graphique
 
@@ -109,7 +113,15 @@ La **déclaration des anomalies se fait dans les applications métier existantes
   - Texte **sncf-dark** : S/DP, A/P, A/SURV (orange, bleu ciel, vert) — AA échouait en blanc
 - Staggers animations plafonnés (`Math.min(i, 6)`) → dernière carte visible en < 400ms
 - Composant `<BackButton/>` factorisé pour tout retour (`src/components/BackButton.tsx`)
-- Respect de `prefers-reduced-motion` : **à faire** (pending 🟡 audit)
+- **Confirmations/alertes** : bottom sheet `<ConfirmProvider>` + hook `useConfirm()` (`confirm`/`alert` async, `src/components/ConfirmSheet.tsx`) — JAMAIS de `confirm()`/`alert()` natifs (cassent le dark mode + bloqués dans certaines WebView Android verrouillées)
+- **a11y faite** : `prefers-reduced-motion` respecté (CSS global + GSAP démo via `gsap.set`), `focus-visible` global, touch targets ≥ 44px, `Toggle` exige `aria-label`, emoji décoratifs en `aria-hidden`
+
+### Layout & scroll (NE PAS CASSER)
+
+- Le shell (`src/components/Layout.tsx`) est en **`h-dvh` + `overflow-hidden`** : le **document ne scrolle JAMAIS**.
+- C'est **`<main>` qui scrolle** : `flex-1 min-h-0 overflow-y-auto`. Le `min-h-0` est INDISPENSABLE (sans lui, `main` grandit avec le contenu et c'est le document qui scrolle → en PWA standalone iOS, le contenu glisse sous la status bar à chaque navigation).
+- Les en-têtes plein écran réservent **`pt-[env(safe-area-inset-top)]`** (Layout, Admin, Editor, PlanTravail, ProfileSetup) ; la nav basse réserve `safe-area-inset-bottom`. `index.html` est en `viewport-fit=cover` + status bar `black-translucent`.
+- Reset du scroll en haut à chaque route via **`useLayoutEffect`** sur `location.pathname` (avant paint → pas de saut visible).
 
 ## Mode éditeur & partage content.json
 
@@ -141,7 +153,7 @@ Modèle **séquentiel mono-exporteur** : Wilfried est le seul à pousser dans `p
 ### Fichiers
 
 - `public/manifest.json` : app installable
-- `public/sw.js` : service worker avec purge systématique des anciens caches à l'install
+- `public/sw.js` : service worker offline-first — install/activate **tolèrent les erreurs réseau** (`res.ok` + try/catch, ne plantent jamais), precache (dont `content.json`), purge des anciens caches versionnés
 - `public/version.json` : version courante (bump à chaque push significatif)
 - `public/maintenance.json` : bascule maintenance totale
 
@@ -158,6 +170,8 @@ Au chargement :
 ## Règles
 
 - **Ne JAMAIS écrire le nom de l'opérateur ferroviaire** dans le code
+- **Ne JAMAIS committer de vrai numéro de référentiel** (`MT#####`, `IN####`), d'URL intranet/SharePoint, ni d'identifiant d'entité/zone (ex « DZP SE ») : masquer en placeholders (`MT0XXXX`, `IN0XXX`). Le repo ET `public/contenu.html` sont publics et crawlés (`robots:index`).
+- **Fetch** : toujours vérifier `res.ok` avant `.json()` (un 404 GitHub Pages renvoie du HTML)
 - Contenu orienté **agent terrain**, pas management
 - Les fiches et guides doivent utiliser la **bonne terminologie métier** SNCF
 - Les descriptions d'applis viennent du store public numerique.sncf.com
@@ -187,9 +201,9 @@ npm run lint    # eslint .
 
 ## Prochaines étapes
 
-- **Brique 3 Quiz** ou **Brique 5 Assistant IA** (RAG local sur catalogue+fiches) — choix ouvert
-- **Brique 6 Alertes**
+État à v0.23.0 : **audit complet traité et déployé** (conformité référentiels/SharePoint/DZP, sécurité sinks, robustesse fetch + version/migrate stores, lint 14→0, a11y/UX bottom sheets + reduced-motion + touch targets, safe-area iOS, architecture scroll PWA). Reste :
+
 - **Brique 7 Admin BO** (app séparée à terme)
-- **Audit UX/UI — 🟡 polish restant** : bottom sheets au lieu de `confirm()`, `prefers-reduced-motion`, `focus-visible`, indicateurs scroll rails, vide states actionnables
-- **Contenu métier réel** : remplacer les 20 anomalies démo et les 4 guides prototype par les vraies données (après validation métier)
+- **Contenu métier réel** : remplacer les 20 anomalies démo + 4 guides + fiches/quiz prototypes par les vraies données (après validation métier)
+- **Dette technique froide (refactors, non bloquant)** : sélecteurs Zustand sans sélecteur (EditorTips/Fiches/Guides, App.tsx) → re-renders en cascade ; extraire `mergeDedupByTitre()` (dupliqué 5×, O(n²)) et `resolveQuizzes/Questions` (3×) dans `utils/` ; race condition `sharedContentStore.load()` (flag `loaded` posé en fin) + couplage direct `sharedContentStore → editorStore.setState`
 - **Migration SNCF interne** : GitLab + PostgreSQL hébergé, à faire quand le kit sera adopté (pas avant)
