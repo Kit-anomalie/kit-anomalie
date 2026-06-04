@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
 import { TopNav } from './TopNav'
@@ -12,10 +12,11 @@ export function Layout() {
   const { role } = useProfileStore()
   const mainRef = useRef<HTMLElement>(null)
 
-  // Le conteneur de scroll (<main>) est persistant entre les routes : sans reset,
+  // Le scroll (document + <main>) est persistant entre les routes : sans reset,
   // une nouvelle page hérite de la position de scroll de la précédente et apparaît
-  // décalée vers le haut. On remet en haut à chaque changement de route.
-  useEffect(() => {
+  // décalée vers le haut. useLayoutEffect (avant paint) → pas de saut d'une frame
+  // visible avant le repositionnement, contrairement à useEffect.
+  useLayoutEffect(() => {
     mainRef.current?.scrollTo({ top: 0 })
     window.scrollTo(0, 0)
   }, [location.pathname])
